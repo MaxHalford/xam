@@ -4,7 +4,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.ensemble import RandomForestClassifier
 
-from hedgehog.stacking import StackingClassifier
+from xam.stacking import StackingClassifier
 
 
 iris = datasets.load_iris()
