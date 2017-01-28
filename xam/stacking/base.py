@@ -7,7 +7,7 @@ from sklearn.utils.validation import check_X_y
 
 class BaseStackingEstimator(BaseEstimator, MetaEstimatorMixin):
 
-    def __init__(self, models, meta_model, n_folds=5, stratified=True, verbose=False):
+    def __init__(self, models, meta_model, n_folds, stratified, verbose):
         self.models = models
         self.meta_model = meta_model
         self.n_folds = n_folds
