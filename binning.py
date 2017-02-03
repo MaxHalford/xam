@@ -1,13 +1,13 @@
 from sklearn import datasets
 
-from xam.discretization import MDLP
+from xam.binning import MDLPBinner
 
 
 iris = datasets.load_iris()
 X, y = iris.data[:, 1:3], iris.target
 
-discretizer = MDLP()
-X_discrete = discretizer.fit_transform(X, y)
+binner = MDLPBinner()
+X_discrete = binner.fit_transform(X, y)
 
 print(X_discrete)
 print(y)

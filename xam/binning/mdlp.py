@@ -1,7 +1,8 @@
 """
-Minimum Description Length Binning (MDLB)
+Minimum Description Length Principle (MDLP)
 
-Original paper: http://sci2s.ugr.es/keel/pdf/algorithm/congreso/fayyad1993.pdf
+- Original paper: http://sci2s.ugr.es/keel/pdf/algorithm/congreso/fayyad1993.pdf
+- Implementation inspiration: https://www.ibm.com/support/knowledgecenter/it/SSLVMB_21.0.0/com.ibm.spss.statistics.help/alg_optimal-binning.htm
 """
 
 import collections
@@ -10,6 +11,7 @@ import numpy as np
 from scipy import stats
 from sklearn.base import BaseEstimator
 from sklearn.base import TransformerMixin
+from sklearn.utils.validation import check_X_y
 
 
 def calc_class_entropy(y):
@@ -29,13 +31,7 @@ def calc_class_information_entropy(x, y, cut_point):
     return (y_1.size * ent_1 + y_2.size * ent_2) / (y_1.size + y_2.size)
 
 
-def calc_information_gain(x, y, cut_point):
-    prev_entropy = calc_class_entropy(y)
-    new_entropy = calc_class_information_entropy(x, y, cut_point)
-    return prev_entropy - new_entropy
-
-
-class MDLP(BaseEstimator, TransformerMixin):
+class MDLPBinner(BaseEstimator, TransformerMixin):
 
     def __init__(self):
         # Attributes
@@ -43,6 +39,10 @@ class MDLP(BaseEstimator, TransformerMixin):
 
     def fit(self, X, y):
         """Determine which are the best cut points for each column in X based on y."""
+
+        # Check that X and y have correct shapes
+        X, y = check_X_y(X, y)
+
         self.cut_points_ = [self.cut(x, y, []) for x in X.T]
         return self
 
@@ -78,10 +78,10 @@ class MDLP(BaseEstimator, TransformerMixin):
                 potential_cut_points.remove[cut_point]
 
         # Find the cut point with gives the lowest class information entropy
-        cut_point = min(potential_cut_points, key=lambda cut_point: calc_class_information_entropy(x, y, cut_point))
-
-        # Calculate the information gain obtained with the obtained cut point
-        gain = calc_information_gain(x, y, cut_point)
+        cut_point = min(
+            potential_cut_points,
+            key=lambda cut_point: calc_class_information_entropy(x, y, cut_point)
+        )
 
         # Partition the data
         partition = x < cut_point
@@ -104,6 +104,10 @@ class MDLP(BaseEstimator, TransformerMixin):
         delta = np.log2(3 ** k - 2) - k * y_ent + k_1 * y_1_ent + k_2 * y_2_ent
         n = y.size
         acceptance_criterion = (np.log2(n - 1) + delta) / n
+
+        # Calculate the information gain obtained with the obtained cut point
+        new_ent = calc_class_information_entropy(x, y, cut_point)
+        gain = y_ent - new_ent
 
         # Add the cut point if the gain is higher than the acceptance criterion
         if gain > acceptance_criterion:

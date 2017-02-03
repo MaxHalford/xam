@@ -15,7 +15,7 @@ class TopTermsClassifier(BaseEstimator, ClassifierMixin):
 
     def fit(self, X, y):
 
-        # Check that X and y have correct shape
+        # Check that X and y have correct shapes
         X, y = check_X_y(X, y)
 
         # Check the n_terms attribute is an int and isn't out of bounds
