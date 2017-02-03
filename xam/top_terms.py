@@ -7,9 +7,11 @@ from sklearn.utils.validation import check_X_y
 class TopTermsClassifier(BaseEstimator, ClassifierMixin):
 
     def __init__(self, n_terms=10):
+        # Parameters
         self.n_terms = n_terms
 
-        self.top_terms_per_class = None
+        # Attributes
+        self.top_terms_per_class_ = None
 
     def fit(self, X, y):
 
@@ -29,7 +31,7 @@ class TopTermsClassifier(BaseEstimator, ClassifierMixin):
         labels = unique_labels(y)
 
         # Determine the n top terms per class
-        self.top_terms_per_class = {
+        self.top_terms_per_class_ = {
             c: set(np.argpartition(np.sum(X[y == c], axis=0), -n_terms)[-n_terms:])
             for c in labels
         }
@@ -44,12 +46,12 @@ class TopTermsClassifier(BaseEstimator, ClassifierMixin):
 
         # Find the class that has the most top words in common with the document
         return max(
-            self.top_terms_per_class.keys(),
-            key=lambda c: len(set.intersection(terms, self.top_terms_per_class[c]))
+            self.top_terms_per_class_.keys(),
+            key=lambda c: len(set.intersection(terms, self.top_terms_per_class_[c]))
         )
 
     def predict(self, X):
-        if self.top_terms_per_class is None:
+        if self.top_terms_per_class_ is None:
             raise RuntimeError("The classifier has to be fitted before it can be able to predict")
 
         return [self._find_class(x) for x in X]
