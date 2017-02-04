@@ -1,6 +1,6 @@
 # xam
 
-xam is my personal data science utilities library. It is written in Python 3 and built around scikit-learn's API.
+xam is my personal data science toolbox. It is written in Python 3 and built around scikit-learn's API.
 
 
 ## Installation
@@ -17,6 +17,10 @@ xam is my personal data science utilities library. It is written in Python 3 and
 - [Equal frequency binning](examples/equal_frequency_binning.py)
 - [Equal width binning](examples/equal_width_binning.py)
 - [Minimum Description Length Principle (MDLP)](examples/mdlp_binning.py)
+
+**Natural Language Processing**
+
+- [Top terms classification](examples/top_terms_classification.py)
 
 **Stacking**
 
