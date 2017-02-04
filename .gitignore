@@ -1,2 +1,6 @@
-.cache/*
 *.pyc
+
+build/
+.cache/
+dist/
+xam.egg-info/
