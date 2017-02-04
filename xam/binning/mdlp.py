@@ -1,5 +1,5 @@
 """
-Minimum Description Length Principle (MDLP)
+Minimum Description Length Principle (MDLP) binning
 
 - Original paper: http://sci2s.ugr.es/keel/pdf/algorithm/congreso/fayyad1993.pdf
 - Implementation inspiration: https://www.ibm.com/support/knowledgecenter/it/SSLVMB_21.0.0/com.ibm.spss.statistics.help/alg_optimal-binning.htm
@@ -9,9 +9,9 @@ import collections
 
 import numpy as np
 from scipy import stats
-from sklearn.base import BaseEstimator
-from sklearn.base import TransformerMixin
 from sklearn.utils.validation import check_X_y
+
+from .base import BaseBinner
 
 
 def calc_class_entropy(y):
@@ -31,11 +31,7 @@ def calc_class_information_entropy(x, y, cut_point):
     return (y_1.size * ent_1 + y_2.size * ent_2) / (y_1.size + y_2.size)
 
 
-class MDLPBinner(BaseEstimator, TransformerMixin):
-
-    def __init__(self):
-        # Attributes
-        self.cut_points_ = None
+class MDLPBinner(BaseBinner):
 
     def fit(self, X, y):
         """Determine which are the best cut points for each column in X based on y."""
@@ -43,16 +39,9 @@ class MDLPBinner(BaseEstimator, TransformerMixin):
         # Check that X and y have correct shapes
         X, y = check_X_y(X, y)
 
-        self.cut_points_ = [self.cut(x, y, []) for x in X.T]
-        return self
+        self.cut_points_ = sorted([self.cut(x, y, []) for x in X.T])
 
-    def transform(self, X, y=None):
-        """Binarize X based on the fitted cut points."""
-        X_discrete = np.array([
-            np.digitize(X[:, i], self.cut_points_[i])
-            for i in range(X.shape[1])
-        ])
-        return X_discrete
+        return self
 
     def cut(self, x, y, cut_points):
 
