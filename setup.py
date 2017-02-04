@@ -1,5 +1,5 @@
-from distutils.core import find_packages
-from distutils.core import setup
+from setuptools import find_packages
+from setuptools import setup
 
 setup(
     author='Max Halford',
