@@ -7,7 +7,7 @@ setup(
     description='Data science utilities library',
     license='MIT',
     name='xam',
-    packages=find_packages(exclude=['tests']),
+    packages=find_packages(exclude=['examples']),
     url='https://github.com/MaxHalford/xam',
     version='0.0.1dev',
 )

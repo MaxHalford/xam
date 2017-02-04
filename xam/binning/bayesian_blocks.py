@@ -58,7 +58,7 @@ def calc_bayesian_blocks(x):
         ind = last[ind - 1]
     change_points = change_points[i_cp:]
 
-    return edges[change_points]
+    return edges[change_points][1:-1]
 
 
 class BayesianBlocksBinner(BaseUnsupervisedBinner):

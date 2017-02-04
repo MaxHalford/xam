@@ -27,9 +27,15 @@ h1 = plt.hist(
     normed=True
 )
 
+bins = np.concatenate([
+    [np.min(x)],
+    binner.cut_points_[0],
+    [np.max(x)]
+])
+
 h2 = plt.hist(
     x,
-    bins=binner.cut_points_[0],
+    bins=bins,
     color='black',
     histtype='step',
     normed=True
