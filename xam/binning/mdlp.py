@@ -31,19 +31,7 @@ def calc_class_information_entropy(x, y, cut_point):
     return (y_1.size * ent_1 + y_2.size * ent_2) / (y_1.size + y_2.size)
 
 
-class MDLPBinner(BaseSupervisedBinner):
-
-    def fit(self, X, y):
-        """Determine which are the best cut points for each column in X based on y."""
-
-        # Check that X and y have correct shapes
-        X, y = check_X_y(X, y)
-
-        self.cut_points_ = sorted([self.cut(x, y, []) for x in X.T])
-
-        return self
-
-    def cut(self, x, y, cut_points):
+def mdlp_cut(x, y, cut_points):
 
         # No cut is necessary if there is only one class
         if np.unique(y).size == 1:
@@ -102,7 +90,20 @@ class MDLPBinner(BaseSupervisedBinner):
         if gain > acceptance_criterion:
             cut_points.append(cut_point)
             # Recursively check if further cuts are possible
-            self.cut(x_1, y_1, cut_points)
-            self.cut(x_2, y_2, cut_points)
+            mdlp_cut(x_1, y_1, cut_points)
+            mdlp_cut(x_2, y_2, cut_points)
 
         return cut_points
+
+
+class MDLPBinner(BaseSupervisedBinner):
+
+    def fit(self, X, y):
+        """Determine which are the best cut points for each column in X based on y."""
+
+        # Check that X and y have correct shapes
+        X, y = check_X_y(X, y)
+
+        self.cut_points_ = sorted([mdlp_cut(x, y, []) for x in X.T])
+
+        return self
