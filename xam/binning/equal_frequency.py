@@ -4,10 +4,10 @@ Equal frequency binning
 
 import numpy as np
 
-from .base import BaseBinner
+from .base import BaseUnsupervisedBinner
 
 
-class EqualFrequencyBinner(BaseBinner):
+class EqualFrequencyBinner(BaseUnsupervisedBinner):
 
     def __init__(self, n_bins):
 
@@ -16,7 +16,7 @@ class EqualFrequencyBinner(BaseBinner):
         # Properties
         self.n_bins = n_bins
 
-    def fit(self, X, y):
+    def fit(self, X, y=None):
         """Choose equally spaces cut points."""
 
         p_step = 100 / self.n_bins

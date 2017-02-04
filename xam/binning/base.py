@@ -1,3 +1,5 @@
+from abc import abstractmethod
+
 import numpy as np
 from sklearn.base import BaseEstimator
 from sklearn.base import TransformerMixin
@@ -16,3 +18,17 @@ class BaseBinner(BaseEstimator, TransformerMixin):
             for i in range(X.shape[1])
         ])
         return X_discrete
+
+
+class BaseSupervisedBinner(BaseBinner):
+
+    @abstractmethod
+    def fit(X, y):
+        return None
+
+
+class BaseUnsupervisedBinner(BaseBinner):
+
+    @abstractmethod
+    def fit(X, y=None):
+        return None

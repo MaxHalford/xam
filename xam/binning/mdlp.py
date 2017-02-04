@@ -11,7 +11,7 @@ import numpy as np
 from scipy import stats
 from sklearn.utils.validation import check_X_y
 
-from .base import BaseBinner
+from .base import BaseSupervisedBinner
 
 
 def calc_class_entropy(y):
@@ -31,7 +31,7 @@ def calc_class_information_entropy(x, y, cut_point):
     return (y_1.size * ent_1 + y_2.size * ent_2) / (y_1.size + y_2.size)
 
 
-class MDLPBinner(BaseBinner):
+class MDLPBinner(BaseSupervisedBinner):
 
     def fit(self, X, y):
         """Determine which are the best cut points for each column in X based on y."""

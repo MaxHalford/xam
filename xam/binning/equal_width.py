@@ -4,10 +4,10 @@ Equal width binning
 
 import numpy as np
 
-from .base import BaseBinner
+from .base import BaseUnsupervisedBinner
 
 
-class EqualWidthBinner(BaseBinner):
+class EqualWidthBinner(BaseUnsupervisedBinner):
 
     def __init__(self, n_bins):
 
@@ -16,7 +16,7 @@ class EqualWidthBinner(BaseBinner):
         # Properties
         self.n_bins = n_bins
 
-    def fit(self, X, y):
+    def fit(self, X, y=None):
         """Choose equally spaces cut points."""
 
         self.cut_points_ = [0] * X.shape[1]
