@@ -22,11 +22,11 @@ xam is my personal data science toolbox. It is written in Python 3 and built aro
 
 - [Cross chain](examples/cross_chain_clustering.py)
 
-**Natural Language Processing**
-
-- [Top terms classification](examples/top_terms_classification.py)
-
-**Stacking**
+**Model stacking**
 
 - [Classification](examples/stacking_classification.py)
 - [Regression](examples/stacking_regression.py)
+
+**Natural Language Processing**
+
+- [Top terms classification](examples/top_terms_classification.py)
