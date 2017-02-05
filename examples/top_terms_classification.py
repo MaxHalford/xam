@@ -1,14 +1,14 @@
 from sklearn.datasets import fetch_20newsgroups
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import CountVectorizer
 
-from xam.top_terms import TopTermsClassifier
+from xam.nlp import TopTermsClassifier
 
 
 cats = ['alt.atheism', 'comp.windows.x']
 newsgroups_train = fetch_20newsgroups(subset='train', categories=cats)
 newsgroups_test = fetch_20newsgroups(subset='test', categories=cats)
 
-vectorizer = TfidfVectorizer(stop_words='english', max_df=0.2)
+vectorizer = CountVectorizer(stop_words='english', max_df=0.2)
 
 X_train = vectorizer.fit_transform(newsgroups_train.data)
 y_train = newsgroups_train.target

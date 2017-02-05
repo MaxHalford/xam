@@ -18,6 +18,10 @@ xam is my personal data science toolbox. It is written in Python 3 and built aro
 - [Equal width binning](examples/equal_width_binning.py)
 - [Minimum Description Length Principle (MDLP)](examples/mdlp_binning.py)
 
+**Clustering**
+
+- [Cross chain](examples/cross_chain_clustering.py)
+
 **Natural Language Processing**
 
 - [Top terms classification](examples/top_terms_classification.py)
