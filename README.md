@@ -13,20 +13,20 @@ xam is my personal data science toolbox. It is written in Python 3 and built aro
 
 **Binning**
 
-- [Bayesian blocks](examples/bayesian_blocks_binning.py)
-- [Equal frequency](examples/equal_frequency_binning.py)
-- [Equal width](examples/equal_width_binning.py)
-- [Minimum Description Length Principle (MDLP)](examples/mdlp_binning.py)
+- [Bayesian blocks](examples/binning/bayesian_blocks.py)
+- [Equal frequency](examples/binning/equal_frequency.py)
+- [Equal width](examples/binning/equal_width.py)
+- [Minimum Description Length Principle (MDLP)](examples/binning/mdlp.py)
 
 **Clustering**
 
-- [Cross chain](examples/cross_chain_clustering.py)
+- [Cross chain](examples/clustering/cross_chain.py)
 
 **Model stacking**
 
-- [Classification](examples/stacking_classification.py)
-- [Regression](examples/stacking_regression.py)
+- [Classification](examples/stacking/classification.py)
+- [Regression](examples/stacking/regression.py)
 
 **Natural Language Processing**
 
-- [Top terms classification](examples/top_terms_classification.py)
+- [Top terms classification](examples/nlp/top_terms_classification.py)
