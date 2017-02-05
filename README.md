@@ -14,8 +14,8 @@ xam is my personal data science toolbox. It is written in Python 3 and built aro
 **Binning**
 
 - [Bayesian blocks](examples/bayesian_blocks_binning.py)
-- [Equal frequency binning](examples/equal_frequency_binning.py)
-- [Equal width binning](examples/equal_width_binning.py)
+- [Equal frequency](examples/equal_frequency_binning.py)
+- [Equal width](examples/equal_width_binning.py)
 - [Minimum Description Length Principle (MDLP)](examples/mdlp_binning.py)
 
 **Clustering**
