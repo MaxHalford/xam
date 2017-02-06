@@ -1,6 +1,6 @@
 # xam
 
-xam is my personal data science toolbox. It is written in Python 3 and built around scikit-learn's API.
+xam is my personal data science toolbox. It is written in Python 3 and built around mainstream libraries such as pandas and scikit-learn.
 
 
 ## Installation

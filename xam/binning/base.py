@@ -22,13 +22,11 @@ class BaseBinner(BaseEstimator, TransformerMixin):
 
 class BaseSupervisedBinner(BaseBinner):
 
-    @abstractmethod
     def fit(X, y):
-        return None
+        raise NotImplementedError
 
 
 class BaseUnsupervisedBinner(BaseBinner):
 
-    @abstractmethod
     def fit(X, y=None):
-        return None
+        raise NotImplementedError

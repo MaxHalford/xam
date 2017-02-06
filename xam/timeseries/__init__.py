@@ -1,0 +1,1 @@
+from .frequency_average import FrequencyAverageForecaster

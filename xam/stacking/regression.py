@@ -13,6 +13,3 @@ class StackingRegressor(BaseStackingEstimator, RegressorMixin):
             stratified=False,
             verbose=verbose
         )
-
-    def fit(self, X, y):
-        return super(StackingRegressor, self).fit(X, y)

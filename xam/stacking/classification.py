@@ -13,6 +13,3 @@ class StackingClassifier(BaseStackingEstimator, ClassifierMixin):
             stratified=stratified,
             verbose=verbose
         )
-
-    def fit(self, X, y):
-        return super(StackingClassifier, self).fit(X, y)
