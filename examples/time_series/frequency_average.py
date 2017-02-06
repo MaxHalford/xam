@@ -3,8 +3,7 @@ import datetime as dt
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from xam.timeseries import FrequencyAverageForecaster
-
+from xam.time_series import FrequencyAverageForecaster
 
 
 df = pd.read_csv('data/bike-station.csv')
