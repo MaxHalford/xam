@@ -1,0 +1,4 @@
+from .exponential_smoothing.double import DoubleExponentialSmoothingForecaster
+from .exponential_smoothing.simple import SimpleExponentialSmoothingForecaster
+from .exponential_smoothing.triple import TripleExponentialSmoothingForecaster
+from .frequency_average import FrequencyAverageForecaster

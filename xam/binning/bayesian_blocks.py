@@ -2,7 +2,7 @@
 Bayesian blocks binning. Good for visualization.
 
 - Original paper: http://adsabs.harvard.edu/abs/2012arXiv1207.5578S
-- Implementation inspiration: https://jakevdp.github.io/blog/2012/09/12/dynamic-programming-in-python/
+- Inspiration: https://jakevdp.github.io/blog/2012/09/12/dynamic-programming-in-python/
 """
 
 import numpy as np

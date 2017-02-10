@@ -27,10 +27,11 @@ xam is my personal data science toolbox. It is written in Python 3 and built aro
 - [Classification](examples/stacking/classification.py)
 - [Regression](examples/stacking/regression.py)
 
-**Natural Language Processing**
+**Natural Language Processing (NLP)**
 
 - [Top terms classification](examples/nlp/top_terms_classification.py)
 
-**Time series**
+**Time series analysis (TSA)**
 
-- [Frequency average forecasting](examples/time_series/frequency_average.py)
+- [Exponential smoothing forecasting (simple, double and triple)](examples/tsa/exponential_smoothing.py)
+- [Frequency average forecasting](examples/tsa/frequency_average.py)

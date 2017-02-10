@@ -23,15 +23,6 @@ class FrequencyAverageForecaster(BaseForecaster):
         return self
 
     def predict(self, timestamps):
-        """Make forecasts from a list of datetimes.
-
-        Args:
-            datetimes (list(pandas.tslib.Timestamp))
-
-        Returns:
-            pandas.Series: A series with the provided datetimes as index and the corresponding
-                forecasts as values.
-        """
         forecasts = [
             self.averages_[self.timestamp_mapper(ts)]
             for ts in timestamps
