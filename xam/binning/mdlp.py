@@ -12,6 +12,21 @@ from scipy import stats
 from sklearn.utils.validation import check_X_y
 
 from .base import BaseSupervisedBinner
+from ..base import Model
+
+
+class MDLPBinner(BaseSupervisedBinner, Model):
+
+    def fit(self, X, y):
+        """Determine which are the best cut points for each column in X based on y."""
+
+        # Check that X and y have correct shapes
+        X, y = check_X_y(X, y)
+        self.cut_points_ = sorted([mdlp_cut(x, y, []) for x in X.T])
+        return self
+
+    def check_params(self):
+        return
 
 
 def calc_class_entropy(y):
@@ -94,16 +109,3 @@ def mdlp_cut(x, y, cut_points):
             mdlp_cut(x_2, y_2, cut_points)
 
         return cut_points
-
-
-class MDLPBinner(BaseSupervisedBinner):
-
-    def fit(self, X, y):
-        """Determine which are the best cut points for each column in X based on y."""
-
-        # Check that X and y have correct shapes
-        X, y = check_X_y(X, y)
-
-        self.cut_points_ = sorted([mdlp_cut(x, y, []) for x in X.T])
-
-        return self

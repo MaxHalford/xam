@@ -3,8 +3,10 @@ from sklearn.base import BaseEstimator, ClusterMixin
 from sklearn.utils.multiclass import unique_labels
 from sklearn.utils.validation import check_X_y
 
+from ..base import Model
 
-class CrossChainClusterer(BaseEstimator, ClusterMixin):
+
+class CrossChainClusterer(BaseEstimator, ClusterMixin, Model):
 
     def __init__(self):
         # Attributes
@@ -69,3 +71,10 @@ class CrossChainClusterer(BaseEstimator, ClusterMixin):
     def fit_predict(self, X, y=None):
         self.fit(X)
         return self.labels_
+
+    def check_params(self):
+        return
+
+    @property
+    def is_fitted(self):
+        return all((self.labels_ is not None, self.cluster_coordinates_ is not None))

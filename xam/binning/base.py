@@ -4,8 +4,10 @@ import numpy as np
 from sklearn.base import BaseEstimator
 from sklearn.base import TransformerMixin
 
+from ..base import Model
 
-class BaseBinner(BaseEstimator, TransformerMixin):
+
+class BaseBinner(BaseEstimator, TransformerMixin, Model):
 
     def __init__(self):
         # Attributes
@@ -18,6 +20,10 @@ class BaseBinner(BaseEstimator, TransformerMixin):
             for i in range(X.shape[1])
         ])
         return X_discrete
+
+    @property
+    def is_fitted(self):
+        return self.cut_points_ is not None
 
 
 class BaseSupervisedBinner(BaseBinner):

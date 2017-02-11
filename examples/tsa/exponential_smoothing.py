@@ -21,7 +21,7 @@ series = pd.Series(
 # Train/test split
 
 season_length = 12
-train_test_split_index = len(series) - season_length * 3
+train_test_split_index = 100
 train = series[:train_test_split_index]
 test = series[train_test_split_index:]
 

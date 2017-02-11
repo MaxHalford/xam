@@ -9,6 +9,17 @@ References:
 import numpy as np
 
 from .base import BaseUnsupervisedBinner
+from ..base import Model
+
+
+class BayesianBlocksBinner(BaseUnsupervisedBinner, Model):
+
+    def fit(self, X, y=None):
+        self.cut_points_ = [calc_bayesian_blocks(x) for x in X.T]
+        return self
+
+    def check_params(self):
+        return
 
 
 def calc_bayesian_blocks(x):
@@ -60,10 +71,3 @@ def calc_bayesian_blocks(x):
     change_points = change_points[i_cp:]
 
     return edges[change_points][1:-1]
-
-
-class BayesianBlocksBinner(BaseUnsupervisedBinner):
-
-    def fit(self, X, y=None):
-        self.cut_points_ = [calc_bayesian_blocks(x) for x in X.T]
-        return self

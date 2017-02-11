@@ -3,8 +3,11 @@ from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.utils.multiclass import unique_labels
 from sklearn.utils.validation import check_X_y
 
+from ..base import Model
+from ..check import is_a_positive_int
 
-class TopTermsClassifier(BaseEstimator, ClassifierMixin):
+
+class TopTermsClassifier(BaseEstimator, ClassifierMixin, Model):
 
     def __init__(self, n_terms=10):
         # Parameters
@@ -14,16 +17,8 @@ class TopTermsClassifier(BaseEstimator, ClassifierMixin):
         self.top_terms_per_class_ = None
 
     def fit(self, X, y):
-
         # Check that X and y have correct shapes
         X, y = check_X_y(X, y)
-
-        # Check the n_terms attribute is an int and isn't out of bounds
-        not_an_int = not isinstance(self.n_terms, int)
-        out_of_bounds = self.n_terms < 0
-
-        if not_an_int or out_of_bounds:
-            raise ValueError('n_terms should be an int comprised between 0 and the number of terms')
 
         n_terms = min(self.n_terms, X.shape[1])
 
@@ -51,7 +46,14 @@ class TopTermsClassifier(BaseEstimator, ClassifierMixin):
         )
 
     def predict(self, X):
-        if self.top_terms_per_class_ is None:
-            raise RuntimeError("The classifier has to be fitted before it can be able to predict")
-
         return [self._find_class(x) for x in X]
+
+    def check_params(self):
+        # Check n_terms is a strictly positive int
+        if not is_a_positive_int(self.n_terms, strict=True):
+            raise ValueError('n_terms is not a strictly positive int')
+        return
+
+    @property
+    def is_fitted(self):
+        return self.top_terms_per_class_ is not None

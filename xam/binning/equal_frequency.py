@@ -5,9 +5,11 @@ Equal frequency binning
 import numpy as np
 
 from .base import BaseUnsupervisedBinner
+from ..base import Model
+from ..check import is_a_positive_int
 
 
-class EqualFrequencyBinner(BaseUnsupervisedBinner):
+class EqualFrequencyBinner(BaseUnsupervisedBinner, Model):
 
     def __init__(self, n_bins):
 
@@ -27,3 +29,9 @@ class EqualFrequencyBinner(BaseUnsupervisedBinner):
         ], axis=-1).tolist()
 
         return self
+
+    def check_params(self):
+        # Check n_bins is a positive int
+        if not is_a_positive_int(self.n_bins):
+            raise ValueError('n_bins is not a strictly positive int')
+        return
