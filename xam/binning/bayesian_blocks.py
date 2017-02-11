@@ -1,8 +1,9 @@
 """
 Bayesian blocks binning. Good for visualization.
 
-- Original paper: http://adsabs.harvard.edu/abs/2012arXiv1207.5578S
-- Inspiration: https://jakevdp.github.io/blog/2012/09/12/dynamic-programming-in-python/
+References:
+    - http://adsabs.harvard.edu/abs/2012arXiv1207.5578S
+    - https://jakevdp.github.io/blog/2012/09/12/dynamic-programming-in-python/
 """
 
 import numpy as np
@@ -64,7 +65,5 @@ def calc_bayesian_blocks(x):
 class BayesianBlocksBinner(BaseUnsupervisedBinner):
 
     def fit(self, X, y=None):
-
         self.cut_points_ = [calc_bayesian_blocks(x) for x in X.T]
-
         return self
