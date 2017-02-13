@@ -1,6 +1,6 @@
 # xam
 
-xam is my personal data science toolbox. It is written in Python 3 and built around mainstream libraries such as pandas and scikit-learn.
+xam is my personal data science and machine learning toolbox. It is written in Python 3 and built around mainstream libraries such as pandas and scikit-learn.
 
 
 ## Installation
@@ -35,3 +35,4 @@ xam is my personal data science toolbox. It is written in Python 3 and built aro
 
 - [Exponential smoothing forecasting (simple, double and triple)](examples/tsa/exponential_smoothing.py)
 - [Frequency average forecasting](examples/tsa/frequency_average.py)
+- [Temporal train/test scoring](examples/tsa/temporal_train_test_scoring.py)
