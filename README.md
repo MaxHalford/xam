@@ -36,3 +36,4 @@ xam is my personal data science and machine learning toolbox. It is written in P
 - [Exponential smoothing forecasting (simple, double and triple)](examples/tsa/exponential_smoothing.py)
 - [Frequency average forecasting](examples/tsa/frequency_average.py)
 - [Temporal train/test scoring](examples/tsa/temporal_train_test_scoring.py)
+- [Subsequence lengths](examples/tsa/subsequence_lengths.py)
