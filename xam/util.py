@@ -5,12 +5,12 @@ import numpy as np
 
 
 def correlation_ratio(x, y):
-    """Calculate the correlation ratio between a categorical array and a numerical array one.
+    """Calculate the correlation ratio between a categorical array and a numerical one.
     Args:
         x (1D array_like): contains categorial data.
         y (1D array_like): contains numerical data.
     Returns:
-        float: The correlation ratio between `A` and `B`.
+        float: The correlation ratio between x and y.
     """
     groups = groupby(sorted(zip(x, y), key=itemgetter(0)), key=itemgetter(0))
     means = []
