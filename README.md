@@ -37,3 +37,7 @@ xam is my personal data science and machine learning toolbox. It is written in P
 - [Frequency average forecasting](examples/tsa/frequency_average.py)
 - [Temporal train/test scoring](examples/tsa/temporal_train_test_scoring.py)
 - [Subsequence lengths](examples/tsa/subsequence_lengths.py)
+
+## License
+
+The MIT License (MIT). Please see the [license file](LICENSE) for more information.
