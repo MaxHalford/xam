@@ -38,6 +38,8 @@ xam is my personal data science and machine learning toolbox. It is written in P
 - [Temporal train/test scoring](examples/tsa/temporal_train_test_scoring.py)
 - [Subsequence lengths](examples/tsa/subsequence_lengths.py)
 
+There are also some handy functions in [`xam/util.py`](xam/util.py).
+
 ## License
 
 The MIT License (MIT). Please see the [license file](LICENSE) for more information.

@@ -1,3 +1,4 @@
+import datetime as dt
 from itertools import groupby
 from operator import itemgetter
 
@@ -6,9 +7,11 @@ import numpy as np
 
 def correlation_ratio(x, y):
     """Calculate the correlation ratio between a categorical array and a numerical one.
+
     Args:
-        x (1D array_like): contains categorial data.
-        y (1D array_like): contains numerical data.
+        x: A sequence of strings.
+        y: A sequence of numbers.
+
     Returns:
         float: The correlation ratio between x and y.
     """
@@ -31,3 +34,21 @@ def correlation_ratio(x, y):
     # The intra-group variance is the weighted variance of the group variances
     var_intra = sum((s * v for s, v in zip(sizes, variances))) / n
     return var_inter / (var_inter + var_intra)
+
+
+def datetime_range(since, until, step=dt.timedelta(days=1)):
+    """Generates datetimes in range [since, until] with a given step.
+
+    Args:
+        since (datetime)
+        until (datetime)
+        step (timedelta)
+
+    Returns:
+        list of datetimes
+    """
+    n_steps = (until - since) // step
+    return [
+        since + step * i
+        for i in range(n_steps + 1)
+    ]
