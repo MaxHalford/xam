@@ -38,7 +38,10 @@ xam is my personal data science and machine learning toolbox. It is written in P
 - [Temporal train/test scoring](examples/tsa/temporal_train_test_scoring.py)
 - [Subsequence lengths](examples/tsa/subsequence_lengths.py)
 
-There are also some handy functions in [`xam/util.py`](xam/util.py).
+**Utilities**
+
+- [Correlation ratio](examples/util/correlation_ratio.py)
+- [Datetime range](examples/util/datetime_range.py)
 
 ## License
 
