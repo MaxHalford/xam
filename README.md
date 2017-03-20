@@ -40,8 +40,8 @@ xam is my personal data science and machine learning toolbox. It is written in P
 
 **Utilities**
 
-- [Correlation ratio](examples/util/correlation_ratio.py)
 - [Datetime range](examples/util/datetime_range.py)
+- [Intraclass correlation](examples/util/intraclass_correlation.py)
 
 ## License
 

@@ -5,17 +5,17 @@ from operator import itemgetter
 import numpy as np
 
 
-def correlation_ratio(x, y):
+def intraclass_correlation(x, y):
     """Calculate the correlation ratio between a categorical array and a numerical one.
 
     Args:
-        x: A sequence of strings.
-        y: A sequence of numbers.
+        x: A sequence of numbers.
+        y: A sequence of strings.
 
     Returns:
         float: The correlation ratio between x and y.
     """
-    groups = groupby(sorted(zip(x, y), key=itemgetter(0)), key=itemgetter(0))
+    groups = groupby(sorted(zip(y, x), key=itemgetter(0)), key=itemgetter(0))
     means = []
     variances = []
     sizes = []

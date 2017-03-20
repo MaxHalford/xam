@@ -1,5 +1,23 @@
 # Data science tricks
 
+## Feature selection
+
+### Continuous -> Continuous
+
+- Pearson's correlation ratio
+- [Coefficient of determination](https://www.wikiwand.com/en/Coefficient_of_determination)
+
+### Continuous <-> Nominal
+
+- Intraclass correlation
+- [Cohen's D](https://www.wikiwand.com/en/Effect_size#/Cohen.27s_d)
+- ANOVA f-test (t-test for two classes)
+
+### Nominal -> Nominal
+
+- Chi-square test
+
+
 ## Marketing Mix Modeling
 
 ### Adstock transformation
