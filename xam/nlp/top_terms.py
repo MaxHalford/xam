@@ -3,11 +3,8 @@ from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.utils.multiclass import unique_labels
 from sklearn.utils.validation import check_X_y
 
-from ..base import Model
-from ..check import is_a_positive_int
 
-
-class TopTermsClassifier(BaseEstimator, ClassifierMixin, Model):
+class TopTermsClassifier(BaseEstimator, ClassifierMixin):
 
     def __init__(self, n_terms=10):
         # Parameters
@@ -47,13 +44,3 @@ class TopTermsClassifier(BaseEstimator, ClassifierMixin, Model):
 
     def predict(self, X):
         return [self._find_class(x) for x in X]
-
-    def check_params(self):
-        # Check n_terms is a strictly positive int
-        if not is_a_positive_int(self.n_terms, strict=True):
-            raise ValueError('n_terms is not a strictly positive int')
-        return
-
-    @property
-    def is_fitted(self):
-        return self.top_terms_per_class_ is not None

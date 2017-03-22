@@ -1,13 +1,6 @@
-import math
-
-import numpy as np
 import pandas as pd
 
 from .base import BaseForecaster
-from ..base import Model
-from ..check import is_a_bool
-from ..check import is_a_positive_int
-from ..check import is_a_ratio
 
 
 class BaseExponentialSmoothingForecaster(BaseForecaster):
@@ -16,7 +9,7 @@ class BaseExponentialSmoothingForecaster(BaseForecaster):
         return ratio * left + (1-ratio) * right
 
 
-class SimpleExponentialSmoothingForecaster(BaseExponentialSmoothingForecaster, Model):
+class SimpleExponentialSmoothingForecaster(BaseExponentialSmoothingForecaster):
 
     """Simple exponential smoothing."""
 
@@ -65,19 +58,6 @@ class SimpleExponentialSmoothingForecaster(BaseExponentialSmoothingForecaster, M
             )
 
         return forecasts
-
-    def check_params(self):
-        if not is_a_ratio(self.alpha):
-            raise ValueError('alpha is not a float in range [0, 1]')
-        return
-
-    @property
-    def is_fitted(self):
-        return all((
-            self.smoothed_ is not None,
-            self.fitted_ is not None,
-            self.last_observation_ is not None
-        ))
 
 
 class DoubleExponentialSmoothingForecaster(BaseExponentialSmoothingForecaster):
@@ -183,7 +163,7 @@ class TripleExponentialSmoothingForecaster(BaseExponentialSmoothingForecaster):
 
         n = len(series) # Length of the series to fit
         k = self.season_length # Naming shortcut for the number of periods in each season
-        p = self.n_seasons_ = n / k # Number of seasons
+        p = self.n_seasons_ = n // k # Number of seasons
 
         if n % k != 0:
             raise ValueError("The last season is not a full one")
@@ -281,26 +261,3 @@ class TripleExponentialSmoothingForecaster(BaseExponentialSmoothingForecaster):
                 forecasts[i] = s + (i+1) * t + self.seasonals_[-self.season_length+i+1]
 
         return forecasts
-
-    def check_params(self):
-        if not is_a_ratio(self.alpha):
-            raise ValueError('alpha is not a float in range [0, 1]')
-        if not is_a_ratio(self.beta):
-            raise ValueError('beta is not a float in range [0, 1]')
-        if not is_a_ratio(self.gamma):
-            raise ValueError('gamma is not a float in range [0, 1]')
-        if not is_a_positive_int(self.season_length):
-            raise ValueError('season_length is not a positive int')
-        if not is_a_bool(self.multiplicative):
-            raise ValueError('multiplicative is not a bool')
-        return
-
-    @property
-    def is_fitted(self):
-        return all((
-            self.n_seasons_ is not None,
-            self.smoothed_ is not None,
-            self.trends_ is not None,
-            self.seasonals_ is not None,
-            self.fitted_ is not None
-        ))

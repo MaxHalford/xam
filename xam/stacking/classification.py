@@ -13,13 +13,3 @@ class StackingClassifier(BaseStackingEstimator, ClassifierMixin):
             stratified=stratified,
             verbose=verbose
         )
-
-    def check_params(self):
-        if not isinstance(self.models, list):
-            raise ValueError('models is not a list')
-        for i, model in enumerate(self.models):
-            if not isinstance(model, ClassifierMixin):
-                raise ValueError('Value %d of models is not a sklearn.base.ClassifierMixin' % i)
-        if not isinstance(self.meta_model, ClassifierMixin):
-            raise ValueError('meta_model is not a sklearn.base.ClassifierMixin')
-        return super().check_params()

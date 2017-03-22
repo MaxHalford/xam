@@ -5,11 +5,9 @@ Equal width binning
 import numpy as np
 
 from .base import BaseUnsupervisedBinner
-from ..base import Model
-from ..check import is_a_positive_int
 
 
-class EqualWidthBinner(BaseUnsupervisedBinner, Model):
+class EqualWidthBinner(BaseUnsupervisedBinner):
 
     def __init__(self, n_bins):
 
@@ -18,7 +16,7 @@ class EqualWidthBinner(BaseUnsupervisedBinner, Model):
         # Properties
         self.n_bins = n_bins
 
-    def fit(self, X, y=None):
+    def fit(self, X, y=None, **fit_params):
         """Choose equally spaces cut points."""
 
         self.cut_points_ = [0] * X.shape[1]
@@ -30,9 +28,3 @@ class EqualWidthBinner(BaseUnsupervisedBinner, Model):
             self.cut_points_[i] = np.arange(start=x_min+step, stop=x_max, step=step).tolist()
 
         return self
-
-    def check_params(self):
-        # Check n_bins is a positive int
-        if not is_a_positive_int(self.n_bins):
-            raise ValueError('n_bins is not a strictly positive int')
-        return

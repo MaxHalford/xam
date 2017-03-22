@@ -1,10 +1,9 @@
 import pandas as pd
 
 from .base import BaseForecaster
-from ..base import Model
 
 
-class FrequencyAverageForecaster(BaseForecaster, Model):
+class FrequencyAverageForecaster(BaseForecaster):
 
     """
     Args:
@@ -29,18 +28,3 @@ class FrequencyAverageForecaster(BaseForecaster, Model):
             for ts in timestamps
         ]
         return pd.Series(data=forecasts, index=timestamps)
-
-    def check_params(self):
-        ts = pd.tslib.Timestamp(dt.datetime.now())
-        error = ValueError("transform_timestamp is not a function that transforms a "
-                           "pandas.tslib.Timestam to a value")
-        try:
-            val = self.transform_timestamp(ts)
-            if val is None:
-                raise error
-        except TypeError:
-            raise error
-
-    @property
-    def is_fitted(self):
-        return self.averages_ is not None

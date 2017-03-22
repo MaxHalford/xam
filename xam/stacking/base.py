@@ -5,12 +5,8 @@ from sklearn.base import MetaEstimatorMixin
 from sklearn.utils.validation import check_X_y
 from tqdm import tqdm
 
-from ..base import Model
-from ..check import is_a_bool
-from ..check import is_a_positive_int
 
-
-class BaseStackingEstimator(BaseEstimator, MetaEstimatorMixin, Model):
+class BaseStackingEstimator(BaseEstimator, MetaEstimatorMixin):
 
     def __init__(self, models, meta_model, n_folds, stratified, verbose):
         # Parameters
@@ -54,16 +50,3 @@ class BaseStackingEstimator(BaseEstimator, MetaEstimatorMixin, Model):
     def predict(self, X):
         meta_features = np.transpose([model.predict(X) for model in self.models])
         return self.meta_model.predict(meta_features)
-
-    def check_params(self):
-        if not is_a_positive_int(self.n_folds):
-            raise ValueError('n_folds is not a positive int')
-        if not is_a_bool(self.stratified):
-            raise ValueError('stratified is not a positive bool')
-        if not is_a_bool(self.verbose):
-            raise ValueError('verbose is not a positive bool')
-        return
-
-    @property
-    def is_fitted(self):
-        return self.meta_features_ is not None
