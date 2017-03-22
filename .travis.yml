@@ -22,9 +22,7 @@ before_install:
   - conda update --yes conda
 
 install:
-  - pip install sklearn>=1.8
-  - pip install pytest>=3.0.5
-  - pip install pytest-cov>=2.2.1
+  - pip install -r requirements/travis.txt
 
 script:
   - pytest --doctest-glob='README.md' --cov=prince tests/ --verbose

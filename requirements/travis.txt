@@ -1,0 +1,7 @@
+-r common.txt
+
+pandas>=0.19
+numpy>=1.10
+pytest>=3.0.5
+pytest-cov>=2.2.1
+scikit-learn>=1.8
