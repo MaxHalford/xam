@@ -23,7 +23,7 @@ before_install:
 
 install:
   - pip install pytest>=3.0.5
-  - pip install pytest>=2.2.1
+  - pip install pytest-cov>=2.2.1
 
 script:
   - pytest --doctest-glob='README.md' --cov=prince tests/ --verbose
