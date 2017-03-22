@@ -23,7 +23,7 @@ install:
   - pip install -r requirements/travis.txt
 
 script:
-  - pytest --doctest-glob='README.md' --cov=prince tests/ --verbose
+  - pytest --doctest-glob='README.md' --cov=xam tests/ --verbose
 
 after_success:
   - coveralls
