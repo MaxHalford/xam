@@ -1,11 +1,12 @@
 import numpy as np
 import pandas as pd
+from sklearn.base import BaseEstimator
 from sklearn.base import TransformerMixin
 from sklearn.utils import as_float_array
 from sklearn.utils import check_array
 
 
-class ColumnSelector(TransformerMixin):
+class ColumnSelector(BaseEstimator, TransformerMixin):
 
     def __init__(self, columns=()):
         self.columns = columns
@@ -17,7 +18,7 @@ class ColumnSelector(TransformerMixin):
         return X[self.columns]
 
 
-class DataFrameTransformer(TransformerMixin):
+class DataFrameTransformer(BaseEstimator, TransformerMixin):
 
     def __init__(self, index, columns, dtype=None):
         self.index = index
@@ -33,7 +34,7 @@ class DataFrameTransformer(TransformerMixin):
         return pd.DataFrame(X, index=self.index, columns=self.columns, dtype=self.dtype)
 
 
-class FunctionTransformer(TransformerMixin):
+class FunctionTransformer(BaseEstimator, TransformerMixin):
 
     def __init__(self, func):
         self.func_vec = np.vectorize(func)
