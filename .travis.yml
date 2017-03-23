@@ -24,6 +24,3 @@ install:
 
 script:
   - pytest --doctest-glob='README.md' --cov=xam tests/ --verbose
-
-after_success:
-  - coveralls

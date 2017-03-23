@@ -1,4 +1,4 @@
-# xam
+# xam [![Build Status](https://travis-ci.org/MaxHalford/xam.svg?branch=master)](https://travis-ci.org/MaxHalford/xam)
 
 xam is my personal data science and machine learning toolbox. It is written in Python 3 and built around mainstream libraries such as pandas and scikit-learn.
 
@@ -11,11 +11,79 @@ xam is my personal data science and machine learning toolbox. It is written in P
 
 ## Usage examples
 
-The following snippets serve as documentation, examples and tests (through the use of [doctests](https://pymotw.com/2/doctest/)).
+The following snippets serve as documentation, examples and tests (through the use of [doctests](https://pymotw.com/2/doctest/)). Again, this is for my personal use so the documentation is not very detailed.
 
 ### Preprocessing
 
+**Column selection**
+
+Transformer that extracts one or more columns from a dataframe; is useful for applying a Transformer on a subset of features in a pipeline.
+
+```python
+>>> import pandas as pd
+>>> from xam import preprocessing
+
+>>> df = pd.DataFrame({'a': [1, 1, 1], 'b': [2, 2, 2], 'c': [3, 3, 3]})
+
+>>> preprocessing.ColumnSelector('a').fit_transform(df)
+0    1
+1    1
+2    1
+Name: a, dtype: int64
+
+>>> preprocessing.ColumnSelector(['b', 'c']).fit_transform(df)
+   b  c
+0  2  3
+1  2  3
+2  2  3
+
+```
+
+**Column transformer**
+
+Transformer that applies a provided function to each value in a series.
+
+```python
+>>> import pandas as pd
+>>> from xam import preprocessing
+
+>>> df = pd.DataFrame({'a': [1, 1, 1], 'b': [2, 2, 2]})
+
+>>> preprocessing.ColumnTransformer(lambda x: 2 * x).fit_transform(df)
+array([[ 2.,  4.],
+       [ 2.,  4.],
+       [ 2.,  4.]])
+
+```
+
+**DataFrame transformer**
+
+By design scikit-learn Transformers output numpy nd-arrays, the `DataFrameTransformer` can be used in a pipeline to return pandas dataframes if needed.
+
+```python
+```python
+>>> import pandas as pd
+>>> from sklearn.pipeline import Pipeline
+>>> from xam import preprocessing
+
+>>> df = pd.DataFrame({'a': [1, 1, 1], 'b': [2, 2, 2]})
+
+>>> pipeline = Pipeline([
+...    ('transform', preprocessing.ColumnTransformer(lambda x: 2 * x)),
+...    ('dataframe', preprocessing.DataFrameTransformer(index=df.index, columns=df.columns))
+... ])
+
+>>> pipeline.fit_transform(df)
+     a    b
+0  2.0  4.0
+1  2.0  4.0
+2  2.0  4.0
+
+```
+
 **Bayesian blocks binning**
+
+Heuristically determines the number of bins to use for continuous variables, see this [blog post](https://jakevdp.github.io/blog/2012/09/12/dynamic-programming-in-python/) for details.
 
 ```python
 >>> import numpy as np
@@ -48,6 +116,8 @@ array([[ 6],
 
 **Equal frequency binning**
 
+Transformer that bins continuous data into `n_bins` of equal frequency.
+
 ```python
 >>> import numpy as np
 >>> from xam import preprocessing
@@ -72,6 +142,8 @@ array([[2],
 ```
 
 **Equal width binning**
+
+Transformer that bins continuous data into `n_bins` of equal width.
 
 ```python
 >>> import numpy as np
@@ -123,6 +195,10 @@ array([[1, 0],
 
 ### Clustering
 
+**Cross-chain algorithm**
+
+This is a clustering algorithm I devised at one of my internships for matching customers with multiple accounts. The idea was to that if there accounts shared some information - eg. the phone number - then we would count those accounts as one single customer. In the following example, the first customer has three accounts; the first account shares the first variable with the second and the second account shares the second variable with the third. The first and third account share no information but they are linked by the second account and form a chain, hence the name of the algorithm.
+
 ```python
 >>> import numpy as np
 >>> from xam import clustering
@@ -148,6 +224,8 @@ array([[1, 0],
 ### Model stacking
 
 **Classification**
+
+Model stacking for classification as described in this [Kaggle blog post](http://blog.kaggle.com/2016/12/27/a-kagglers-guide-to-model-stacking-in-practice/).
 
 ```python
 >>> from sklearn import datasets, metrics, model_selection
@@ -179,6 +257,8 @@ Accuracy: 0.95 (+/- 0.03) [StackingClassifier]
 
 **Regression**
 
+Model stacking for regression as described in this [Kaggle blog post](http://blog.kaggle.com/2016/12/27/a-kagglers-guide-to-model-stacking-in-practice/).
+
 ```python
 >>> from sklearn import datasets, metrics, model_selection
 >>> from sklearn.ensemble import RandomForestRegressor
@@ -209,6 +289,8 @@ MAE: 6.38 (+/- 0.64) [StackingRegressor]
 
 
 ### Natural Language Processing (NLP)
+
+**Top-terms classifier**
 
 ```python
 >>> from sklearn.datasets import fetch_20newsgroups

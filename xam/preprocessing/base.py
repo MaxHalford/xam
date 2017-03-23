@@ -1,47 +1,47 @@
 import numpy as np
-from sklearn.base import BaseEstimator
+import pandas as pd
 from sklearn.base import TransformerMixin
-from sklearn.exceptions import NotFittedError
 from sklearn.utils import as_float_array
 from sklearn.utils import check_array
 
 
-class BaseBinner(BaseEstimator, TransformerMixin):
+class ColumnSelector(TransformerMixin):
 
-    def __init__(self):
-        # Attributes
-        self.cut_points_ = None
+    def __init__(self, columns=()):
+        self.columns = columns
 
-    def transform(self, X, y=None, **transform_params):
-        """Binarize X based on the fitted cut points."""
+    def fit(self, X, y=None, **fit_params):
+        return self
 
+    def transform(self, X, **transform_params):
+        return X[self.columns]
+
+
+class ColumnTransformer(TransformerMixin):
+
+    def __init__(self, func):
+        self.func = np.vectorize(func)
+
+    def fit(self, X, y=None, **fit_params):
+        return self
+
+    def transform(self, X, **transform_params):
         X = as_float_array(X)
         X = check_array(X)
-
-        if self.cut_points_ is None:
-            raise NotFittedError('Estimator not fitted, call `fit` before exploiting the model.')
-
-        if X.shape[1] != len(self.cut_points_):
-            raise ValueError("Provided array's dimensions do not match with the ones from the "
-                             "array `fit` was called on.")
-
-        binned = np.array([
-            np.digitize(x, self.cut_points_[i])
-            if len(self.cut_points_[i]) > 0
-            else np.zeros(x.shape)
-            for i, x in enumerate(X.T)
-        ]).T
-
-        return binned
+        return np.array([self.func(x) for x in X.T]).T
 
 
-class BaseSupervisedBinner(BaseBinner):
+class DataFrameTransformer(TransformerMixin):
 
-    def fit(X, y, **fit_params):
-        raise NotImplementedError
+    def __init__(self, index, columns, dtype=None):
+        self.index = index
+        self.columns = columns
+        self.dtype = dtype
 
+    def fit(self, X, y=None, **fit_params):
+        return self
 
-class BaseUnsupervisedBinner(BaseBinner):
-
-    def fit(X, y=None, **fit_params):
-        raise NotImplementedError
+    def transform(self, X, **transform_params):
+        X = as_float_array(X)
+        X = check_array(X)
+        return pd.DataFrame(X, index=self.index, columns=self.columns, dtype=self.dtype)
