@@ -1,6 +1,6 @@
 from .base import CellTransformer
 from .base import ColumnSelector
-from .base import LambdaExtractor
+from .base import LambdaTransfomer
 from .base import ToDataFrameTransformer
 from .binning.bayesian_blocks import BayesianBlocksBinner
 from .binning.equal_frequency import EqualFrequencyBinner

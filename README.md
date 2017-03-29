@@ -81,20 +81,20 @@ By design scikit-learn Transformers output numpy nd-arrays, the `ToDataFrameTran
 
 ```
 
-**Lambda extractor**
+**Lambda transformer**
 
 Will apply a function to the input; this transformer can potentially do anything but you have to properly keep track of your inputs and outputs.
 
 ```python
 >>> import pandas as pd
->>> from xam.preprocessing import LambdaExtractor
+>>> from xam.preprocessing import LambdaTransfomer
 
 >>> df = pd.DataFrame({'one': ['a', 'a', 'a'], 'two': ['c', 'a', 'c']})
 
 >>> def has_one_c(dataframe):
 ...    return (dataframe['one'] == 'c') | (dataframe['two'] == 'c')
 
->>> LambdaExtractor(has_one_c).fit_transform(df)
+>>> LambdaTransfomer(has_one_c).fit_transform(df)
 0     True
 1    False
 2     True

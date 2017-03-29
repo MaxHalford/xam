@@ -48,7 +48,7 @@ class ToDataFrameTransformer(BaseEstimator, TransformerMixin):
         return pd.DataFrame(X, index=self.index, columns=self.columns, dtype=self.dtype)
 
 
-class LambdaExtractor(TransformerMixin):
+class LambdaTransfomer(TransformerMixin):
 
     def __init__(self, func):
         self.func = func
