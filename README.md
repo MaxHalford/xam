@@ -91,7 +91,7 @@ Used for extracting one or more features from a dataframe given a provided funct
 >>> A = pd.DataFrame({'one': ['a', 'a', 'a'], 'two': ['c', 'a', 'c']})
 
 >>> def has_one_c(df):
-...       return (df['one'] == 'c') | (df['two'] == 'c')
+...    return (df['one'] == 'c') | (df['two'] == 'c')
 
 >>> preprocessing.DataFrameExtractor(has_one_c).fit_transform(A)
 0     True
