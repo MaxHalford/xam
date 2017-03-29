@@ -21,17 +21,17 @@ Transformer that extracts one or more columns from a dataframe; is useful for ap
 
 ```python
 >>> import pandas as pd
->>> from xam import preprocessing
+>>> from xam.preprocessing import ColumnSelector
 
 >>> df = pd.DataFrame({'a': [1, 1, 1], 'b': [2, 2, 2], 'c': [3, 3, 3]})
 
->>> preprocessing.ColumnSelector('a').fit_transform(df)
+>>> ColumnSelector('a').fit_transform(df)
 0    1
 1    1
 2    1
 Name: a, dtype: int64
 
->>> preprocessing.ColumnSelector(['b', 'c']).fit_transform(df)
+>>> ColumnSelector(['b', 'c']).fit_transform(df)
    b  c
 0  2  3
 1  2  3
@@ -39,17 +39,17 @@ Name: a, dtype: int64
 
 ```
 
-**Function transformer**
+**Cell transformer**
 
 Transformer that applies a provided function to each cell in an nd-array.
 
 ```python
 >>> import pandas as pd
->>> from xam import preprocessing
+>>> from xam.preprocessing import CellTransformer
 
 >>> df = pd.DataFrame({'a': [1, 1, 1], 'b': [2, 2, 2]})
 
->>> preprocessing.FunctionTransformer(lambda x: 2 * x).fit_transform(df)
+>>> CellTransformer(lambda x: 2 * x).fit_transform(df)
 array([[ 2.,  4.],
        [ 2.,  4.],
        [ 2.,  4.]])
@@ -63,13 +63,14 @@ By design scikit-learn Transformers output numpy nd-arrays, the `ToDataFrameTran
 ```python
 >>> import pandas as pd
 >>> from sklearn.pipeline import Pipeline
->>> from xam import preprocessing
+>>> from xam.preprocessing import CellTransformer
+>>> from xam.preprocessing import ToDataFrameTransformer
 
 >>> df = pd.DataFrame({'a': [1, 1, 1], 'b': [2, 2, 2]})
 
 >>> pipeline = Pipeline([
-...    ('transform', preprocessing.FunctionTransformer(lambda x: 2 * x)),
-...    ('dataframe', preprocessing.ToDataFrameTransformer(index=df.index, columns=df.columns))
+...    ('transform', CellTransformer(lambda x: 2 * x)),
+...    ('dataframe', ToDataFrameTransformer(index=df.index, columns=df.columns))
 ... ])
 
 >>> pipeline.fit_transform(df)
@@ -80,20 +81,20 @@ By design scikit-learn Transformers output numpy nd-arrays, the `ToDataFrameTran
 
 ```
 
-**DataFrame extractor**
+**Lambda extractor**
 
-Used for extracting one or more features from a dataframe given a provided function.
+Will apply a function to the input; this transformer can potentially do anything but you have to properly keep track of your inputs and outputs.
 
 ```python
 >>> import pandas as pd
->>> from xam import preprocessing
+>>> from xam.preprocessing import LambdaExtractor
 
->>> A = pd.DataFrame({'one': ['a', 'a', 'a'], 'two': ['c', 'a', 'c']})
+>>> df = pd.DataFrame({'one': ['a', 'a', 'a'], 'two': ['c', 'a', 'c']})
 
->>> def has_one_c(df):
-...    return (df['one'] == 'c') | (df['two'] == 'c')
+>>> def has_one_c(dataframe):
+...    return (dataframe['one'] == 'c') | (dataframe['two'] == 'c')
 
->>> preprocessing.DataFrameExtractor(has_one_c).fit_transform(A)
+>>> LambdaExtractor(has_one_c).fit_transform(df)
 0     True
 1    False
 2     True

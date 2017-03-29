@@ -18,7 +18,7 @@ class ColumnSelector(BaseEstimator, TransformerMixin):
         return X[self.columns]
 
 
-class FunctionTransformer(BaseEstimator, TransformerMixin):
+class CellTransformer(BaseEstimator, TransformerMixin):
 
     def __init__(self, func):
         self.func_vec = np.vectorize(func)
@@ -48,7 +48,7 @@ class ToDataFrameTransformer(BaseEstimator, TransformerMixin):
         return pd.DataFrame(X, index=self.index, columns=self.columns, dtype=self.dtype)
 
 
-class DataFrameExtractor(TransformerMixin):
+class LambdaExtractor(TransformerMixin):
 
     def __init__(self, func):
         self.func = func
