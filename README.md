@@ -11,7 +11,7 @@ xam is my personal data science and machine learning toolbox. It is written in P
 
 ## Usage examples
 
-The following snippets serve as documentation, examples and tests (through the use of [doctests](https://pymotw.com/2/doctest/)). Again, this is for my personal use so the documentation is not very detailed.
+The following snippets serve as documentation, examples and tests - through the use of [doctests](https://pymotw.com/2/doctest/). Again, this is for my personal use so the documentation is not very detailed.
 
 ### Preprocessing
 
@@ -56,11 +56,10 @@ array([[ 2.,  4.],
 
 ```
 
-**DataFrame transformer**
+**Convert to DataFrame transformer**
 
-By design scikit-learn Transformers output numpy nd-arrays, the `DataFrameTransformer` can be used in a pipeline to return pandas dataframes if needed.
+By design scikit-learn Transformers output numpy nd-arrays, the `ToDataFrameTransformer` can be used in a pipeline to return pandas dataframes if needed.
 
-```python
 ```python
 >>> import pandas as pd
 >>> from sklearn.pipeline import Pipeline
@@ -70,7 +69,7 @@ By design scikit-learn Transformers output numpy nd-arrays, the `DataFrameTransf
 
 >>> pipeline = Pipeline([
 ...    ('transform', preprocessing.FunctionTransformer(lambda x: 2 * x)),
-...    ('dataframe', preprocessing.DataFrameTransformer(index=df.index, columns=df.columns))
+...    ('dataframe', preprocessing.ToDataFrameTransformer(index=df.index, columns=df.columns))
 ... ])
 
 >>> pipeline.fit_transform(df)
@@ -80,6 +79,28 @@ By design scikit-learn Transformers output numpy nd-arrays, the `DataFrameTransf
 2  2.0  4.0
 
 ```
+
+**DataFrame extractor**
+
+Used for extracting one or more features from a dataframe given a provided function.
+
+```python
+>>> import pandas as pd
+>>> from xam import preprocessing
+
+>>> A = pd.DataFrame({'one': ['a', 'a', 'a'], 'two': ['c', 'a', 'c']})
+
+>>> def has_one_c(df):
+...       return (df['one'] == 'c') | (df['two'] == 'c')
+
+>>> preprocessing.DataFrameExtractor(has_one_c).fit_transform(A)
+0     True
+1    False
+2     True
+dtype: bool
+
+```
+
 
 **Bayesian blocks binning**
 
