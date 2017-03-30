@@ -48,6 +48,15 @@ class ToDataFrameTransformer(BaseEstimator, TransformerMixin):
         return pd.DataFrame(X, index=self.index, columns=self.columns, dtype=self.dtype)
 
 
+class LabelVectorizer(BaseEstimator, TransformerMixin):
+
+    def fit(self, X, y=None, **fit_params):
+        return self
+
+    def transform(self, X, y=None, **fit_params):
+        return pd.get_dummies(X)
+
+
 class LambdaTransfomer(BaseEstimator, TransformerMixin):
 
     def __init__(self, func):

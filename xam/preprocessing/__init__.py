@@ -1,4 +1,5 @@
 from .base import ColumnSelector
+from .base import LabelVectorizer
 from .base import LambdaTransfomer
 from .base import SeriesTransformer
 from .base import ToDataFrameTransformer

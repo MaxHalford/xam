@@ -93,6 +93,24 @@ By design scikit-learn Transformers output numpy nd-arrays, the `ToDataFrameTran
 
 ```
 
+**Label vectorizer**
+
+One-hot encoder that works in a pipeline.
+
+```python
+>>> import pandas as pd
+>>> from xam.preprocessing import LabelVectorizer
+
+>>> df = pd.DataFrame({'one': ['a', 'b', 'c'], 'two': ['c', 'a', 'c']})
+
+>>> LabelVectorizer().fit_transform(df)
+   one_a  one_b  one_c  two_a  two_c
+0      1      0      0      0      1
+1      0      1      0      1      0
+2      0      0      1      0      1
+
+```
+
 **Lambda transformer**
 
 Will apply a function to the input; this transformer can potentially do anything but you have to properly keep track of your inputs and outputs.
