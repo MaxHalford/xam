@@ -93,6 +93,38 @@ By design scikit-learn Transformers output numpy nd-arrays, the `ToDataFrameTran
 
 ```
 
+**Convert to dense transformer**
+
+Convert a sparse array to a dense one; is often useful in pipelines.
+
+```python
+>>> import pandas as pd
+>>> from sklearn.pipeline import Pipeline
+>>> from sklearn.feature_extraction.text import CountVectorizer
+>>> from xam.preprocessing import ToDenseTransformer
+
+>>> df = pd.Series(['little', 'miss', 'sunshine'])
+
+>>> pipeline = Pipeline([
+...    ('count', CountVectorizer()),
+... ])
+
+>>> print(type(pipeline.fit_transform(df)))
+<class 'scipy.sparse.csr.csr_matrix'>
+
+>>> pipeline = Pipeline([
+...    ('count', CountVectorizer()),
+...    ('dense', ToDenseTransformer()),
+... ])
+
+>>> pipeline.fit_transform(df)
+matrix([[1, 0, 0],
+        [0, 1, 0],
+        [0, 0, 1]], dtype=int64)
+
+```
+
+
 **Lambda transformer**
 
 Will apply a function to the input; this transformer can potentially do anything but you have to properly keep track of your inputs and outputs.

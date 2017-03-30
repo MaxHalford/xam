@@ -48,7 +48,18 @@ class ToDataFrameTransformer(BaseEstimator, TransformerMixin):
         return pd.DataFrame(X, index=self.index, columns=self.columns, dtype=self.dtype)
 
 
-class LambdaTransfomer(TransformerMixin):
+class ToDenseTransformer(TransformerMixin):
+
+    def fit(self, X, y=None, **fit_params):
+        return self
+
+    def transform(self, X, y=None, **fit_params):
+        if isinstance(X, np.ndarray):
+            return X
+        return X.todense()
+
+
+class LambdaTransfomer(BaseEstimator, TransformerMixin):
 
     def __init__(self, func):
         self.func = func
