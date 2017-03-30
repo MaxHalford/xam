@@ -58,7 +58,8 @@ print(advertising)
 
 - Use under-sampling if there is a lot of data
 - Use over-sampling if there is not a lot of data
-
+- Alway under/over-sample on the training set. Don't apply it on the entire set before doing a train/test split, if you do duplicates will exist between the two sets and the scores will be skewed
+- Instead of predicting a class predict a probability and use a manual threshold to increase/reduce precision and recall as you wish
 
 
 ## Timeseries forecasting
@@ -66,3 +67,6 @@ print(advertising)
 ### Temporal cross-validation
 
 ### Spectral analysis for uncovering recurring patterns
+
+
+

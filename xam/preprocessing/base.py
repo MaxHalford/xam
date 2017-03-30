@@ -18,20 +18,6 @@ class ColumnSelector(BaseEstimator, TransformerMixin):
         return X[self.columns]
 
 
-class CellTransformer(BaseEstimator, TransformerMixin):
-
-    def __init__(self, func):
-        self.func_vec = np.vectorize(func)
-
-    def fit(self, X, y=None, **fit_params):
-        return self
-
-    def transform(self, X, **transform_params):
-        X = as_float_array(X)
-        X = check_array(X)
-        return self.func_vec(X)
-
-
 class ToDataFrameTransformer(BaseEstimator, TransformerMixin):
 
     def __init__(self, index, columns, dtype=None):

@@ -39,23 +39,6 @@ Name: a, dtype: int64
 
 ```
 
-**Cell transformer**
-
-Transformer that applies a provided function to each cell in an nd-array.
-
-```python
->>> import pandas as pd
->>> from xam.preprocessing import CellTransformer
-
->>> df = pd.DataFrame({'a': [1, 1, 1], 'b': [2, 2, 2]})
-
->>> CellTransformer(lambda x: 2 * x).fit_transform(df)
-array([[ 2.,  4.],
-       [ 2.,  4.],
-       [ 2.,  4.]])
-
-```
-
 **Convert to DataFrame transformer**
 
 By design scikit-learn Transformers output numpy nd-arrays, the `ToDataFrameTransformer` can be used in a pipeline to return pandas dataframes if needed.

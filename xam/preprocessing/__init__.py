@@ -1,4 +1,3 @@
-from .base import CellTransformer
 from .base import ColumnSelector
 from .base import LambdaTransfomer
 from .base import ToDataFrameTransformer
