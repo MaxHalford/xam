@@ -20,7 +20,7 @@ class ColumnSelector(BaseEstimator, TransformerMixin):
 
 class ToDataFrameTransformer(BaseEstimator, TransformerMixin):
 
-    def __init__(self, index, columns, dtype=None):
+    def __init__(self, index=None, columns=None, dtype=None):
         self.index = index
         self.columns = columns
         self.dtype = dtype
@@ -29,6 +29,8 @@ class ToDataFrameTransformer(BaseEstimator, TransformerMixin):
         return self
 
     def transform(self, X, **transform_params):
+        if isinstance(X, pd.Series):
+            return X.to_frame()
         X = as_float_array(X)
         X = check_array(X)
         return pd.DataFrame(X, index=self.index, columns=self.columns, dtype=self.dtype)
