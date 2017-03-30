@@ -18,6 +18,18 @@ class ColumnSelector(BaseEstimator, TransformerMixin):
         return X[self.columns]
 
 
+class SeriesTransformer(BaseEstimator, TransformerMixin):
+
+    def __init__(self, func):
+        self.func = func
+
+    def fit(self, X, y=None, **fit_params):
+        return self
+
+    def transform(self, X, **transform_params):
+        return X.map(self.func)
+
+
 class ToDataFrameTransformer(BaseEstimator, TransformerMixin):
 
     def __init__(self, index=None, columns=None, dtype=None):

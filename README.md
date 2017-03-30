@@ -39,6 +39,33 @@ Name: a, dtype: int64
 
 ```
 
+
+**Series transformer**
+
+Applies a function to each value in series.
+
+```python
+>>> import pandas as pd
+>>> from sklearn.pipeline import Pipeline
+>>> from xam.preprocessing import ColumnSelector
+>>> from xam.preprocessing import SeriesTransformer
+
+>>> df = pd.DataFrame({'a': [1, 1, 1], 'b': [2, 2, 2]})
+
+>>> pipeline = Pipeline([
+...    ('extract', ColumnSelector('a')),
+...    ('transform', SeriesTransformer(lambda x: 2 * x))
+... ])
+
+>>> pipeline.fit_transform(df)
+0    2
+1    2
+2    2
+Name: a, dtype: int64
+
+```
+
+
 **Convert to DataFrame transformer**
 
 By design scikit-learn Transformers output numpy nd-arrays, the `ToDataFrameTransformer` can be used in a pipeline to return pandas dataframes if needed.
@@ -46,21 +73,23 @@ By design scikit-learn Transformers output numpy nd-arrays, the `ToDataFrameTran
 ```python
 >>> import pandas as pd
 >>> from sklearn.pipeline import Pipeline
->>> from xam.preprocessing import CellTransformer
+>>> from xam.preprocessing import ColumnSelector
+>>> from xam.preprocessing import SeriesTransformer
 >>> from xam.preprocessing import ToDataFrameTransformer
 
 >>> df = pd.DataFrame({'a': [1, 1, 1], 'b': [2, 2, 2]})
 
 >>> pipeline = Pipeline([
-...    ('transform', CellTransformer(lambda x: 2 * x)),
-...    ('dataframe', ToDataFrameTransformer(index=df.index, columns=df.columns))
+...    ('extract', ColumnSelector('a')),
+...    ('transform', SeriesTransformer(lambda x: 2 * x)),
+...    ('dataframe', ToDataFrameTransformer())
 ... ])
 
 >>> pipeline.fit_transform(df)
-     a    b
-0  2.0  4.0
-1  2.0  4.0
-2  2.0  4.0
+   a
+0  2
+1  2
+2  2
 
 ```
 
