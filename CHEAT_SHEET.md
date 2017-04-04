@@ -54,12 +54,15 @@ print(advertising)
 - When the DV is continuous, there is a parametric test for when the DV follows a normal distribution and non-parametric test for when it does not.
 
 
-## Dealing with unbalanced
+## Dealing with unbalanced classes
 
-- Use under-sampling if there is a lot of data
-- Use over-sampling if there is not a lot of data
+- [Read this](https://svds.com/learning-imbalanced-classes/)
+- Try under-sampling if there is a lot of data
+- Try over-sampling if there is not a lot of data
 - Alway under/over-sample on the training set. Don't apply it on the entire set before doing a train/test split, if you do duplicates will exist between the two sets and the scores will be skewed
 - Instead of predicting a class predict a probability and use a manual threshold to increase/reduce precision and recall as you wish
+- Use weights/costs
+- Limit the over-represented class
 
 
 ## Timeseries forecasting

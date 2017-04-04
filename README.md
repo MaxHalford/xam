@@ -21,17 +21,17 @@ Transformer that extracts one or more columns from a dataframe; is useful for ap
 
 ```python
 >>> import pandas as pd
->>> from xam.preprocessing import ColumnSelector
+>>> import xam
 
 >>> df = pd.DataFrame({'a': [1, 1, 1], 'b': [2, 2, 2], 'c': [3, 3, 3]})
 
->>> ColumnSelector('a').fit_transform(df)
+>>> xam.preprocessing.ColumnSelector('a').fit_transform(df)
 0    1
 1    1
 2    1
 Name: a, dtype: int64
 
->>> ColumnSelector(['b', 'c']).fit_transform(df)
+>>> xam.preprocessing.ColumnSelector(['b', 'c']).fit_transform(df)
    b  c
 0  2  3
 1  2  3
@@ -99,11 +99,11 @@ One-hot encoder that works in a pipeline.
 
 ```python
 >>> import pandas as pd
->>> from xam.preprocessing import LabelVectorizer
+>>> import xam
 
 >>> df = pd.DataFrame({'one': ['a', 'b', 'c'], 'two': ['c', 'a', 'c']})
 
->>> LabelVectorizer().fit_transform(df)
+>>> xam.preprocessing.LabelVectorizer().fit_transform(df)
    one_a  one_b  one_c  two_a  two_c
 0      1      0      0      0      1
 1      0      1      0      1      0
@@ -117,14 +117,14 @@ Will apply a function to the input; this transformer can potentially do anything
 
 ```python
 >>> import pandas as pd
->>> from xam.preprocessing import LambdaTransfomer
+>>> import xam
 
 >>> df = pd.DataFrame({'one': ['a', 'a', 'a'], 'two': ['c', 'a', 'c']})
 
 >>> def has_one_c(dataframe):
 ...    return (dataframe['one'] == 'c') | (dataframe['two'] == 'c')
 
->>> LambdaTransfomer(has_one_c).fit_transform(df)
+>>> xam.preprocessing.LambdaTransfomer(has_one_c).fit_transform(df)
 0     True
 1    False
 2     True
@@ -140,7 +140,7 @@ Heuristically determines the number of bins to use for continuous variables, see
 ```python
 >>> import numpy as np
 >>> from scipy import stats
->>> from xam import preprocessing
+>>> import xam
 
 >>> np.random.seed(0)
 >>> x = np.concatenate([
@@ -151,7 +151,7 @@ Heuristically determines the number of bins to use for continuous variables, see
 ...     stats.cauchy(4, 1.5).rvs(500)
 ... ])
 >>> x = x[(x > -15) & (x < 15)].reshape(-1, 1)
->>> binner = preprocessing.BayesianBlocksBinner()
+>>> binner = xam.preprocessing.BayesianBlocksBinner()
 >>> binner.fit_transform(X=x)[:10]
 array([[ 6],
        [ 8],
@@ -172,13 +172,13 @@ Transformer that bins continuous data into `n_bins` of equal frequency.
 
 ```python
 >>> import numpy as np
->>> from xam import preprocessing
+>>> import xam
 
 >>> np.random.seed(42)
 >>> mu, sigma = 0, 0.1
 >>> x = np.random.normal(mu, sigma, 10).reshape(-1, 1)
 
->>> binner = preprocessing.EqualFrequencyBinner(n_bins=5)
+>>> binner = xam.preprocessing.EqualFrequencyBinner(n_bins=5)
 >>> binner.fit_transform(X=x)
 array([[2],
        [1],
@@ -199,13 +199,13 @@ Transformer that bins continuous data into `n_bins` of equal width.
 
 ```python
 >>> import numpy as np
->>> from xam import preprocessing
+>>> import xam
 
 >>> np.random.seed(42)
 >>> mu, sigma = 0, 0.1
 >>> x = np.random.normal(mu, sigma, 10).reshape(-1, 1)
 
->>> binner = preprocessing.EqualWidthBinner(n_bins=5)
+>>> binner = xam.preprocessing.EqualWidthBinner(n_bins=5)
 >>> binner.fit_transform(X=x)
 array([[2],
        [0],
@@ -224,12 +224,12 @@ array([[2],
 
 ```python
 >>> from sklearn import datasets
->>> from xam import preprocessing
+>>> import xam
 
 >>> iris = datasets.load_iris()
 >>> X, y = iris.data[:, 1:3], iris.target
 
->>> binner = preprocessing.MDLPBinner()
+>>> binner = xam.preprocessing.MDLPBinner()
 >>> binner.fit_transform(X, y)[:10]
 array([[1, 0],
        [0, 0],
@@ -253,7 +253,7 @@ This is a clustering algorithm I devised at one of my internships for matching c
 
 ```python
 >>> import numpy as np
->>> from xam import clustering
+>>> import xam
 
 >>> X = np.array([
 ...     # First expected cluster
@@ -267,7 +267,7 @@ This is a clustering algorithm I devised at one of my internships for matching c
 ...     [2, 4],
 ... ])
 
->>> clustering.CrossChainClusterer().fit_predict(X)
+>>> xam.clustering.CrossChainClusterer().fit_predict(X)
 [0, 0, 0, 1, 2, 2]
 
 ```
@@ -285,7 +285,7 @@ Model stacking for classification as described in this [Kaggle blog post](http:/
 >>> from sklearn.linear_model import LogisticRegression
 >>> from sklearn.naive_bayes import GaussianNB
 >>> from sklearn.neighbors import KNeighborsClassifier
->>> from xam import stacking
+>>> import xam
 
 >>> iris = datasets.load_iris()
 >>> X, y = iris.data[:, 1:3], iris.target
@@ -293,7 +293,10 @@ Model stacking for classification as described in this [Kaggle blog post](http:/
 >>> m1 = KNeighborsClassifier(n_neighbors=1)
 >>> m2 = RandomForestClassifier(random_state=1)
 >>> m3 = GaussianNB()
->>> stack = stacking.StackingClassifier(models=[m1, m2, m3], meta_model=LogisticRegression())
+>>> stack = xam.stacking.StackingClassifier(
+...     models=[m1, m2, m3],
+...     meta_model=LogisticRegression()
+... )
 
 >>> model_names = ['KNN', 'Random Forest', 'Naïve Bayes', 'StackingClassifier']
 
@@ -317,7 +320,7 @@ Model stacking for regression as described in this [Kaggle blog post](http://blo
 >>> from sklearn.linear_model import LinearRegression
 >>> from sklearn.linear_model import Ridge
 >>> from sklearn.neighbors import KNeighborsRegressor
->>> from xam import stacking
+>>> import xam
 
 >>> boston = datasets.load_boston()
 >>> X, y = boston.data[:, :2], boston.target
@@ -325,7 +328,10 @@ Model stacking for regression as described in this [Kaggle blog post](http://blo
 >>> m1 = KNeighborsRegressor(n_neighbors=1)
 >>> m2 = LinearRegression()
 >>> m3 = Ridge(alpha=.5)
->>> stack = stacking.StackingRegressor(models=[m1, m2, m3], meta_model=RandomForestRegressor(random_state=1))
+>>> stack = xam.stacking.StackingRegressor(
+...     models=[m1, m2, m3],
+...     meta_model=RandomForestRegressor(random_state=1)
+... )
 
 >>> model_names = ['KNN', 'Random Forest', 'Ridge regression', 'StackingRegressor']
 
@@ -347,7 +353,7 @@ MAE: 6.38 (+/- 0.64) [StackingRegressor]
 ```python
 >>> from sklearn.datasets import fetch_20newsgroups
 >>> from sklearn.feature_extraction.text import CountVectorizer
->>> from xam import nlp
+>>> import xam
 
 >>> cats = ['alt.atheism', 'comp.windows.x']
 >>> newsgroups_train = fetch_20newsgroups(subset='train', categories=cats)
@@ -361,7 +367,7 @@ MAE: 6.38 (+/- 0.64) [StackingRegressor]
 >>> X_test = vectorizer.transform(newsgroups_test.data)
 >>> y_test = newsgroups_test.target
 
->>> clf = nlp.TopTermsClassifier(n_terms=50)
+>>> clf = xam.nlp.TopTermsClassifier(n_terms=50)
 >>> clf.fit(X_train.toarray(), y_train).score(X_test.toarray(), y_test)
 0.95238095238095233
 
@@ -376,7 +382,7 @@ MAE: 6.38 (+/- 0.64) [StackingRegressor]
 >>> import datetime as dt
 >>> import numpy as np
 >>> import pandas as pd
->>> from xam import tsa
+>>> import xam
 
 >>> df = pd.read_csv('datasets/airline-passengers.csv')
 >>> series = pd.Series(
@@ -398,7 +404,7 @@ MAE: 6.38 (+/- 0.64) [StackingRegressor]
 >>> beta = 0.2
 >>> gamma = 0.6
 
->>> tsa.SimpleExponentialSmoothingForecaster(alpha).fit(train).predict(test.index)
+>>> xam.tsa.SimpleExponentialSmoothingForecaster(alpha).fit(train).predict(test.index)
 1960-01-01    415.452445
 1960-02-01    414.407201
 1960-03-01    413.466481
@@ -413,7 +419,7 @@ MAE: 6.38 (+/- 0.64) [StackingRegressor]
 1960-12-01    408.280088
 dtype: float64
 
->>> tsa.DoubleExponentialSmoothingForecaster(alpha, beta).fit(train).predict(test.index)
+>>> xam.tsa.DoubleExponentialSmoothingForecaster(alpha, beta).fit(train).predict(test.index)
 1960-01-01    447.564520
 1960-02-01    451.786035
 1960-03-01    456.007549
@@ -428,7 +434,7 @@ dtype: float64
 1960-12-01    494.001183
 dtype: float64
 
->>> tsa.TripleExponentialSmoothingForecaster(
+>>> xam.tsa.TripleExponentialSmoothingForecaster(
 ...     alpha,
 ...     beta,
 ...     gamma,
@@ -456,7 +462,7 @@ dtype: float64
 ```python
 >>> import datetime as dt
 >>> import pandas as pd
->>> from xam import tsa
+>>> import xam
 
 >>> df = pd.read_csv('datasets/bike-station.csv')
 >>> series = pd.Series(
@@ -464,7 +470,7 @@ dtype: float64
 ...     index=pd.to_datetime(df['moment'], format='%Y-%m-%d %H:%M:%S')
 ... )
 
->>> forecaster = tsa.FrequencyAverageForecaster(lambda d: f'{d.weekday()}-{d.hour}')
+>>> forecaster = xam.tsa.FrequencyAverageForecaster(lambda d: f'{d.weekday()}-{d.hour}')
 >>> forecaster.fit(series[:-10]).predict(series.index[-10:])
 moment
 2016-10-05 09:28:48    8.622535
@@ -488,12 +494,12 @@ dtype: float64
 
 ```python
 >>> import datetime as dt
->>> from xam import util
+>>> import xam
 
 >>> since = dt.datetime(2017, 3, 22)
 >>> until = dt.datetime(2017, 3, 25)
 >>> step = dt.timedelta(days=2)
->>> util.datetime_range(since=since, until=until, step=step)
+>>> xam.util.datetime_range(since=since, until=until, step=step)
 [datetime.datetime(2017, 3, 22, 0, 0), datetime.datetime(2017, 3, 24, 0, 0)]
 
 ```
@@ -501,11 +507,11 @@ dtype: float64
 **Intraclass correlation**
 
 ```python
->>> from xam import util
+>>> import xam
 
 >>> x = [1, 1.1, 1.2, 1.3, 2.1, 2.2, 2.3, 2.4]
 >>> y = ['a', 'a', 'a', 'a', 'b', 'b', 'b', 'b']
->>> util.intraclass_correlation(x, y)
+>>> xam.util.intraclass_correlation(x, y)
 0.96031746031746024
 
 ```
@@ -513,10 +519,10 @@ dtype: float64
 **Subsequence lengths**
 
 ```python
->>> from xam import util
+>>> import xam
 
 >>> sequence = 'appaaaaapa'
->>> lengths = util.subsequence_lengths(sequence)
+>>> lengths = xam.util.subsequence_lengths(sequence)
 >>> print(lengths)
 {'a': [1, 5, 1], 'p': [2, 1, 2]}
 
