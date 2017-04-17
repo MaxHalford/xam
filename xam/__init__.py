@@ -1,6 +1,6 @@
-import xam.clustering
-import xam.nlp
-import xam.preprocessing
-import xam.stacking
-import xam.tsa
-import xam.util
+from . import clustering
+from . import nlp
+from . import preprocessing
+from . import stacking
+from . import tsa
+from . import util
