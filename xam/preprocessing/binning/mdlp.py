@@ -31,11 +31,11 @@ class MDLPBinner(BaseSupervisedBinner):
 
 def calc_class_entropy(y):
     class_counts = stats.itemfreq(y)[:, 1]
-    return stats.entropy(class_counts)
+    return stats.entropy(class_counts, base=2)
 
 
 def calc_class_information_entropy(x, y, cut_point):
-    partition = x < cut_point
+    partition = x <= cut_point
 
     y_1 = y[partition]
     y_2 = y[~partition]
@@ -52,22 +52,21 @@ def mdlp_cut(x, y, cut_points):
     if len(np.unique(y)) == 1:
         return
 
+    # Calculate the current entropy
+    y_ent = calc_class_entropy(y)
+
     # Sort x and y according to x
     sorted_indexes = x.argsort()
     x = x[sorted_indexes]
     y = y[sorted_indexes]
 
     # Find the potential cut points
-    potential_cut_points = [0]
+    potential_cut_points = []
     for i in range(x.size - 1):
-        if x[i] != x[i+1] and y[i] != y[i+1]:
-            potential_cut_points.append(x[i])
+        potential_cut_points.append((x[i] + x[i+1]) / 2)
 
     # Ignore the cut points that appear more than once
-    counts = collections.Counter(potential_cut_points)
-    for cut_point in set(potential_cut_points):
-        if counts[cut_point] > 1:
-            potential_cut_points.remove(cut_point)
+    potential_cut_points = list(set(potential_cut_points))
 
     # Find the cut point with gives the lowest class information entropy
     cut_point = min(
@@ -75,8 +74,12 @@ def mdlp_cut(x, y, cut_points):
         key=lambda cut_point: calc_class_information_entropy(x, y, cut_point)
     )
 
+    # Calculate the information gain obtained with the obtained cut point
+    new_ent = calc_class_information_entropy(x, y, cut_point)
+    gain = y_ent - new_ent
+
     # Partition the data
-    partition = x < cut_point
+    partition = x <= cut_point
     x_1 = x[partition]
     y_1 = y[partition]
     x_2 = x[~partition]
@@ -88,18 +91,13 @@ def mdlp_cut(x, y, cut_points):
     k_2 = len(np.unique(y_2))
 
     # Calculate the entropy of each group
-    y_ent = calc_class_entropy(y)
     y_1_ent = calc_class_entropy(y_1)
     y_2_ent = calc_class_entropy(y_2)
 
     # Calculate the acceptance criterion
-    delta = math.log2(3 ** k - 2) - k * y_ent + k_1 * y_1_ent + k_2 * y_2_ent
+    delta = math.log2(3 ** k) - k * y_ent + k_1 * y_1_ent + k_2 * y_2_ent
     n = y.size
     acceptance_criterion = (math.log2(n - 1) + delta) / n
-
-    # Calculate the information gain obtained with the obtained cut point
-    new_ent = calc_class_information_entropy(x, y, cut_point)
-    gain = y_ent - new_ent
 
     # Add the cut point if the gain is higher than the acceptance criterion
     if gain > acceptance_criterion:

@@ -231,16 +231,16 @@ array([[2],
 
 >>> binner = xam.preprocessing.MDLPBinner()
 >>> binner.fit_transform(X, y)[:10]
-array([[1, 0],
-       [0, 0],
-       [0, 0],
-       [0, 0],
+array([[2, 0],
        [1, 0],
        [1, 0],
        [1, 0],
-       [1, 0],
+       [2, 0],
+       [2, 0],
+       [2, 0],
+       [2, 0],
        [0, 0],
-       [0, 0]])
+       [1, 0]])
 
 ```
 
@@ -302,11 +302,11 @@ Model stacking for classification as described in this [Kaggle blog post](http:/
 
 >>> for clf, label in zip(stack.models + [stack], model_names):
 ...     scores = model_selection.cross_val_score(clf, X, y, cv=3, scoring='accuracy')
-...     print('Accuracy: %0.2f (+/- %0.2f) [%s]' % (scores.mean(), scores.std(), label))
-Accuracy: 0.91 (+/- 0.01) [KNN]
-Accuracy: 0.91 (+/- 0.06) [Random Forest]
-Accuracy: 0.92 (+/- 0.03) [Naïve Bayes]
-Accuracy: 0.95 (+/- 0.03) [StackingClassifier]
+...     print('Accuracy: %0.2f (+/- %0.2f) [%s]' % (scores.mean(), 1.96 * scores.std(), label))
+Accuracy: 0.91 (+/- 0.02) [KNN]
+Accuracy: 0.91 (+/- 0.13) [Random Forest]
+Accuracy: 0.92 (+/- 0.05) [Naïve Bayes]
+Accuracy: 0.95 (+/- 0.06) [StackingClassifier]
 
 ```
 
@@ -337,11 +337,11 @@ Model stacking for regression as described in this [Kaggle blog post](http://blo
 
 >>> for clf, label in zip(stack.models + [stack], model_names):
 ...     scores = model_selection.cross_val_score(clf, X, y, cv=3, scoring='neg_mean_absolute_error')
-...     print('MAE: %0.2f (+/- %0.2f) [%s]' % (-scores.mean(), scores.std(), label))
-MAE: 7.45 (+/- 1.22) [KNN]
-MAE: 7.72 (+/- 2.09) [Random Forest]
-MAE: 7.71 (+/- 2.07) [Ridge regression]
-MAE: 6.38 (+/- 0.64) [StackingRegressor]
+...     print('MAE: %0.2f (+/- %0.2f) [%s]' % (-scores.mean(), 1.96 * scores.std(), label))
+MAE: 7.45 (+/- 2.39) [KNN]
+MAE: 7.72 (+/- 4.10) [Random Forest]
+MAE: 7.71 (+/- 4.06) [Ridge regression]
+MAE: 6.38 (+/- 1.25) [StackingRegressor]
 
 ```
 
