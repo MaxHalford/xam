@@ -9,6 +9,12 @@ xam is my personal data science and machine learning toolbox. It is written in P
 - Run `pip install git+https://github.com/MaxHalford/xam` in a terminal
 
 
+## Other Python data science and machine learning toolkits
+
+- [ogrisel/oglearn](https://github.com/ogrisel/oglearn)
+- [rasbt/mlxtend](https://github.com/rasbt/mlxtend)
+
+
 ## Usage examples
 
 The following snippets serve as documentation, examples and tests - through the use of [doctests](https://pymotw.com/2/doctest/). Again, this is for my personal use so the documentation is not very detailed.
