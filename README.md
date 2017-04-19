@@ -301,7 +301,8 @@ Model stacking for classification as described in this [Kaggle blog post](http:/
 >>> m3 = GaussianNB()
 >>> stack = xam.stacking.StackingClassifier(
 ...     models=[m1, m2, m3],
-...     meta_model=LogisticRegression()
+...     meta_model=LogisticRegression(),
+...     use_base_features=False
 ... )
 
 >>> model_names = ['KNN', 'Random Forest', 'Naïve Bayes', 'StackingClassifier']
@@ -336,7 +337,8 @@ Model stacking for regression as described in this [Kaggle blog post](http://blo
 >>> m3 = Ridge(alpha=.5)
 >>> stack = xam.stacking.StackingRegressor(
 ...     models=[m1, m2, m3],
-...     meta_model=RandomForestRegressor(random_state=1)
+...     meta_model=RandomForestRegressor(random_state=1),
+...     use_base_features=False
 ... )
 
 >>> model_names = ['KNN', 'Random Forest', 'Ridge regression', 'StackingRegressor']

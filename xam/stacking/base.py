@@ -8,12 +8,13 @@ from tqdm import tqdm
 
 class BaseStackingEstimator(BaseEstimator, MetaEstimatorMixin):
 
-    def __init__(self, models, meta_model, n_folds, stratified, verbose):
+    def __init__(self, models, meta_model, n_folds, stratified, use_base_features, verbose):
         # Parameters
         self.models = models
         self.meta_model = meta_model
         self.n_folds = n_folds
         self.stratified = stratified
+        self.use_base_features = use_base_features
         self.verbose = verbose
 
         # Attributes
@@ -39,6 +40,9 @@ class BaseStackingEstimator(BaseEstimator, MetaEstimatorMixin):
                 # Store the predictions the model makes on the test set
                 self.meta_features_[test_index, j] = model.predict(X[test_index])
 
+        if self.use_base_features:
+            self.meta_features_ = np.hstack((self.meta_features_, X))
+
         self.meta_model.fit(self.meta_features_, y)
 
         # Each model has to be fit on all the data for further predictions
@@ -49,4 +53,8 @@ class BaseStackingEstimator(BaseEstimator, MetaEstimatorMixin):
 
     def predict(self, X):
         meta_features = np.transpose([model.predict(X) for model in self.models])
+
+        if self.use_base_features:
+            meta_features = np.hstack((meta_features, X))
+
         return self.meta_model.predict(meta_features)
