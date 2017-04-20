@@ -250,6 +250,28 @@ array([[2, 0],
 
 ```
 
+**Transforming cyclic**
+
+Day of week, hours, minutes, are cyclic ordinal features; cosine and sine transforms should be used to express the cycle. See [this StackEchange discussion](https://datascience.stackexchange.com/questions/5990/what-is-a-good-way-to-transform-cyclic-ordinal-attributes). This transformer returns an array with twice as many columns as the input array; the first columns are the cosine transforms and the last columns are the sine transforms.
+
+```python
+>>> import numpy as np
+>>> import xam
+
+>>> times = np.array([
+...    np.linspace(0, 23, 4),
+...    np.linspace(0, 59, 4),
+... ]).T
+
+>>> trans = xam.preprocessing.CycleTransformer()
+>>> trans.fit_transform(times)
+array([[ 1.        ,  1.        ,  0.        ,  0.        ],
+       [-0.42261826, -0.46947156, -0.76604444, -0.82903757],
+       [-0.64278761, -0.5591929 ,  0.98480775,  0.92718385],
+       [ 0.96592583,  0.9945219 , -0.5       , -0.20791169]])
+
+```
+
 
 ### Clustering
 

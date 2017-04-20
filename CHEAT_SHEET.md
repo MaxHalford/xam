@@ -15,16 +15,29 @@
 
 ## Feature engineering
 
+### Temporal features
+
+Day of week, hours, minutes, are cyclic ordinal features; cosine and sine transforms should be used to express the cycle. See [this StackEchange discussion](https://datascience.stackexchange.com/questions/5990/what-is-a-good-way-to-transform-cyclic-ordinal-attributes).
+
+```python
+from math import sin, pi
+
+hours = list(range(24))
+
+hours_cos = [cos(pi * h / 24) for h in hours]
+hours_sin = [sin(pi * h / 24) for h in hours]
+```
+
 ### Binning continuous variables
 
-- [Minimum description length principle](https://arxiv.org/abs/math/0406077)
+- [Minimum description length principle (entropy)](https://arxiv.org/abs/math/0406077)
 
 ### String encoding
 
-- Use label encoding for preserving order
-- Use one-hot encoding if order does not matter
+- Use label encoding if order matters (ordinal values)
+- Use one-hot encoding if order does not matter (nominal values)
 
-For one-hot encoding be careful that the dimensionality doesn't blow up.
+For one-hot encoding be careful that the dimensionality doesn't blow up; also expect the training time to increase because of the added columns.
 
 ### Adstock transformation
 
