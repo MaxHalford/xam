@@ -265,10 +265,10 @@ Day of week, hours, minutes, are cyclic ordinal features; cosine and sine transf
 
 >>> trans = xam.preprocessing.CycleTransformer()
 >>> trans.fit_transform(times)
-array([[ 1.          1.        ]
-       [ 0.48368953  0.41347603]
-       [-1.40883205 -1.38823048]
-       [ 0.70710678  0.88999343]])
+array([[ 1.        ,  1.        ],
+       [ 0.48368953,  0.41347603],
+       [-1.40883205, -1.38823048],
+       [ 0.70710678,  0.88999343]])
 
 ```
 
