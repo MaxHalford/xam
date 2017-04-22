@@ -3,6 +3,7 @@ from collections import defaultdict
 import numpy as np
 
 from sklearn.base import BaseEstimator
+from sklearn.base import clone
 from sklearn.base import TransformerMixin
 from sklearn.preprocessing import Imputer
 
@@ -19,7 +20,7 @@ class SupervisedImputer(BaseEstimator, TransformerMixin):
         for i, x in enumerate(X.T):
             for c in self.classes_:
                 non_nulls = x[y == c]
-                self.imputers_[i][c] = Imputer().fit(
+                self.imputers_[i][c] = clone(self.imputer).fit(
                     non_nulls[~np.isnan(non_nulls)].reshape(-1, 1)
                 )
         return self
