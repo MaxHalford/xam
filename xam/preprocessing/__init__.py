@@ -8,3 +8,4 @@ from .binning.equal_frequency import EqualFrequencyBinner
 from .binning.equal_width import EqualWidthBinner
 from .binning.mdlp import MDLPBinner
 from .cycle import CycleTransformer
+from .imputation import SupervisedImputer

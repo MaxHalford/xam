@@ -12,7 +12,7 @@ class CycleTransformer(BaseEstimator, TransformerMixin):
         self.maximums_ = np.max(X, axis=0)
         return self
 
-    def transform(self, X, **transform_params):
+    def transform(self, X, y=None):
         return np.vstack((
             np.array([
                 np.cos(2 * np.pi * x / (maximum + 1))

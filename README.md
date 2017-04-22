@@ -21,6 +21,37 @@ The following snippets serve as documentation, examples and tests - through the 
 
 ### Preprocessing
 
+**Supervised imputation**
+
+Scikit-learn's [`Imputer`](http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.Imputer.html) transformer is practical for it is an unsupervised method. `SupervisedImputer` makes it possible to apply an `Imputer` in a supervised way. In other words the `Imputer` is applied conditionally on the value of `y`.
+
+```python
+>>> import numpy as np
+>>> from sklearn.preprocessing import Imputer
+>>> import xam
+
+>>> X = np.array([
+...     [1,      4],
+...     [np.nan, np.nan],
+...     [3,      5],
+...     [3,      5],
+...     [3,      np.nan],
+...     [3,      7],
+... ])
+
+>>> y = np.array([1, 1, 1, 2, 2, 2])
+
+>>> imp = xam.preprocessing.SupervisedImputer(Imputer)
+>>> imp.fit_transform(X, y)
+array([[ 1. ,  4. ],
+       [ 2. ,  4.5],
+       [ 3. ,  5. ],
+       [ 3. ,  5. ],
+       [ 3. ,  6. ],
+       [ 3. ,  7. ]])
+
+```
+
 **Column selection**
 
 Transformer that extracts one or more columns from a dataframe; is useful for applying a Transformer on a subset of features in a pipeline.
