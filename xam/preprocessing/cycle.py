@@ -12,13 +12,14 @@ class CycleTransformer(BaseEstimator, TransformerMixin):
         self.maximums_ = np.max(X, axis=0)
         return self
 
-    @staticmethod
-    def cosine_sine_transform(x, maximum):
-        radians = 2 * np.pi * x
-        return np.cos(radians / (maximum + 1)) + np.sin(radians / (maximum + 1))
-
     def transform(self, X, **transform_params):
-        return np.array([
-            self.cosine_sine_transform(x, maximum)
-            for x, maximum in zip(X.T, self.maximums_)
-        ]).T
+        return np.vstack((
+            np.array([
+                np.cos(2 * np.pi * x / (maximum + 1))
+                for x, maximum in zip(X.T, self.maximums_)
+            ]),
+            np.array([
+                np.sin(2 * np.pi * x / (maximum + 1))
+                for x, maximum in zip(X.T, self.maximums_)
+            ])
+        )).T
