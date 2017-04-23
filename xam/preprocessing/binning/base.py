@@ -12,7 +12,7 @@ class BaseBinner(BaseEstimator, TransformerMixin):
         # Attributes
         self.cut_points_ = None
 
-    def transform(self, X, y=None, **transform_params):
+    def transform(self, X, y=None):
         """Binarize X based on the fitted cut points."""
 
         X = as_float_array(X)

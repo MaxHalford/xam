@@ -1,8 +1,10 @@
 from sklearn.utils.estimator_checks import check_estimator
 
-from xam.preprocessing import MDLPBinner
-from xam.preprocessing import EqualWidthBinner
+import xam
 
 
 def test_mdlp_binner():
-    assert check_estimator(MDLPBinner) is None
+    assert check_estimator(xam.preprocessing.MDLPBinner) is None
+
+#def test_supervised_imputer():
+#    assert check_estimator(xam.preprocessing.SupervisedImputer) is None

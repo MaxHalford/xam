@@ -41,7 +41,7 @@ Scikit-learn's [`Imputer`](http://scikit-learn.org/stable/modules/generated/skle
 
 >>> y = np.array([1, 1, 1, 2, 2, 2])
 
->>> imp = xam.preprocessing.SupervisedImputer(Imputer(strategy='mean'))
+>>> imp = xam.preprocessing.SupervisedImputer(strategy='mean')
 >>> imp.fit_transform(X, y)
 array([[ 1. ,  4. ],
        [ 2. ,  4.5],
