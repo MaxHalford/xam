@@ -2,7 +2,6 @@ import numpy as np
 from sklearn.base import BaseEstimator
 from sklearn.base import TransformerMixin
 from sklearn.exceptions import NotFittedError
-from sklearn.utils import as_float_array
 from sklearn.utils import check_array
 
 
@@ -15,7 +14,7 @@ class BaseBinner(BaseEstimator, TransformerMixin):
     def transform(self, X, y=None):
         """Binarize X based on the fitted cut points."""
 
-        X = as_float_array(X)
+        # scikit-learn checks
         X = check_array(X)
 
         if self.cut_points_ is None:

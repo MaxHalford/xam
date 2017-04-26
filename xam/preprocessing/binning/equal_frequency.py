@@ -3,13 +3,14 @@ Equal frequency binning
 """
 
 import numpy as np
+from sklearn.utils import check_array
 
 from .base import BaseUnsupervisedBinner
 
 
 class EqualFrequencyBinner(BaseUnsupervisedBinner):
 
-    def __init__(self, n_bins):
+    def __init__(self, n_bins=5):
 
         super().__init__()
 
@@ -18,6 +19,9 @@ class EqualFrequencyBinner(BaseUnsupervisedBinner):
 
     def fit(self, X, y=None, **fit_params):
         """Choose equally spaces cut points."""
+
+        # scikit-learn checks
+        X = check_array(X)
 
         p_step = 100 / self.n_bins
 

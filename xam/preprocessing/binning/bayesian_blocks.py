@@ -7,6 +7,7 @@ References:
 """
 
 import numpy as np
+from sklearn.utils import check_array
 
 from .base import BaseUnsupervisedBinner
 
@@ -14,6 +15,10 @@ from .base import BaseUnsupervisedBinner
 class BayesianBlocksBinner(BaseUnsupervisedBinner):
 
     def fit(self, X, y=None, **fit_params):
+
+        # scikit-learn checks
+        X = check_array(X)
+
         self.cut_points_ = [calc_bayesian_blocks(x) for x in X.T]
         return self
 

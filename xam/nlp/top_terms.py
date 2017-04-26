@@ -1,6 +1,7 @@
 import numpy as np
-from sklearn.base import BaseEstimator, ClassifierMixin
-from sklearn.utils.multiclass import unique_labels
+from sklearn.base import BaseEstimator
+from sklearn.base import ClassifierMixin
+from sklearn.utils.validation import check_array
 from sklearn.utils.validation import check_X_y
 
 
@@ -13,14 +14,15 @@ class TopTermsClassifier(BaseEstimator, ClassifierMixin):
         # Attributes
         self.top_terms_per_class_ = None
 
-    def fit(self, X, y):
-        # Check that X and y have correct shapes
+    def fit(self, X, y=None, **fit_params):
+
+        # scikit-learn checks
         X, y = check_X_y(X, y)
 
         n_terms = min(self.n_terms, X.shape[1])
 
         # Get a list of unique labels from y
-        labels = unique_labels(y)
+        labels = np.unique(y)
 
         # Determine the n top terms per class
         self.top_terms_per_class_ = {
@@ -31,7 +33,7 @@ class TopTermsClassifier(BaseEstimator, ClassifierMixin):
         # Return the classifier
         return self
 
-    def _find_class(self, x):
+    def _classify(self, x):
 
         # Find the terms in the document
         terms = set(np.where(x > 0)[0])
@@ -43,4 +45,8 @@ class TopTermsClassifier(BaseEstimator, ClassifierMixin):
         )
 
     def predict(self, X):
-        return [self._find_class(x) for x in X]
+
+        # scikit-learn checks
+        X = check_array(X)
+
+        return np.array([self._classify(x) for x in X])

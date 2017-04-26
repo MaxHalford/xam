@@ -1,4 +1,3 @@
-import numpy as np
 import pandas as pd
 from sklearn.base import BaseEstimator
 from sklearn.base import TransformerMixin
@@ -26,7 +25,7 @@ class SeriesTransformer(BaseEstimator, TransformerMixin):
     def fit(self, X, y=None, **fit_params):
         return self
 
-    def transform(self, X, **transform_params):
+    def transform(self, X):
         return X.map(self.func)
 
 
@@ -40,7 +39,7 @@ class ToDataFrameTransformer(BaseEstimator, TransformerMixin):
     def fit(self, X, y=None, **fit_params):
         return self
 
-    def transform(self, X, **transform_params):
+    def transform(self, X):
         if isinstance(X, pd.Series):
             return X.to_frame()
         X = as_float_array(X)
@@ -48,18 +47,9 @@ class ToDataFrameTransformer(BaseEstimator, TransformerMixin):
         return pd.DataFrame(X, index=self.index, columns=self.columns, dtype=self.dtype)
 
 
-class LabelVectorizer(BaseEstimator, TransformerMixin):
-
-    def fit(self, X, y=None, **fit_params):
-        return self
-
-    def transform(self, X, y=None, **fit_params):
-        return pd.get_dummies(X)
-
-
 class LambdaTransfomer(BaseEstimator, TransformerMixin):
 
-    def __init__(self, func):
+    def __init__(self, func=lambda x: x):
         self.func = func
 
     def fit(self, X, y=None):

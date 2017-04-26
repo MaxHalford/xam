@@ -10,7 +10,6 @@ import math
 
 import numpy as np
 from scipy import stats
-from sklearn.utils import as_float_array
 from sklearn.utils import check_X_y
 
 from .base import BaseSupervisedBinner
@@ -21,9 +20,7 @@ class MDLPBinner(BaseSupervisedBinner):
     def fit(self, X, y, **fit_params):
         """Determine which are the best cut points for each column in X based on y."""
 
-        X = as_float_array(X)
-        y = np.array(y).astype(int)
-        X, y = check_X_y(X, y)
+        X, y = check_X_y(X, y, y_numeric=True)
 
         self.cut_points_ = [mdlp_cut(x, y, []) for x in X.T]
         return self
