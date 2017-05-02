@@ -57,16 +57,6 @@ print(advertising)
 ```
 
 
-## Feature selection
-
-| IV/DV       | Categorical | Continuous    |
-|-------------|-------------|---------------|
-| Categorical | Chi Square  | t-test, ANOVA |
-| Continuous  | LDA, QDA    | Regression    |
-
-- When the DV is continuous, there is a parametric test for when the DV follows a normal distribution and non-parametric test for when it does not.
-
-
 ## Dealing with unbalanced classes
 
 - [Read this](https://svds.com/learning-imbalanced-classes/)

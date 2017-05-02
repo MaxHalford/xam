@@ -331,6 +331,51 @@ array([[2, 0],
 ```
 
 
+### Feature selection
+
+**Feature importance**
+
+The `feature_importance` method returns two dataframes that contain feature importance metrics that depend on the types of the feature/target
+
+| Feature/Target       | Categorical           | Numerical               |
+|----------------------|-----------------------|-------------------------|
+| Categorical          | Chi² score            | Mutual information      |
+| Numerical            | Mutual information    | Pearson correlation     |
+
+```python
+>>> import pandas as pd
+>>> from sklearn import datasets
+>>> import xam
+
+>>> boston = datasets.load_boston()
+>>> features = pd.DataFrame(boston.data, columns=boston.feature_names)
+>>> target = pd.Series(boston.target)
+
+>>> features['CHAS'] = features['CHAS'].astype(int)
+
+>>> num_imp, cat_imp = xam.feature_selection.feature_importance(features, target)
+>>> num_imp.sort_values('pearson_r_p')
+         pearson_r_value   pearson_r_p
+LSTAT          -0.737663  5.081103e-88
+RM              0.695360  2.487229e-74
+PTRATIO        -0.507787  1.609509e-34
+INDUS          -0.483725  4.900260e-31
+TAX            -0.468536  5.637734e-29
+NOX            -0.427321  7.065042e-24
+CRIM           -0.385832  2.083550e-19
+RAD            -0.381626  5.465933e-19
+AGE            -0.376955  1.569982e-18
+ZN              0.360445  5.713584e-17
+B               0.333461  1.318113e-14
+DIS             0.249929  1.206612e-08
+
+>>> cat_imp.sort_values('mutual_information')
+      mutual_information
+CHAS            0.018653
+
+```
+
+
 ### Clustering
 
 **Cross-chain algorithm**
@@ -589,18 +634,6 @@ dtype: float64
 >>> step = dt.timedelta(days=2)
 >>> xam.util.datetime_range(since=since, until=until, step=step)
 [datetime.datetime(2017, 3, 22, 0, 0), datetime.datetime(2017, 3, 24, 0, 0)]
-
-```
-
-**Intraclass correlation**
-
-```python
->>> import xam
-
->>> x = [1, 1.1, 1.2, 1.3, 2.1, 2.2, 2.3, 2.4]
->>> y = ['a', 'a', 'a', 'a', 'b', 'b', 'b', 'b']
->>> xam.util.intraclass_correlation(x, y)
-0.96031746031746024
 
 ```
 
