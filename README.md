@@ -12,6 +12,7 @@ xam is my personal data science and machine learning toolbox. It is written in P
     - [Preprocessing](#preprocessing)
       - [Pipeline](#pipeline)
       - [Binning](#binning)
+    - [Feature selection](#feature-selection)
     - [Clustering](#clustering)
     - [Model stacking](#model-stacking)
     - [Natural Language Processing (NLP)](#natural-language-processing-nlp)
