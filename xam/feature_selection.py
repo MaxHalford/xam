@@ -6,7 +6,7 @@ from sklearn import feature_selection
 
 def feature_importance(features, target):
     num = features.select_dtypes(include=[float])
-    cat = features.select_dtypes(include=[int, bool, object])
+    cat = features.select_dtypes(include=[int, bool])
 
     # If the target is numerical then it is a regression task
     if target.dtype == 'float':
