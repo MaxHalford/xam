@@ -3,19 +3,17 @@ from sklearn import model_selection
 from sklearn.base import BaseEstimator
 from sklearn.base import MetaEstimatorMixin
 from sklearn.utils.validation import check_X_y
-from tqdm import tqdm
 
 
 class BaseStackingEstimator(BaseEstimator, MetaEstimatorMixin):
 
-    def __init__(self, models, meta_model, n_folds, stratified, use_base_features, verbose):
+    def __init__(self, models, meta_model, n_folds, stratified, use_base_features):
         # Parameters
         self.models = models
         self.meta_model = meta_model
         self.n_folds = n_folds
         self.stratified = stratified
         self.use_base_features = use_base_features
-        self.verbose = verbose
 
         # Attributes
         self.meta_features_ = None
@@ -33,8 +31,8 @@ class BaseStackingEstimator(BaseEstimator, MetaEstimatorMixin):
         else:
             folds = model_selection.KFold(n_splits=self.n_folds).split(X)
 
-        for train_index, test_index in tqdm(folds, desc='CV loop', disable=not self.verbose):
-            for j, model in enumerate(tqdm(self.models, desc='Model loop', disable=not self.verbose)):
+        for train_index, test_index in folds:
+            for j, model in enumerate(self.models):
                 # Train the model on the training set
                 model.fit(X[train_index], y[train_index])
                 # Store the predictions the model makes on the test set
