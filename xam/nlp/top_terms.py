@@ -33,7 +33,7 @@ class TopTermsClassifier(BaseEstimator, ClassifierMixin):
         # Return the classifier
         return self
 
-    def _classify(self, x):
+    def _predict(self, x):
 
         # Find the terms in the document
         terms = set(np.where(x > 0)[0])
@@ -49,4 +49,4 @@ class TopTermsClassifier(BaseEstimator, ClassifierMixin):
         # scikit-learn checks
         X = check_array(X)
 
-        return np.array([self._classify(x) for x in X])
+        return np.array([self._predict(x) for x in X])
