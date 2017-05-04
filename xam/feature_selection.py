@@ -1,53 +1,124 @@
+from collections import defaultdict
+import math
+
 import numpy as np
 import pandas as pd
 from scipy import stats
 from sklearn import feature_selection
 
 
-def feature_importance(features, target):
-    num = features.select_dtypes(include=[float])
-    cat = features.select_dtypes(include=[int, bool])
-
-    # If the target is numerical then it is a regression task
-    if target.dtype == 'float':
-        return _regression_importance(num, cat, target)
-
-    # Else it is a classification task
-    return _classification_importance(num, cat, target)
+def cramers_v_stat(confusion_matrix):
+    """ Calculate Cramérs V statistic for categorial-categorial association."""
+    chi2 = stats.chi2_contingency(confusion_matrix)[0]
+    n = confusion_matrix.sum()
+    phi2 = chi2 / n
+    r, k = confusion_matrix.shape
+    return math.sqrt(phi2 / min((r-1), (k-1)))
 
 
-def _regression_importance(num, cat, target):
+def cramers_v_corrected_stat(confusion_matrix):
+    """ Calculate Cramérs V statistic for categorial-categorial association.
 
-    num_imp = pd.DataFrame(index=num.columns)
-    cat_imp = pd.DataFrame(index=cat.columns)
-
-    # Use Pearson correlation for numerical features
-    if num_imp.index.size > 0:
-        pearson_rs = np.array([stats.pearsonr(feature, target) for _, feature in num.iteritems()])
-        num_imp['pearson_r_value'] = pearson_rs[:, 0]
-        num_imp['pearson_r_p'] = pearson_rs[:, 1]
-
-    # Use mutual information for categorical features
-    if cat_imp.index.size > 0:
-        mut_inf = feature_selection.mutual_info_regression(cat, target, discrete_features=True)
-        cat_imp['mutual_information'] = mut_inf
-
-    return num_imp, cat_imp
+    Uses correction from Bergsma and Wicher, Journal of the Korean Statistical
+    Society 42 (2013): 323-328.
+    """
+    chi2 = stats.chi2_contingency(confusion_matrix)[0]
+    n = confusion_matrix.sum()
+    phi2 = chi2 / n
+    r, k = confusion_matrix.shape
+    phi2_corr = max(0, phi2 - ((k-1)*(r-1)) / (n-1))
+    r_corr = r - ((r-1)**2) / (n-1)
+    k_corr = k - ((k-1)**2) / (n-1)
+    return math.sqrt(phi2_corr / min((r_corr-1), (k_corr-1)))
 
 
-def _classification_importance(num, cat, target):
+def feature_importance_classification(features, target, n_neighbors=3, random_state=None):
 
-    num_imp = pd.DataFrame(index=num.columns)
-    cat_imp = pd.DataFrame(index=cat.columns)
+    cont = features.select_dtypes(include=[np.floating])
+    disc = features.select_dtypes(include=[np.integer, np.bool])
 
-    # Use mutual information for numerical features
-    if num_imp.index.size > 0:
-        mut_inf = feature_selection.mutual_info_classif(num, target, discrete_features=False)
-        num_imp['mutual_information'] = mut_inf
+    cont_imp = pd.DataFrame(index=cont.columns)
+    disc_imp = pd.DataFrame(index=disc.columns)
 
-    # Use chi-square score for categorical features
-    if cat_imp.index.size > 0:
-        chi2 = feature_selection.chi2(cat, target)
-        cat_imp['chi2_value'], cat_imp['chi2_p'] = chi2[0], chi2[1]
+    # Continuous features
+    if cont_imp.index.size > 0:
 
-    return num_imp, cat_imp
+        # F-test
+        f_test = feature_selection.f_classif(cont, target)
+        cont_imp['f_statistic'] = f_test[0]
+        cont_imp['f_p_value'] = f_test[1]
+
+        # Mutual information
+        mut_inf = feature_selection.mutual_info_classif(cont, target, discrete_features=False,
+                                                        n_neighbors=n_neighbors,
+                                                        random_state=random_state)
+        cont_imp['mutual_information'] = mut_inf
+
+    # Discrete features
+    if disc_imp.index.size > 0:
+
+        # Chi²-test
+        chi2 = feature_selection.chi2(disc, target)
+        disc_imp['chi2_statistic'] = chi2[0]
+        disc_imp['chi2_p_value'] = chi2[1]
+
+        # Cramér's V (corrected)
+        disc_imp['cramers_v'] = [
+            cramers_v_corrected_stat(pd.crosstab(feature, target).values)
+            for _, feature in disc.iteritems()
+        ]
+
+        # Mutual information
+        mut_inf = feature_selection.mutual_info_classif(disc, target, discrete_features=True,
+                                                        n_neighbors=n_neighbors,
+                                                        random_state=random_state)
+        disc_imp['mutual_information'] = mut_inf
+
+    return cont_imp, disc_imp
+
+
+def feature_importance_regression(features, target, n_neighbors=3, random_state=None):
+
+    cont = features.select_dtypes(include=[np.floating])
+    disc = features.select_dtypes(include=[np.integer, np.bool])
+
+    cont_imp = pd.DataFrame(index=cont.columns)
+    disc_imp = pd.DataFrame(index=disc.columns)
+
+    # Continuous features
+    if cont_imp.index.size > 0:
+
+        # Pearson correlation
+        pearson = np.array([stats.pearsonr(feature, target) for _, feature in cont.iteritems()])
+        cont_imp['pearson_r'] = pearson[:, 0]
+        cont_imp['pearson_r_p_value'] = pearson[:, 1]
+
+        # Mutual information
+        mut_inf = feature_selection.mutual_info_regression(cont, target, discrete_features=False,
+                                                           n_neighbors=n_neighbors,
+                                                           random_state=random_state)
+        cont_imp['mutual_information'] = mut_inf
+
+    # Discrete features
+    if disc_imp.index.size > 0:
+
+        # F-test
+        f_tests = defaultdict(dict)
+
+        for feature in disc.columns:
+            groups = [target[idxs] for idxs in disc.groupby(feature).groups.values()]
+            f_test = stats.f_oneway(*groups)
+            f_tests[feature]['f_statistic'] = f_test[0]
+            f_tests[feature]['f_p_value'] = f_test[1]
+
+        f_tests_df = pd.DataFrame.from_dict(f_tests, orient='index')
+        disc_imp['f_statistic'] = f_tests_df['f_statistic']
+        disc_imp['f_p_value'] = f_tests_df['f_p_value']
+
+        # Mutual information
+        mut_inf = feature_selection.mutual_info_regression(disc, target, discrete_features=True,
+                                                           n_neighbors=n_neighbors,
+                                                           random_state=random_state)
+        disc_imp['mutual_information'] = mut_inf
+
+    return cont_imp, disc_imp
