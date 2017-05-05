@@ -8,7 +8,7 @@ from sklearn import feature_selection
 
 
 def cramers_v_stat(confusion_matrix):
-    """ Calculate Cramérs V statistic for categorial-categorial association."""
+    """Calculate Cramérs V statistic for categorial-categorial association."""
     chi2 = stats.chi2_contingency(confusion_matrix)[0]
     n = confusion_matrix.sum()
     phi2 = chi2 / n
@@ -17,7 +17,7 @@ def cramers_v_stat(confusion_matrix):
 
 
 def cramers_v_corrected_stat(confusion_matrix):
-    """ Calculate Cramérs V statistic for categorial-categorial association.
+    """Calculate Cramérs V statistic for categorial-categorial association.
 
     Uses correction from Bergsma and Wicher, Journal of the Korean Statistical
     Society 42 (2013): 323-328.
@@ -58,9 +58,17 @@ def feature_importance_classification(features, target, n_neighbors=3, random_st
     if disc_imp.index.size > 0:
 
         # Chi²-test
-        chi2 = feature_selection.chi2(disc, target)
-        disc_imp['chi2_statistic'] = chi2[0]
-        disc_imp['chi2_p_value'] = chi2[1]
+        chi2_tests = defaultdict(dict)
+
+        for feature in disc.columns:
+            cont = pd.crosstab(disc[feature], target)
+            statistic, p_value, _, _ = stats.chi2_contingency(cont)
+            chi2_tests[feature]['chi2_statistic'] = statistic
+            chi2_tests[feature]['chi2_p_value'] = p_value
+
+        chi2_tests_df = pd.DataFrame.from_dict(chi2_tests, orient='index')
+        disc_imp['chi2_statistic'] = chi2_tests_df['chi2_statistic']
+        disc_imp['chi2_p_value'] = chi2_tests_df['chi2_p_value']
 
         # Cramér's V (corrected)
         disc_imp['cramers_v'] = [
@@ -107,9 +115,9 @@ def feature_importance_regression(features, target, n_neighbors=3, random_state=
 
         for feature in disc.columns:
             groups = [target[idxs] for idxs in disc.groupby(feature).groups.values()]
-            f_test = stats.f_oneway(*groups)
-            f_tests[feature]['f_statistic'] = f_test[0]
-            f_tests[feature]['f_p_value'] = f_test[1]
+            statistic, p_value = stats.f_oneway(*groups)
+            f_tests[feature]['f_statistic'] = statistic
+            f_tests[feature]['f_p_value'] = p_value
 
         f_tests_df = pd.DataFrame.from_dict(f_tests, orient='index')
         disc_imp['f_statistic'] = f_tests_df['f_statistic']

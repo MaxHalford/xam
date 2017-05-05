@@ -369,7 +369,7 @@ sepal width (cm)     47.364461  1.327917e-16            0.256295
 
 >>> disc_imp.sort_values('chi2_p_value')
                    chi2_statistic  chi2_p_value  cramers_v  mutual_information
-sepal length (cm)       38.593407  4.164360e-09   0.803139            0.386244
+sepal length (cm)        98.11883  4.940452e-22   0.803139            0.386244
 
 ```
 
