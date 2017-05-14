@@ -8,15 +8,11 @@ from sklearn.utils.validation import check_X_y
 class BaseStackingEstimator(BaseEstimator, MetaEstimatorMixin):
 
     def __init__(self, models, meta_model, n_folds, stratified, use_base_features):
-        # Parameters
         self.models = models
         self.meta_model = meta_model
         self.n_folds = n_folds
         self.stratified = stratified
         self.use_base_features = use_base_features
-
-        # Attributes
-        self.meta_features_ = None
 
     def fit(self, X, y):
 

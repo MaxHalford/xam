@@ -15,6 +15,7 @@ xam is my personal data science and machine learning toolbox. It is written in P
     - [Feature selection](#feature-selection)
     - [Clustering](#clustering)
     - [Model stacking](#model-stacking)
+    - [Splitting](#splitting)
     - [Natural Language Processing (NLP)](#natural-language-processing-nlp)
     - [Time series analysis (TSA)](#time-series-analysis-tsa)
     - [Utilities](#utilities)
@@ -508,6 +509,37 @@ MAE: 7.45 (+/- 2.39) [KNN]
 MAE: 7.72 (+/- 4.10) [Random Forest]
 MAE: 7.71 (+/- 4.06) [Ridge regression]
 MAE: 6.38 (+/- 1.25) [StackingRegressor]
+
+```
+
+
+### Splitting
+
+Splitting makes it easy a model on different *splits* of a dataset. For example you may want to train one model per user/day.
+
+```python
+>>> from sklearn import model_selection
+>>> from sklearn.linear_model import Lasso
+>>> from sklearn.datasets import load_diabetes
+>>> import xam
+
+>>> X, y = load_diabetes(return_X_y=True)
+
+>>> def split(row):
+...    return row[2] > 0
+
+>>> lasso = Lasso(alpha=0.01, random_state=42)
+>>> split_lasso = xam.splitting.SplittingEstimator(lasso, split)
+
+>>> cv = model_selection.KFold(n_splits=5, random_state=42)
+
+>>> scores = model_selection.cross_val_score(lasso, X, y, cv=cv, scoring='r2')
+>>> print('{:.3f} (+/- {:.3f})'.format(scores.mean(), 1.96 * scores.std()))
+0.481 (+/- 0.095)
+
+>>> scores = model_selection.cross_val_score(split_lasso, X, y, cv=cv, scoring='r2')
+>>> print('{:.3f} (+/- {:.3f})'.format(scores.mean(), 1.96 * scores.std()))
+0.468 (+/- 0.090)
 
 ```
 

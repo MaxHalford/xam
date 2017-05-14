@@ -57,7 +57,7 @@ class SupervisedImputer(BaseEstimator, TransformerMixin):
                              "Expected %d, got %d." % (len(self.imputers_), X.shape[1]))
 
         features = np.hstack((X[:, :self.groupby_col], X[:, self.groupby_col+1:]))
-        X_trans = np.copy(features)
+        XX = np.copy(features)
         y = np.hstack(X[:, self.groupby_col])
 
         # Iterate over the columns
@@ -70,10 +70,10 @@ class SupervisedImputer(BaseEstimator, TransformerMixin):
                 nulls = x[null_mask & (y == c)]
                 # If there are missing values for the class then apply the corresponding Imputer
                 if nulls.size > 0:
-                    X_trans[:, i][(null_mask) & (y == c)] = self.imputers_[i][c].transform(
+                    XX[:, i][(null_mask) & (y == c)] = self.imputers_[i][c].transform(
                         nulls.reshape(-1, 1)
                     )
-        return X_trans
+        return XX
 
     def fit_transform(self, X, y=None, **fit_params):
         return self.fit(X, y, **fit_params).transform(X, y)

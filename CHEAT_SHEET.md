@@ -7,6 +7,11 @@
 - *DV*: dependent variable
 
 
+## Wise words
+
+- Resampling may improve ROC AUC, but it might reduce precision for the lesser represented class
+
+
 ## Missing values
 
 - Replace by mean, median or most frequent value
@@ -70,9 +75,6 @@ print(advertising)
 
 ## Timeseries forecasting
 
-### Temporal cross-validation
+- Use [time series cross-validation](http://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html) (explanatory diagram [here](http://robjhyndman.com/hyndsight/tscv/))
 
 ### Spectral analysis for uncovering recurring patterns
-
-
-

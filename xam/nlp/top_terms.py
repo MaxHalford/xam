@@ -8,11 +8,7 @@ from sklearn.utils.validation import check_X_y
 class TopTermsClassifier(BaseEstimator, ClassifierMixin):
 
     def __init__(self, n_terms=10):
-        # Parameters
         self.n_terms = n_terms
-
-        # Attributes
-        self.top_terms_per_class_ = None
 
     def fit(self, X, y=None, **fit_params):
 
