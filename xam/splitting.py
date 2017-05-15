@@ -33,7 +33,7 @@ class SplittingEstimator(BaseEstimator, MetaEstimatorMixin):
 
         for key in self.split_keys_:
             mask = keys == key
-            self.estimators_[key].fit(X[mask], y[mask])
+            self.estimators_[key].fit(X[mask], y[mask], **fit_params)
 
         return self
 
