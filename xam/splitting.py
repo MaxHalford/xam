@@ -37,7 +37,7 @@ class SplittingEstimator(BaseEstimator, MetaEstimatorMixin):
 
         return self
 
-    def _predict(self, X, proba):
+    def predict(self, X):
 
         keys = self._get_keys(X)
         yy = np.zeros(shape=(X.shape[0],))
@@ -45,15 +45,18 @@ class SplittingEstimator(BaseEstimator, MetaEstimatorMixin):
 
         for key in self.split_keys_:
             mask = keys == key
-            yy[mask] = (
-                self.estimators_[key].predict_proba(X[mask]) if proba
-                else self.estimators_[key].predict(X[mask])
-            )
+            yy[mask] = self.estimators_[key].predict(X[mask])
 
         return yy
 
-    def predict(self, X):
-        return self._predict(X, proba=False)
-
     def predict_proba(self, X):
-        return self._predict(X, proba=True)
+
+        keys = self._get_keys(X)
+        yy = np.zeros(shape=(X.shape[0], 2))
+        yy[:] = np.nan
+
+        for key in self.split_keys_:
+            mask = keys == key
+            yy[mask] = self.estimators_[key].predict_proba(X[mask])
+
+        return yy
