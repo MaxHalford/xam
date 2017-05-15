@@ -526,7 +526,7 @@ Splitting makes it easy a model on different *splits* of a dataset. For example 
 >>> X, y = load_diabetes(return_X_y=True)
 
 >>> def split(row):
-...    return row[2] > 0
+...    return row[1] > 0
 
 >>> lasso = Lasso(alpha=0.01, random_state=42)
 >>> split_lasso = xam.splitting.SplittingEstimator(lasso, split)
@@ -539,7 +539,7 @@ Splitting makes it easy a model on different *splits* of a dataset. For example 
 
 >>> scores = model_selection.cross_val_score(split_lasso, X, y, cv=cv, scoring='r2')
 >>> print('{:.3f} (+/- {:.3f})'.format(scores.mean(), 1.96 * scores.std()))
-0.468 (+/- 0.090)
+0.496 (+/- 0.098)
 
 ```
 
