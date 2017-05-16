@@ -517,6 +517,8 @@ MAE: 6.38 (+/- 1.25) [StackingRegressor]
 
 Splitting makes it easy a model on different *splits* of a dataset. For example you may want to train one model per user/day.
 
+:warning: Python doesn't know how to pickle lambda functions; you should pass a plain old `def` function to `SplittingEstimator` if you want to be able to pickle it.
+
 ```python
 >>> from sklearn import model_selection
 >>> from sklearn.linear_model import Lasso
