@@ -706,6 +706,8 @@ dtype: float64
 >>> plot = ax.plot(x, y)
 >>> x_label = ax.set_xlabel('X')
 >>> y_label = ax.set_ylabel('Y')
+>>> title = ax.set_title('Logistic function')
+>>> ax.grid(True)
 
 >>> latex.save_fig('figures/latex_example')
 
