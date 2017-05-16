@@ -18,6 +18,7 @@ xam is my personal data science and machine learning toolbox. It is written in P
     - [Splitting](#splitting)
     - [Natural Language Processing (NLP)](#natural-language-processing-nlp)
     - [Time series analysis (TSA)](#time-series-analysis-tsa)
+    - [Plotting](#plotting)
     - [Various](#various)
   - [License](#license)
 <!-- END gotoc -->
@@ -693,32 +694,25 @@ dtype: float64
 **Latex style figures**
 
 ```python
->>> from xam import latex
+>>> from xam import latex  # Needs to be imported before matplotlib.pyplot
 >>> import matplotlib.pyplot as plt
+>>> import numpy as np
 
 >>> fig, ax  = latex.new_fig(width=0.8)
 
->>> def ema(y, a):
-...     s = []
-...     s.append(y[0])
-...     for t in range(1, len(y)):
-...         s.append(a * y[t] + (1-a) * s[t-1])
-...     return np.array(s)
+>>> x = np.arange(-6, 6, 0.04)
+>>> y = 1 / (1 + np.exp(-x))  # Logistic function
 
->>> y = [0] * 200
->>> y.extend([20] * (1000-len(y)))
->>> s = ema(y, 0.01)
+>>> plot = ax.plot(x, y)
+>>> x_label = ax.set_xlabel('X')
+>>> y_label = ax.set_ylabel('Y')
 
->>> plot = ax.plot(s)
->>> x_label = ax.set_xlabel('X Label')
->>> y_label = ax.set_ylabel('EMA')
-
->>> latex.save_fig('figures/ema')
+>>> latex.save_fig('figures/latex_example')
 
 ```
 
 <div align="center">
-  <img src="figures/ema.png">
+  <img src="figures/latex_example.png">
 </div>
 
 
