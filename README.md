@@ -18,7 +18,7 @@ xam is my personal data science and machine learning toolbox. It is written in P
     - [Splitting](#splitting)
     - [Natural Language Processing (NLP)](#natural-language-processing-nlp)
     - [Time series analysis (TSA)](#time-series-analysis-tsa)
-    - [Utilities](#utilities)
+    - [Various](#various)
   - [License](#license)
 <!-- END gotoc -->
 
@@ -688,7 +688,41 @@ dtype: float64
 ```
 
 
-### Utilities
+### Plotting
+
+**Latex style figures**
+
+```python
+>>> from xam import latex
+>>> import matplotlib.pyplot as plt
+
+>>> fig, ax  = latex.new_fig(width=0.8)
+
+>>> def ema(y, a):
+...     s = []
+...     s.append(y[0])
+...     for t in range(1, len(y)):
+...         s.append(a * y[t] + (1-a) * s[t-1])
+...     return np.array(s)
+
+>>> y = [0] * 200
+>>> y.extend([20] * (1000-len(y)))
+>>> s = ema(y, 0.01)
+
+>>> plot = ax.plot(s)
+>>> x_label = ax.set_xlabel('X Label')
+>>> y_label = ax.set_ylabel('EMA')
+
+>>> latex.save_fig('figures/ema')
+
+```
+
+<div align="center">
+  <img src="figures/ema.png">
+</div>
+
+
+### Various
 
 **Datetime range**
 
