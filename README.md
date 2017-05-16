@@ -714,7 +714,7 @@ dtype: float64
 ```
 
 <div align="center">
-  <img src="figures/latex_example.png">
+  <img src="figures/latex_example.png" width="66%">
 </div>
 
 
