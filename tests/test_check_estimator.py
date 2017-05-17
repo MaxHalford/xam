@@ -5,9 +5,6 @@ import xam
 
 # Preprocessing
 
-def test_binary_encoding():
-    assert check_estimator(xam.preprocessing.BinaryEncoder) is None
-
 def test_cycle_transformer():
     assert check_estimator(xam.preprocessing.CycleTransformer) is None
 

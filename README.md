@@ -35,6 +35,7 @@ xam is my personal data science and machine learning toolbox. It is written in P
 
 - [Laurae2/Laurae](https://github.com/Laurae2/Laurae)
 - [rasbt/mlxtend](https://github.com/rasbt/mlxtend)
+- [scikit-learn-contrib](https://github.com/scikit-learn-contrib)
 
 
 ## Usage examples
@@ -92,26 +93,6 @@ array([[ 1.        ,  1.        ,  0.        ,  0.        ],
        [-0.42261826, -0.46947156,  0.90630779,  0.88294759],
        [-0.64278761, -0.5591929 , -0.76604444, -0.82903757],
        [ 0.96592583,  0.9945219 , -0.25881905, -0.10452846]])
-
-```
-
-**Binary encoding**
-
-One-hot encoding is nice but it can an undesirably large amount of features; one alternative is to use binary encoding, this is quite well explained in this [blog post](https://medium.com/data-design/visiting-categorical-features-and-encoding-in-decision-trees-53400fa65931). In the following example the first column has 3 feature distinct values, thus 1 becomes "01", 2 becomes "10" and 3 becomes "11". "00" is reserved for unseen values during the transformation step - in other words if the test set has labels that you didn't encounter in the training set.
-
-```python
->>> import xam
-
->>> X = np.array([
-...     [1, 1],
-...     [2, 1],
-...     [3, 1],
-... ])
-
->>> xam.preprocessing.BinaryEncoder().fit_transform(X)
-array([[0, 1, 1],
-       [1, 0, 1],
-       [1, 1, 1]])
 
 ```
 
@@ -706,7 +687,7 @@ dtype: float64
 >>> y3 = np.arctan(x)  # Inverse tangent
 >>> y4 = x * (x > 0) # Rectified linear unit (ReLU)
 
->>> plot = ax.plot(x, y1, label='Logistic')
+>>> plot = ax.plot(x, y1, label='Logistic sigmoid')
 >>> plot = ax.plot(x, y2, label='Hyperbolic tangent')
 >>> plot = ax.plot(x, y3, label='Inverse tangent')
 >>> plot = ax.plot(x, y4, label='Rectified linear unit (ReLU)')

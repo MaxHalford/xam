@@ -860,7 +860,7 @@
 \pgfusepath{stroke}%
 \end{pgfscope}%
 \begin{pgfscope}%
-\pgftext[x=1.079217in,y=2.687879in,left,base]{\rmfamily\fontsize{8.000000}{9.600000}\selectfont Logistic}%
+\pgftext[x=1.079217in,y=2.687879in,left,base]{\rmfamily\fontsize{8.000000}{9.600000}\selectfont Logistic sigmoid}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfsetrectcap%

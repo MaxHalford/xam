@@ -1,4 +1,3 @@
-from .binary_encoding import BinaryEncoder
 from .binning.bayesian_blocks import BayesianBlocksBinner
 from .binning.equal_frequency import EqualFrequencyBinner
 from .binning.equal_width import EqualWidthBinner
