@@ -700,14 +700,22 @@ dtype: float64
 
 >>> fig, ax  = latex.new_fig(width=0.8)
 
->>> x = np.arange(-6, 6, 0.04)
->>> y = 1 / (1 + np.exp(-x))  # Logistic function
+>>> x = np.arange(-2, 2, 0.03)
+>>> y1 = 1 / (1 + np.exp(-x))  # Logistic
+>>> y2 = np.tanh(x)  # Hyperbolic tangent
+>>> y3 = np.arctan(x)  # Inverse tangent
+>>> y4 = x * (x > 0) # Rectified linear unit (ReLU)
 
->>> plot = ax.plot(x, y)
+>>> plot = ax.plot(x, y1, label='Logistic')
+>>> plot = ax.plot(x, y2, label='Hyperbolic tangent')
+>>> plot = ax.plot(x, y3, label='Inverse tangent')
+>>> plot = ax.plot(x, y4, label='Rectified linear unit (ReLU)')
+
 >>> x_label = ax.set_xlabel('X')
 >>> y_label = ax.set_ylabel('Y')
 >>> title = ax.set_title('Logistic function')
->>> ax.grid(True)
+>>> ax.grid(linewidth=0.5)
+>>> legend = ax.legend(loc='upper left', framealpha=1)
 
 >>> latex.save_fig('figures/latex_example')
 
