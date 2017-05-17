@@ -711,9 +711,9 @@ dtype: float64
 >>> plot = ax.plot(x, y3, label='Inverse tangent')
 >>> plot = ax.plot(x, y4, label='Rectified linear unit (ReLU)')
 
->>> x_label = ax.set_xlabel('X')
->>> y_label = ax.set_ylabel('Y')
->>> title = ax.set_title('Logistic function')
+>>> x_label = ax.set_xlabel('x')
+>>> y_label = ax.set_ylabel('y')
+>>> title = ax.set_title('Activation functions')
 >>> ax.grid(linewidth=0.5)
 >>> legend = ax.legend(loc='upper left', framealpha=1)
 
@@ -722,7 +722,7 @@ dtype: float64
 ```
 
 <div align="center">
-  <img src="figures/latex_example.png" width="66%">
+  <img src="figures/latex_example.png" width="80%">
 </div>
 
 
