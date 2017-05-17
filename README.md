@@ -711,9 +711,9 @@ dtype: float64
 >>> plot = ax.plot(x, y3, label='Inverse tangent')
 >>> plot = ax.plot(x, y4, label='Rectified linear unit (ReLU)')
 
->>> x_label = ax.set_xlabel('x')
->>> y_label = ax.set_ylabel('y')
->>> title = ax.set_title('Activation functions')
+>>> x_label = ax.set_xlabel(r'$x$')
+>>> y_label = ax.set_ylabel(r'$y$')
+>>> title = ax.set_title('A few common activation functions')
 >>> ax.grid(linewidth=0.5)
 >>> legend = ax.legend(loc='upper left', framealpha=1)
 

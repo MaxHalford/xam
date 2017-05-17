@@ -371,7 +371,7 @@
 \pgftext[x=4.827318in,y=0.426335in,,top]{\rmfamily\fontsize{8.000000}{9.600000}\selectfont \(\displaystyle 2.0\)}%
 \end{pgfscope}%
 \begin{pgfscope}%
-\pgftext[x=2.841553in,y=0.272655in,,top]{\rmfamily\fontsize{10.000000}{12.000000}\selectfont x}%
+\pgftext[x=2.841553in,y=0.272655in,,top]{\rmfamily\fontsize{10.000000}{12.000000}\selectfont \(\displaystyle x\)}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfpathrectangle{\pgfqpoint{0.668106in}{0.523557in}}{\pgfqpoint{4.346894in}{2.342099in}} %
@@ -619,7 +619,7 @@
 \pgftext[x=0.420033in,y=2.727810in,left,base]{\rmfamily\fontsize{8.000000}{9.600000}\selectfont \(\displaystyle 2.0\)}%
 \end{pgfscope}%
 \begin{pgfscope}%
-\pgftext[x=0.272655in,y=1.694607in,,bottom,rotate=90.000000]{\rmfamily\fontsize{10.000000}{12.000000}\selectfont y}%
+\pgftext[x=0.272655in,y=1.694607in,,bottom,rotate=90.000000]{\rmfamily\fontsize{10.000000}{12.000000}\selectfont \(\displaystyle y\)}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfpathrectangle{\pgfqpoint{0.668106in}{0.523557in}}{\pgfqpoint{4.346894in}{2.342099in}} %
@@ -825,7 +825,7 @@
 \pgfusepath{stroke}%
 \end{pgfscope}%
 \begin{pgfscope}%
-\pgftext[x=2.841553in,y=2.948990in,,base]{\rmfamily\fontsize{12.000000}{14.400000}\selectfont Activation functions}%
+\pgftext[x=2.841553in,y=2.948990in,,base]{\rmfamily\fontsize{12.000000}{14.400000}\selectfont A few common activation functions}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfsetbuttcap%
