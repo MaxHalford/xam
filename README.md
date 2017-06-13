@@ -676,7 +676,6 @@ dtype: float64
 
 ```python
 >>> from xam import latex  # Needs to be imported before matplotlib.pyplot
->>> import matplotlib.pyplot as plt
 >>> import numpy as np
 
 >>> fig, ax  = latex.new_fig(width=0.8)

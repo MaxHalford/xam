@@ -1,4 +1,5 @@
 from . import clustering
+from . import diagnosis
 from . import feature_selection
 from . import nlp
 from . import preprocessing
