@@ -36,10 +36,9 @@ pgf_with_latex = {                      # setup matplotlib to use latex for outp
 mpl.rcParams.update(pgf_with_latex)
 
 
-import matplotlib.pyplot as plt
-
-
 def new_fig(width):
+    import matplotlib.pyplot as plt
+
     plt.clf()
     fig = plt.figure(figsize=figsize(width))
     ax = fig.add_subplot(111)
@@ -47,6 +46,8 @@ def new_fig(width):
 
 
 def save_fig(filename, dpi=200):
+    import matplotlib.pyplot as plt
+
     plt.tight_layout()
     plt.savefig('{}.pdf'.format(filename))
     plt.savefig('{}.pgf'.format(filename))
