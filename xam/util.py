@@ -24,6 +24,19 @@ def datetime_range(since, until, step=dt.timedelta(days=1)):
     ]
 
 
+def get_next_weekday(date, weekday):
+    """Find the first weekday after a given date.
+
+    Args:
+        date (datetime)
+        weekday (int)
+
+    Returns:
+        datetime: The next day of the week that has index `weekday`.
+    """
+    return date + dt.timedelta(days=(weekday - date.weekday() + 7) % 7)
+
+
 def subsequence_lengths(sequence):
     """Calculate the lengths of each subsequence in a sequence.
 

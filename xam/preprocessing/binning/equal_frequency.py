@@ -23,11 +23,11 @@ class EqualFrequencyBinner(BaseUnsupervisedBinner):
         # scikit-learn checks
         X = check_array(X)
 
-        p_step = 100 / self.n_bins
+        step = 100 / self.n_bins
 
         self.cut_points_ = np.stack([
-            np.percentile(X, p, axis=0)
-            for p in np.arange(start=p_step, stop=100, step=p_step)
+            np.percentile(X, q, axis=0)
+            for q in np.arange(start=step, stop=100, step=step)
         ], axis=-1).tolist()
 
         return self

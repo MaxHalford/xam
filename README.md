@@ -672,10 +672,16 @@ dtype: float64
 
 ### Plotting
 
+**ROC curve**
+
+```python
+
+```
+
 **Latex style figures**
 
 ```python
->>> from xam import latex  # Needs to be imported before matplotlib.pyplot
+>>> from xam.plotting import latex  # Needs to be imported before matplotlib.pyplot
 >>> import numpy as np
 
 >>> fig, ax  = latex.new_fig(width=0.8)
@@ -719,6 +725,19 @@ dtype: float64
 >>> step = dt.timedelta(days=2)
 >>> xam.util.datetime_range(since=since, until=until, step=step)
 [datetime.datetime(2017, 3, 22, 0, 0), datetime.datetime(2017, 3, 24, 0, 0)]
+
+```
+
+**Next day of the week**
+
+```python
+>>> import datetime as dt
+>>> import xam
+
+>>> now = dt.datetime(2017, 3, 22) # Wednesday
+>>> next_monday = xam.util.get_next_weekday(now, 0) # Get next Monday
+>>> next_monday
+datetime.datetime(2017, 3, 27, 0, 0)
 
 ```
 
