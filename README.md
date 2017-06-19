@@ -317,7 +317,7 @@ array([[2, 0],
 
 #### Subsampling
 
-See this [blog post](https://maxhalford.github.io/resampling-1/).
+See this [blog post](https://maxhalford.github.io/subsampling-1/).
 
 ```python
 >>> import numpy as np
