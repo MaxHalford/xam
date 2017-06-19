@@ -12,6 +12,7 @@ xam is my personal data science and machine learning toolbox. It is written in P
     - [Preprocessing](#preprocessing)
       - [Pipeline](#pipeline)
       - [Binning](#binning)
+      - [Subsampling](#subsampling)
     - [Feature selection](#feature-selection)
     - [Clustering](#clustering)
     - [Model stacking](#model-stacking)
@@ -311,6 +312,34 @@ array([[2, 0],
        [2, 0],
        [0, 0],
        [1, 0]])
+
+```
+
+#### Subsampling
+
+See this [blog post](https://maxhalford.github.io/resampling-1/).
+
+```python
+>>> import numpy as np
+>>> import scipy as sp
+>>> import xam
+
+>>> np.random.seed(0)
+>>> train = np.random.beta(1.5, 2, size=5000)
+>>> test = np.random.beta(2, 1.5, size=1000)
+
+>>> # Calculate Kullback–Leibler divergence between the train and the test data
+>>> sp.stats.entropy(np.histogram(train, bins=30)[0], np.histogram(test, bins=30)[0])
+0.1612937324333199
+
+>>> resampler = xam.preprocessing.DistributionResampler(feature=0, sample_frac=0.5, seed=0)
+>>> resampler.fit(test.reshape(-1, 1))
+
+>>> sample = resampler.transform(train.reshape(-1, 1))
+
+>>> # The Kullback–Leibler divergence between sample and test is now lower
+>>> sp.stats.entropy(np.histogram(sample, bins=30)[0], np.histogram(test, bins=30)[0])
+0.036151910003416353
 
 ```
 
