@@ -8,4 +8,4 @@ from .pipeline import ColumnSelector
 from .pipeline import LambdaTransfomer
 from .pipeline import SeriesTransformer
 from .pipeline import ToDataFrameTransformer
-from .resampling import DistributionResampler
+from .resampling import DistributionSubsampler

@@ -332,7 +332,7 @@ See this [blog post](https://maxhalford.github.io/subsampling-1/).
 >>> sp.stats.entropy(np.histogram(train, bins=30)[0], np.histogram(test, bins=30)[0])
 0.1612937324333199
 
->>> resampler = xam.preprocessing.DistributionResampler(feature=0, sample_frac=0.5, seed=0)
+>>> resampler = xam.preprocessing.DistributionSubsampler(feature=0, sample_frac=0.5, seed=0)
 >>> resampler.fit(test.reshape(-1, 1))
 
 >>> sample = resampler.transform(train.reshape(-1, 1))
