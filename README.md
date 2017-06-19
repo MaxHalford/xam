@@ -36,6 +36,7 @@ xam is my personal data science and machine learning toolbox. It is written in P
 
 - [Laurae2/Laurae](https://github.com/Laurae2/Laurae)
 - [rasbt/mlxtend](https://github.com/rasbt/mlxtend)
+- [reiinakano/scikit-plot](https://github.com/reiinakano/scikit-plot)
 - [scikit-learn-contrib](https://github.com/scikit-learn-contrib)
 
 
@@ -710,7 +711,7 @@ dtype: float64
 **Latex style figures**
 
 ```python
->>> from xam.plotting import latex  # Needs to be imported before matplotlib.pyplot
+>>> from xam import latex  # Has to be imported before matplotlib.pyplot
 >>> import numpy as np
 
 >>> fig, ax  = latex.new_fig(width=0.8)
