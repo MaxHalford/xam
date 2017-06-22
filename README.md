@@ -38,7 +38,7 @@ xam is my personal data science and machine learning toolbox. It is written in P
 - [rasbt/mlxtend](https://github.com/rasbt/mlxtend)
 - [reiinakano/scikit-plot](https://github.com/reiinakano/scikit-plot)
 - [scikit-learn-contrib](https://github.com/scikit-learn-contrib)
-
+- [zygmuntz/phraug2](https://github.com/zygmuntz/phraug2)
 
 ## Usage examples
 
