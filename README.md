@@ -787,6 +787,27 @@ datetime.datetime(2017, 3, 27, 0, 0)
 
 ```
 
+**Convert pandas DataFrame to Vowpal Wabbit format**
+
+`xam.util.dataframe_to_vw` convert a `pandas.DataFrame` to a string which can be ingested by [Vowpal Wabbit](https://github.com/JohnLangford/vowpal_wabbit) once it is saved on disk.
+
+```python
+>>> import xam
+
+>>> df = pd.DataFrame.from_dict({
+...     'label': [0, 0, 1, 1],
+...     'feature_0': [0.2, 0.1, 0.4, 0.3],
+...     'feature_1': [0.4, 0.3, 0.3, 0.2],
+... })
+
+>>> vw_str = xam.util.dataframe_to_vw(df, label_col='label')
+>>> print(vw_str)
+0 | feature_0:0.2 feature_1:0.4
+0 | feature_0:0.1 feature_1:0.3
+1 | feature_0:0.4 feature_1:0.3
+1 | feature_0:0.3 feature_1:0.2
+
+```
 
 ## License
 

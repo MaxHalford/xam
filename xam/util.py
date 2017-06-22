@@ -65,3 +65,48 @@ def subsequence_lengths(sequence):
         lengths[sequence[-1]].append(1)
 
     return dict(lengths)
+
+
+def dataframe_to_vw(dataframe, label_col, importance_col=None, base_col=None, tag_col=None):
+    """Convert a pandas.DataFrame to a string which follows Vowpal Wabbit's
+    input format.
+
+    Reference: https://github.com/JohnLangford/vowpal_wabbit/wiki/Input-format
+    """
+
+    vw_str = ''
+    cols = dataframe.columns.tolist()
+
+    label_idx = cols.index(label_col)
+    importance_idx = cols.index(importance_col) if importance_col is not None else None
+    base_idx = cols.index(base_col) if base_col is not None else None
+    tag_idx = cols.index(tag_col) if tag_col is not None else None
+
+    # Determine the columns that represent features
+    feature_idxs = set((
+        i for i, col in enumerate(cols)
+        if col not in (label_col, importance_col, base_col, tag_col)
+    ))
+
+    for row in dataframe.itertuples(index=False):
+
+        row_str = str(row[label_idx])
+
+        if importance_idx:
+            row_str += ' {}'.format(row[importance_idx])
+
+        if base_idx:
+            row_str += ' {}'.format(row[base_idx])
+
+        if tag_idx:
+            row_str += " '{}".format(row[tag_idx])
+
+        row_str += ' | '
+        row_str += ' '.join(('{}:{}'.format(cols[i], str(row[i])) for i in feature_idxs))
+
+        vw_str += '{}\n'.format(row_str)
+
+    # Remove the last carriage return
+    vw_str = vw_str.rstrip('\n')
+
+    return vw_str
