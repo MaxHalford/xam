@@ -8,12 +8,9 @@ python:
 
 cache:
   apt: true
-  # We use three different cache directory
-  # to work around a Travis bug with multi-platform cache
   directories:
   - $HOME/.cache/pip
   - $HOME/download
-  - miniconda.sh
 
 addons:
   apt:
