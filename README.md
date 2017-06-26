@@ -454,7 +454,7 @@ This is a clustering algorithm I devised at one of my internships for matching c
 
 **Classification**
 
-Model stacking for classification as described in this [Kaggle blog post](http://blog.kaggle.com/2016/12/27/a-kagglers-guide-to-model-stacking-in-practice/).
+Model stacking for classification as described in this [Kaggle blog post](http://blog.kaggle.com/2016/12/27/a-kagglers-guide-to-model-stacking-in-practice/) and also [this one](http://blog.kaggle.com/2017/06/15/stacking-made-easy-an-introduction-to-stacknet-by-competitions-grandmaster-marios-michailidis-kazanova/).
 
 ```python
 >>> from sklearn import datasets, metrics, model_selection
