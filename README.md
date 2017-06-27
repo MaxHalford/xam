@@ -465,7 +465,7 @@ Model stacking for classification as described in this [Kaggle blog post](http:/
 >>> import xam
 
 >>> iris = datasets.load_iris()
->>> X, y = iris.data[:, 1:3], iris.target
+>>> X, y = iris.data[:, :3], iris.target
 
 >>> m1 = KNeighborsClassifier(n_neighbors=1)
 >>> m2 = RandomForestClassifier(random_state=1)
@@ -475,19 +475,20 @@ Model stacking for classification as described in this [Kaggle blog post](http:/
 >>> stack = xam.stacking.StackingClassifier(
 ...     models=[m1, m2, m3, m4],
 ...     meta_model=LogisticRegression(),
-...     use_base_features=False
+...     cv=model_selection.StratifiedKFold(n_splits=10),
+...     use_base_features=True
 ... )
 
 >>> model_names = ['KNN', 'Random forest', 'Naïve Bayes', 'Logistic regression', 'StackingClassifier']
 
 >>> for clf, label in zip(stack.models + [stack], model_names):
-...     scores = model_selection.cross_val_score(clf, X, y, cv=3, scoring='f1_weighted')
+...     scores = model_selection.cross_val_score(clf, X, y, cv=10, scoring='f1_weighted')
 ...     print('Accuracy: %0.3f (+/- %0.3f) [%s]' % (scores.mean(), 1.96 * scores.std(), label))
-Accuracy: 0.913 (+/- 0.016) [KNN]
-Accuracy: 0.912 (+/- 0.131) [Random forest]
-Accuracy: 0.921 (+/- 0.052) [Naïve Bayes]
-Accuracy: 0.905 (+/- 0.082) [Logistic regression]
-Accuracy: 0.934 (+/- 0.065) [StackingClassifier]
+Accuracy: 0.932 (+/- 0.104) [KNN]
+Accuracy: 0.926 (+/- 0.125) [Random forest]
+Accuracy: 0.878 (+/- 0.128) [Naïve Bayes]
+Accuracy: 0.917 (+/- 0.137) [Logistic regression]
+Accuracy: 0.939 (+/- 0.112) [StackingClassifier]
 
 ```
 
