@@ -7,11 +7,10 @@ from sklearn.utils.validation import check_X_y
 
 class BaseStackingEstimator(BaseEstimator, MetaEstimatorMixin):
 
-    def __init__(self, models, meta_model, n_folds, stratified, use_base_features):
+    def __init__(self, models, meta_model, cv, use_base_features):
         self.models = models
         self.meta_model = meta_model
-        self.n_folds = n_folds
-        self.stratified = stratified
+        self.cv = cv
         self.use_base_features = use_base_features
 
     def fit(self, X, y):
@@ -22,10 +21,8 @@ class BaseStackingEstimator(BaseEstimator, MetaEstimatorMixin):
         # The meta features has as many rows as there are in X and as many columns as models
         self.meta_features_ = np.empty((len(X), len(self.models)))
 
-        if self.stratified:
-            folds = model_selection.StratifiedKFold(n_splits=self.n_folds).split(X, y)
-        else:
-            folds = model_selection.KFold(n_splits=self.n_folds).split(X)
+        # Generate CV folds
+        folds = self.cv.split(X, y)
 
         for train_index, test_index in folds:
             for j, model in enumerate(self.models):

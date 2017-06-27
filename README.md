@@ -457,7 +457,7 @@ This is a clustering algorithm I devised at one of my internships for matching c
 Model stacking for classification as described in this [Kaggle blog post](http://blog.kaggle.com/2016/12/27/a-kagglers-guide-to-model-stacking-in-practice/) and also [this one](http://blog.kaggle.com/2017/06/15/stacking-made-easy-an-introduction-to-stacknet-by-competitions-grandmaster-marios-michailidis-kazanova/).
 
 ```python
->>> from sklearn import datasets, metrics, model_selection
+>>> from sklearn import datasets, model_selection
 >>> from sklearn.ensemble import RandomForestClassifier
 >>> from sklearn.linear_model import LogisticRegression
 >>> from sklearn.naive_bayes import GaussianNB
@@ -470,21 +470,24 @@ Model stacking for classification as described in this [Kaggle blog post](http:/
 >>> m1 = KNeighborsClassifier(n_neighbors=1)
 >>> m2 = RandomForestClassifier(random_state=1)
 >>> m3 = GaussianNB()
+>>> m4 = LogisticRegression()
+
 >>> stack = xam.stacking.StackingClassifier(
-...     models=[m1, m2, m3],
+...     models=[m1, m2, m3, m4],
 ...     meta_model=LogisticRegression(),
 ...     use_base_features=False
 ... )
 
->>> model_names = ['KNN', 'Random Forest', 'Naïve Bayes', 'StackingClassifier']
+>>> model_names = ['KNN', 'Random forest', 'Naïve Bayes', 'Logistic regression', 'StackingClassifier']
 
 >>> for clf, label in zip(stack.models + [stack], model_names):
-...     scores = model_selection.cross_val_score(clf, X, y, cv=3, scoring='accuracy')
-...     print('Accuracy: %0.2f (+/- %0.2f) [%s]' % (scores.mean(), 1.96 * scores.std(), label))
-Accuracy: 0.91 (+/- 0.02) [KNN]
-Accuracy: 0.91 (+/- 0.13) [Random Forest]
-Accuracy: 0.92 (+/- 0.05) [Naïve Bayes]
-Accuracy: 0.95 (+/- 0.06) [StackingClassifier]
+...     scores = model_selection.cross_val_score(clf, X, y, cv=3, scoring='f1_weighted')
+...     print('Accuracy: %0.3f (+/- %0.3f) [%s]' % (scores.mean(), 1.96 * scores.std(), label))
+Accuracy: 0.913 (+/- 0.016) [KNN]
+Accuracy: 0.912 (+/- 0.131) [Random forest]
+Accuracy: 0.921 (+/- 0.052) [Naïve Bayes]
+Accuracy: 0.905 (+/- 0.082) [Logistic regression]
+Accuracy: 0.934 (+/- 0.065) [StackingClassifier]
 
 ```
 
@@ -493,7 +496,7 @@ Accuracy: 0.95 (+/- 0.06) [StackingClassifier]
 Model stacking for regression as described in this [Kaggle blog post](http://blog.kaggle.com/2016/12/27/a-kagglers-guide-to-model-stacking-in-practice/).
 
 ```python
->>> from sklearn import datasets, metrics, model_selection
+>>> from sklearn import datasets, model_selection
 >>> from sklearn.ensemble import RandomForestRegressor
 >>> from sklearn.linear_model import LinearRegression
 >>> from sklearn.linear_model import Ridge
@@ -501,26 +504,28 @@ Model stacking for regression as described in this [Kaggle blog post](http://blo
 >>> import xam
 
 >>> boston = datasets.load_boston()
->>> X, y = boston.data[:, :2], boston.target
+>>> X, y = boston.data, boston.target
 
 >>> m1 = KNeighborsRegressor(n_neighbors=1)
 >>> m2 = LinearRegression()
 >>> m3 = Ridge(alpha=.5)
+
 >>> stack = xam.stacking.StackingRegressor(
 ...     models=[m1, m2, m3],
 ...     meta_model=RandomForestRegressor(random_state=1),
-...     use_base_features=False
+...     cv=model_selection.KFold(n_splits=10),
+...     use_base_features=True
 ... )
 
 >>> model_names = ['KNN', 'Random Forest', 'Ridge regression', 'StackingRegressor']
 
 >>> for clf, label in zip(stack.models + [stack], model_names):
-...     scores = model_selection.cross_val_score(clf, X, y, cv=3, scoring='neg_mean_absolute_error')
+...     scores = model_selection.cross_val_score(clf, X, y, cv=10, scoring='neg_mean_absolute_error')
 ...     print('MAE: %0.2f (+/- %0.2f) [%s]' % (-scores.mean(), 1.96 * scores.std(), label))
-MAE: 7.45 (+/- 2.39) [KNN]
-MAE: 7.72 (+/- 4.10) [Random Forest]
-MAE: 7.71 (+/- 4.06) [Ridge regression]
-MAE: 6.38 (+/- 1.25) [StackingRegressor]
+MAE: 7.21 (+/- 3.51) [KNN]
+MAE: 4.01 (+/- 4.09) [Random Forest]
+MAE: 3.95 (+/- 4.14) [Ridge regression]
+MAE: 3.07 (+/- 2.54) [StackingRegressor]
 
 ```
 
