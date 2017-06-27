@@ -1,5 +1,4 @@
 import numpy as np
-from sklearn import model_selection
 from sklearn.base import BaseEstimator
 from sklearn.base import MetaEstimatorMixin
 from sklearn.utils.validation import check_X_y
@@ -7,30 +6,45 @@ from sklearn.utils.validation import check_X_y
 
 class BaseStackingEstimator(BaseEstimator, MetaEstimatorMixin):
 
-    def __init__(self, models, meta_model, cv, use_base_features):
+    def __init__(self, models, meta_model, cv, use_base_features, use_proba):
         self.models = models
         self.meta_model = meta_model
         self.cv = cv
         self.use_base_features = use_base_features
+        self.use_proba = use_proba
 
     def fit(self, X, y):
 
         # Check that X and y have correct shape
         X, y = check_X_y(X, y)
 
-        # The meta features has as many rows as there are in X and as many columns as models
-        self.meta_features_ = np.empty((len(X), len(self.models)))
+        # meta_features_ have as many rows as there are in X and as many
+        # columns as there are models. However, if use_proba is True then
+        # ((n_classes - 1) * n_models) columns have to be stored
+        if self.use_proba:
+            self.n_probas_ = len(np.unique(y)) - 1
+            self.meta_features_ = np.empty((len(X), len(self.models) * (self.n_probas_)))
+        else:
+            self.meta_features_ = np.empty((len(X), len(self.models)))
 
         # Generate CV folds
         folds = self.cv.split(X, y)
 
         for train_index, test_index in folds:
-            for j, model in enumerate(self.models):
+            for i, model in enumerate(self.models):
                 # Train the model on the training set
                 model.fit(X[train_index], y[train_index])
-                # Store the predictions the model makes on the test set
-                self.meta_features_[test_index, j] = model.predict(X[test_index])
+                # If use_proba is True then the probabilities of each class for
+                # each model have to be predicted and then stored into
+                # meta_features
+                if self.use_proba:
+                    probabilities = model.predict_proba(X[test_index])
+                    for j, k in enumerate(range(self.n_probas_ * i, self.n_probas_ * (i + 1))):
+                        self.meta_features_[test_index, k] = probabilities[:, j]
+                else:
+                    self.meta_features_[test_index, i] = model.predict(X[test_index])
 
+        # Combine the predictions with the original features
         if self.use_base_features:
             self.meta_features_ = np.hstack((self.meta_features_, X))
 
@@ -43,7 +57,17 @@ class BaseStackingEstimator(BaseEstimator, MetaEstimatorMixin):
         return self
 
     def predict(self, X):
-        meta_features = np.transpose([model.predict(X) for model in self.models])
+
+        # If use_proba is True then the probabilities of each class for each
+        # model have to be predicted and then stored into meta_features
+        if self.use_proba:
+            meta_features = np.empty((len(X), len(self.models) * (self.n_probas_)))
+            for i, model in enumerate(self.models):
+                probabilities = model.predict_proba(X)
+                for j, k in enumerate(range(self.n_probas_ * i, self.n_probas_ * (i + 1))):
+                    meta_features[:, k] = probabilities[:, j]
+        else:
+            meta_features = np.transpose([model.predict(X) for model in self.models])
 
         if self.use_base_features:
             meta_features = np.hstack((meta_features, X))

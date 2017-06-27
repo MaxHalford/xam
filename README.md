@@ -452,9 +452,11 @@ This is a clustering algorithm I devised at one of my internships for matching c
 
 ### Model stacking
 
-**Classification**
+- [A Kaggler's guide to model stacking in practice](http://blog.kaggle.com/2016/12/27/a-kagglers-guide-to-model-stacking-in-practice/)
+- [Stacking Made Easy: An Introduction to StackNet by Competitions Grandmaster Marios Michailidis](http://blog.kaggle.com/2017/06/15/stacking-made-easy-an-introduction-to-stacknet-by-competitions-grandmaster-marios-michailidis-kazanova/)
+- [Stacked generalization, when does it work?](http://www.cs.waikato.ac.nz/~ihw/papers/97KMT-IHW-Stacked.pdf)
 
-Model stacking for classification as described in this [Kaggle blog post](http://blog.kaggle.com/2016/12/27/a-kagglers-guide-to-model-stacking-in-practice/) and also [this one](http://blog.kaggle.com/2017/06/15/stacking-made-easy-an-introduction-to-stacknet-by-competitions-grandmaster-marios-michailidis-kazanova/).
+**Classification**
 
 ```python
 >>> from sklearn import datasets, model_selection
@@ -476,7 +478,8 @@ Model stacking for classification as described in this [Kaggle blog post](http:/
 ...     models=[m1, m2, m3, m4],
 ...     meta_model=LogisticRegression(),
 ...     cv=model_selection.StratifiedKFold(n_splits=10),
-...     use_base_features=True
+...     use_base_features=True,
+...     use_proba=True
 ... )
 
 >>> model_names = ['KNN', 'Random forest', 'Naïve Bayes', 'Logistic regression', 'StackingClassifier']
@@ -488,7 +491,7 @@ Accuracy: 0.932 (+/- 0.104) [KNN]
 Accuracy: 0.926 (+/- 0.125) [Random forest]
 Accuracy: 0.878 (+/- 0.128) [Naïve Bayes]
 Accuracy: 0.917 (+/- 0.137) [Logistic regression]
-Accuracy: 0.939 (+/- 0.112) [StackingClassifier]
+Accuracy: 0.939 (+/- 0.093) [StackingClassifier]
 
 ```
 

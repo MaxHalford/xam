@@ -12,5 +12,6 @@ class StackingRegressor(BaseStackingEstimator, RegressorMixin):
             models=models,
             meta_model=meta_model,
             cv=cv,
-            use_base_features=use_base_features
+            use_base_features=use_base_features,
+            use_proba=False
         )
