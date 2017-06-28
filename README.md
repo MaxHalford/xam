@@ -738,12 +738,6 @@ ROC AUC: 0.999
 
 ### Plotting
 
-**ROC curve**
-
-```python
-
-```
-
 **Latex style figures**
 
 ```python
