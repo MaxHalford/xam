@@ -19,6 +19,7 @@ xam is my personal data science and machine learning toolbox. It is written in P
     - [Splitting](#splitting)
     - [Natural Language Processing (NLP)](#natural-language-processing-nlp)
     - [Time series analysis (TSA)](#time-series-analysis-tsa)
+    - [Linear models](#linear-models)
     - [Plotting](#plotting)
     - [Various](#various)
   - [License](#license)
@@ -705,6 +706,32 @@ moment
 2016-10-05 09:54:04    8.622535
 2016-10-05 09:57:18    8.622535
 dtype: float64
+
+```
+
+
+### Linear models
+
+**Classification metric maximizer**
+
+This is a generalization of the [AUC regressor](https://github.com/pyduan/amazonaccess/blob/f8addfefcee80f0ca15e416954af3926f3007d16/helpers/ml.py#L77) Paul Buan used for his winning solution to the [Amazon Employee Access Challenge](https://www.kaggle.com/c/amazon-employee-access-challenge).
+
+```python
+>>> from sklearn import datasets
+>>> from sklearn import metrics
+>>> from sklearn import model_selection
+>>> import xam
+
+>>> X, y = datasets.load_digits(n_class=2, return_X_y=True)
+>>> X_train, X_test, y_train, y_test = model_selection.train_test_split(X, y, train_size=0.5, random_state=42)
+
+>>> clf = xam.linear_model.ClassificationMetricRegression(metric=metrics.roc_auc_score)
+>>> clf.fit(X_train, y_train)
+>>> y_pred = clf.predict_proba(X_test)[:, 1]
+>>> test_roc_auc = metrics.roc_auc_score(y_test, y_pred)
+
+>>> print('ROC AUC: {:.3f}'.format(test_roc_auc))
+ROC AUC: 0.999
 
 ```
 
