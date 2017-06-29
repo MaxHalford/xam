@@ -9,18 +9,19 @@ xam is my personal data science and machine learning toolbox. It is written in P
   - [Installation](#installation)
   - [Other Python data science and machine learning toolkits](#other-python-data-science-and-machine-learning-toolkits)
   - [Usage examples](#usage-examples)
+    - [Clustering](#clustering)
+    - [Feature selection](#feature-selection)
+    - [Linear models](#linear-models)
+    - [Model selection](#model-selection)
+    - [Model stacking](#model-stacking)
+    - [Natural Language Processing (NLP)](#natural-language-processing-nlp)
+    - [Pipeline](#pipeline)
+    - [Plotting](#plotting)
     - [Preprocessing](#preprocessing)
-      - [Pipeline](#pipeline)
       - [Binning](#binning)
       - [Subsampling](#subsampling)
-    - [Feature selection](#feature-selection)
-    - [Clustering](#clustering)
-    - [Model stacking](#model-stacking)
     - [Splitting](#splitting)
-    - [Natural Language Processing (NLP)](#natural-language-processing-nlp)
     - [Time series analysis (TSA)](#time-series-analysis-tsa)
-    - [Linear models](#linear-models)
-    - [Plotting](#plotting)
     - [Various](#various)
   - [License](#license)
 <!-- END gotoc -->
@@ -45,62 +46,291 @@ xam is my personal data science and machine learning toolbox. It is written in P
 
 The following snippets serve as documentation, examples and tests - through the use of [doctests](https://pymotw.com/2/doctest/). Again, this is for my personal use so the documentation is not very detailed.
 
-### Preprocessing
 
-**Supervised imputation**
+### Clustering
 
-Scikit-learn's [`Imputer`](http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.Imputer.html) transformer is practical for it is an unsupervised method. `SupervisedImputer` makes it possible to apply an `Imputer` in a supervised way. In other words the `Imputer` is applied conditionally on the value of `y`.
+**Cross-chain algorithm**
+
+This is a clustering algorithm I devised at one of my internships for matching customers with multiple accounts. The idea was to that if there accounts shared some information - eg. the phone number - then we would count those accounts as one single customer. In the following example, the first customer has three accounts; the first account shares the first variable with the second and the second account shares the second variable with the third. The first and third account share no information but they are linked by the second account and form a chain, hence the name of the algorithm.
 
 ```python
 >>> import numpy as np
->>> from sklearn.preprocessing import Imputer
 >>> import xam
 
 >>> X = np.array([
-...     [1,      4,      1],
-...     [np.nan, np.nan, 1],
-...     [3,      5,      1],
-...     [3,      5,      2],
-...     [3,      np.nan, 2],
-...     [3,      7,      2],
+...     # First expected cluster
+...     [0, 1],
+...     [0, 2],
+...     [1, 2],
+...     # Third expected cluster
+...     [4, 3],
+...     # Second expected cluster
+...     [3, 4],
+...     [2, 4],
 ... ])
 
->>> imp = xam.preprocessing.SupervisedImputer(groupby_col=2, strategy='mean')
->>> imp.fit_transform(X)
-array([[ 1. ,  4. ],
-       [ 2. ,  4.5],
-       [ 3. ,  5. ],
-       [ 3. ,  5. ],
-       [ 3. ,  6. ],
-       [ 3. ,  7. ]])
+>>> xam.clustering.CrossChainClusterer().fit_predict(X)
+[0, 0, 0, 1, 2, 2]
 
 ```
 
 
-**Transforming cyclic**
+### Feature selection
 
-Day of week, hours, minutes, are cyclic ordinal features; cosine and sine transforms should be used to express the cycle. See [this StackEchange discussion](https://datascience.stackexchange.com/questions/5990/what-is-a-good-way-to-transform-cyclic-ordinal-attributes). This transformer returns an array with twice as many columns as the input array; the first columns are the cosine transforms and the last columns are the sine transforms.
+**Feature importance**
+
+The `feature_importance` method returns two dataframes that contain feature importance metrics that depend on the types of the feature/target
+
+| Feature/Task         | Classification         | Regression          |
+|----------------------|------------------------|---------------------|
+| Categorical          | Chi²-test + Cramér's V | F-test              |
+| Numerical            | F-test                 | Pearson correlation |
+
+Additionally [mutual information](https://www.wikiwand.com/en/Mutual_information) can be used in each case.
+
+- [Comparison of F-test and mutual information](http://scikit-learn.org/stable/auto_examples/feature_selection/plot_f_test_vs_mi.html)
+
+Classification.
 
 ```python
->>> import numpy as np
+>>> import pandas as pd
+>>> from sklearn import datasets
 >>> import xam
 
->>> times = np.array([
-...    np.linspace(0, 23, 4),
-...    np.linspace(0, 59, 4),
-... ]).T
+>>> iris = datasets.load_iris()
+>>> features = pd.DataFrame(iris.data, columns=iris.feature_names)
+>>> features['sepal length (cm)'] = features['sepal length (cm)'] > 5.5
+>>> target = pd.Series(iris.target)
 
->>> trans = xam.preprocessing.CycleTransformer()
->>> trans.fit_transform(times)
-array([[ 1.        ,  1.        ,  0.        ,  0.        ],
-       [-0.42261826, -0.46947156,  0.90630779,  0.88294759],
-       [-0.64278761, -0.5591929 , -0.76604444, -0.82903757],
-       [ 0.96592583,  0.9945219 , -0.25881905, -0.10452846]])
+>>> cont_imp, disc_imp = xam.feature_selection.feature_importance_classification(features, target, random_state=1)
+
+>>> cont_imp.sort_values('f_p_value')
+                   f_statistic     f_p_value  mutual_information
+petal length (cm)  1179.034328  3.051976e-91            0.990061
+petal width (cm)    959.324406  4.376957e-85            0.977279
+sepal width (cm)     47.364461  1.327917e-16            0.256295
+
+>>> disc_imp.sort_values('chi2_p_value')
+                   chi2_statistic  chi2_p_value  cramers_v  mutual_information
+sepal length (cm)        98.11883  4.940452e-22   0.803139            0.386244
+
+```
+
+Regression.
+
+```python
+>>> import pandas as pd
+>>> from sklearn import datasets
+>>> import xam
+
+>>> boston = datasets.load_boston()
+>>> features = pd.DataFrame(boston.data, columns=boston.feature_names)
+>>> features['CHAS'] = features['CHAS'].astype(int)
+>>> target = pd.Series(boston.target)
+
+>>> cont_imp, disc_imp = xam.feature_selection.feature_importance_regression(features, target, random_state=1)
+
+>>> cont_imp.sort_values('pearson_r_p_value')
+         pearson_r  pearson_r_p_value  mutual_information
+LSTAT    -0.737663       5.081103e-88            0.666882
+RM        0.695360       2.487229e-74            0.526456
+PTRATIO  -0.507787       1.609509e-34            0.453291
+INDUS    -0.483725       4.900260e-31            0.471507
+TAX      -0.468536       5.637734e-29            0.363694
+NOX      -0.427321       7.065042e-24            0.456947
+CRIM     -0.385832       2.083550e-19            0.334339
+RAD      -0.381626       5.465933e-19            0.217623
+AGE      -0.376955       1.569982e-18            0.311285
+ZN        0.360445       5.713584e-17            0.195153
+B         0.333461       1.318113e-14            0.161861
+DIS       0.249929       1.206612e-08            0.295207
+
+>>> disc_imp.sort_values('mutual_information')
+      f_statistic  f_p_value  mutual_information
+CHAS    15.971512   0.000074            0.030825
 
 ```
 
 
-#### Pipeline
+### Linear models
+
+**Classification metric maximizer**
+
+This is a generalization of the [AUC regressor](https://github.com/pyduan/amazonaccess/blob/f8addfefcee80f0ca15e416954af3926f3007d16/helpers/ml.py#L77) Paul Buan used for his winning solution to the [Amazon Employee Access Challenge](https://www.kaggle.com/c/amazon-employee-access-challenge).
+
+```python
+>>> from sklearn import datasets
+>>> from sklearn import metrics
+>>> from sklearn import model_selection
+>>> import xam
+
+>>> X, y = datasets.load_digits(n_class=2, return_X_y=True)
+>>> X_train, X_test, y_train, y_test = model_selection.train_test_split(X, y, train_size=0.5, random_state=42)
+
+>>> clf = xam.linear_model.ClassificationMetricRegression(metric=metrics.roc_auc_score)
+>>> clf.fit(X_train, y_train)
+>>> y_pred = clf.predict_proba(X_test)[:, 1]
+>>> test_roc_auc = metrics.roc_auc_score(y_test, y_pred)
+
+>>> print('ROC AUC: {:.3f}'.format(test_roc_auc))
+ROC AUC: 0.999
+
+```
+
+
+### Model selection
+
+**Datetime cross-validation**
+
+```python
+>>> import datetime as dt
+>>> import pandas as pd
+>>> import xam
+
+>>> df = pd.DataFrame(
+...     [1, 2, 3, 4, 5, 6],
+...     index=[
+...         dt.datetime(2016, 5, 1),
+...         dt.datetime(2016, 5, 1),
+...         dt.datetime(2016, 5, 2),
+...         dt.datetime(2016, 5, 2),
+...         dt.datetime(2016, 5, 2),
+...         dt.datetime(2016, 5, 3),
+...     ]
+... )
+
+>>> df
+            0
+2016-05-01  1
+2016-05-01  2
+2016-05-02  3
+2016-05-02  4
+2016-05-02  5
+2016-05-03  6
+
+>>> cv = xam.model_selection.DatetimeCV(timedelta=dt.timedelta(days=1))
+
+>>> for train_idxs, test_idxs in cv.split(df):
+...     print(train_idxs, test_idxs)
+[0 1] [2 3 4]
+[0 1 2 3 4] [5]
+
+```
+
+
+### Model stacking
+
+- [A Kaggler's guide to model stacking in practice](http://blog.kaggle.com/2016/12/27/a-kagglers-guide-to-model-stacking-in-practice/)
+- [Stacking Made Easy: An Introduction to StackNet by Competitions Grandmaster Marios Michailidis](http://blog.kaggle.com/2017/06/15/stacking-made-easy-an-introduction-to-stacknet-by-competitions-grandmaster-marios-michailidis-kazanova/)
+- [Stacked generalization, when does it work?](http://www.cs.waikato.ac.nz/~ihw/papers/97KMT-IHW-Stacked.pdf)
+
+**Classification**
+
+```python
+>>> from sklearn import datasets, model_selection
+>>> from sklearn.ensemble import RandomForestClassifier
+>>> from sklearn.linear_model import LogisticRegression
+>>> from sklearn.naive_bayes import GaussianNB
+>>> from sklearn.neighbors import KNeighborsClassifier
+>>> import xam
+
+>>> iris = datasets.load_iris()
+>>> X, y = iris.data[:, :3], iris.target
+
+>>> m1 = KNeighborsClassifier(n_neighbors=1)
+>>> m2 = RandomForestClassifier(random_state=1)
+>>> m3 = GaussianNB()
+>>> m4 = LogisticRegression()
+
+>>> stack = xam.stacking.StackingClassifier(
+...     models=[m1, m2, m3, m4],
+...     meta_model=LogisticRegression(),
+...     cv=model_selection.StratifiedKFold(n_splits=10),
+...     use_base_features=True,
+...     use_proba=True
+... )
+
+>>> model_names = ['KNN', 'Random forest', 'Naïve Bayes', 'Logistic regression', 'StackingClassifier']
+
+>>> for clf, label in zip(stack.models + [stack], model_names):
+...     scores = model_selection.cross_val_score(clf, X, y, cv=10, scoring='f1_weighted')
+...     print('Accuracy: %0.3f (+/- %0.3f) [%s]' % (scores.mean(), 1.96 * scores.std(), label))
+Accuracy: 0.932 (+/- 0.104) [KNN]
+Accuracy: 0.926 (+/- 0.125) [Random forest]
+Accuracy: 0.878 (+/- 0.128) [Naïve Bayes]
+Accuracy: 0.917 (+/- 0.137) [Logistic regression]
+Accuracy: 0.939 (+/- 0.093) [StackingClassifier]
+
+```
+
+**Regression**
+
+Model stacking for regression as described in this [Kaggle blog post](http://blog.kaggle.com/2016/12/27/a-kagglers-guide-to-model-stacking-in-practice/).
+
+```python
+>>> from sklearn import datasets, model_selection
+>>> from sklearn.ensemble import RandomForestRegressor
+>>> from sklearn.linear_model import LinearRegression
+>>> from sklearn.linear_model import Ridge
+>>> from sklearn.neighbors import KNeighborsRegressor
+>>> import xam
+
+>>> boston = datasets.load_boston()
+>>> X, y = boston.data, boston.target
+
+>>> m1 = KNeighborsRegressor(n_neighbors=1)
+>>> m2 = LinearRegression()
+>>> m3 = Ridge(alpha=.5)
+
+>>> stack = xam.stacking.StackingRegressor(
+...     models=[m1, m2, m3],
+...     meta_model=RandomForestRegressor(random_state=1),
+...     cv=model_selection.KFold(n_splits=10),
+...     use_base_features=True
+... )
+
+>>> model_names = ['KNN', 'Random Forest', 'Ridge regression', 'StackingRegressor']
+
+>>> for clf, label in zip(stack.models + [stack], model_names):
+...     scores = model_selection.cross_val_score(clf, X, y, cv=10, scoring='neg_mean_absolute_error')
+...     print('MAE: %0.2f (+/- %0.2f) [%s]' % (-scores.mean(), 1.96 * scores.std(), label))
+MAE: 7.21 (+/- 3.51) [KNN]
+MAE: 4.01 (+/- 4.09) [Random Forest]
+MAE: 3.95 (+/- 4.14) [Ridge regression]
+MAE: 3.07 (+/- 2.54) [StackingRegressor]
+
+```
+
+
+### Natural Language Processing (NLP)
+
+**Top-terms classifier**
+
+```python
+>>> from sklearn.datasets import fetch_20newsgroups
+>>> from sklearn.feature_extraction.text import CountVectorizer
+>>> import xam
+
+>>> cats = ['alt.atheism', 'comp.windows.x']
+>>> newsgroups_train = fetch_20newsgroups(subset='train', categories=cats)
+>>> newsgroups_test = fetch_20newsgroups(subset='test', categories=cats)
+
+>>> vectorizer = CountVectorizer(stop_words='english', max_df=0.2)
+
+>>> X_train = vectorizer.fit_transform(newsgroups_train.data)
+>>> y_train = newsgroups_train.target
+
+>>> X_test = vectorizer.transform(newsgroups_test.data)
+>>> y_test = newsgroups_test.target
+
+>>> clf = xam.nlp.TopTermsClassifier(n_terms=50)
+>>> clf.fit(X_train.toarray(), y_train).score(X_test.toarray(), y_test)
+0.95238095238095233
+
+```
+
+
+### Pipeline
 
 
 **Column selection**
@@ -200,6 +430,97 @@ Will apply a function to the input; this transformer can potentially do anything
 1    False
 2     True
 dtype: bool
+
+```
+
+
+### Plotting
+
+**Latex style figures**
+
+```python
+>>> from xam import latex  # Has to be imported before matplotlib.pyplot
+>>> import numpy as np
+
+>>> fig, ax  = latex.new_fig(width=0.8)
+
+>>> x = np.arange(-2, 2, 0.03)
+>>> y1 = 1 / (1 + np.exp(-x))  # Logistic
+>>> y2 = np.tanh(x)  # Hyperbolic tangent
+>>> y3 = np.arctan(x)  # Inverse tangent
+>>> y4 = x * (x > 0) # Rectified linear unit (ReLU)
+
+>>> plot = ax.plot(x, y1, label='Logistic sigmoid')
+>>> plot = ax.plot(x, y2, label='Hyperbolic tangent')
+>>> plot = ax.plot(x, y3, label='Inverse tangent')
+>>> plot = ax.plot(x, y4, label='Rectified linear unit (ReLU)')
+
+>>> x_label = ax.set_xlabel(r'$x$')
+>>> y_label = ax.set_ylabel(r'$y$')
+>>> title = ax.set_title('A few common activation functions')
+>>> ax.grid(linewidth=0.5)
+>>> legend = ax.legend(loc='upper left', framealpha=1)
+
+>>> latex.save_fig('figures/latex_example')
+
+```
+
+<div align="center">
+  <img src="figures/latex_example.png" width="80%">
+</div>
+
+
+### Preprocessing
+
+**Supervised imputation**
+
+Scikit-learn's [`Imputer`](http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.Imputer.html) transformer is practical for it is an unsupervised method. `SupervisedImputer` makes it possible to apply an `Imputer` in a supervised way. In other words the `Imputer` is applied conditionally on the value of `y`.
+
+```python
+>>> import numpy as np
+>>> from sklearn.preprocessing import Imputer
+>>> import xam
+
+>>> X = np.array([
+...     [1,      4,      1],
+...     [np.nan, np.nan, 1],
+...     [3,      5,      1],
+...     [3,      5,      2],
+...     [3,      np.nan, 2],
+...     [3,      7,      2],
+... ])
+
+>>> imp = xam.preprocessing.SupervisedImputer(groupby_col=2, strategy='mean')
+>>> imp.fit_transform(X)
+array([[ 1. ,  4. ],
+       [ 2. ,  4.5],
+       [ 3. ,  5. ],
+       [ 3. ,  5. ],
+       [ 3. ,  6. ],
+       [ 3. ,  7. ]])
+
+```
+
+
+**Transforming cyclic**
+
+Day of week, hours, minutes, are cyclic ordinal features; cosine and sine transforms should be used to express the cycle. See [this StackEchange discussion](https://datascience.stackexchange.com/questions/5990/what-is-a-good-way-to-transform-cyclic-ordinal-attributes). This transformer returns an array with twice as many columns as the input array; the first columns are the cosine transforms and the last columns are the sine transforms.
+
+```python
+>>> import numpy as np
+>>> import xam
+
+>>> times = np.array([
+...    np.linspace(0, 23, 4),
+...    np.linspace(0, 59, 4),
+... ]).T
+
+>>> trans = xam.preprocessing.CycleTransformer()
+>>> trans.fit_transform(times)
+array([[ 1.        ,  1.        ,  0.        ,  0.        ],
+       [-0.42261826, -0.46947156,  0.90630779,  0.88294759],
+       [-0.64278761, -0.5591929 , -0.76604444, -0.82903757],
+       [ 0.96592583,  0.9945219 , -0.25881905, -0.10452846]])
 
 ```
 
@@ -346,195 +667,6 @@ See this [blog post](https://maxhalford.github.io/subsampling-1/).
 ```
 
 
-### Feature selection
-
-**Feature importance**
-
-The `feature_importance` method returns two dataframes that contain feature importance metrics that depend on the types of the feature/target
-
-| Feature/Task         | Classification         | Regression          |
-|----------------------|------------------------|---------------------|
-| Categorical          | Chi²-test + Cramér's V | F-test              |
-| Numerical            | F-test                 | Pearson correlation |
-
-Additionally [mutual information](https://www.wikiwand.com/en/Mutual_information) can be used in each case.
-
-- [Comparison of F-test and mutual information](http://scikit-learn.org/stable/auto_examples/feature_selection/plot_f_test_vs_mi.html)
-
-Classification.
-
-```python
->>> import pandas as pd
->>> from sklearn import datasets
->>> import xam
-
->>> iris = datasets.load_iris()
->>> features = pd.DataFrame(iris.data, columns=iris.feature_names)
->>> features['sepal length (cm)'] = features['sepal length (cm)'] > 5.5
->>> target = pd.Series(iris.target)
-
->>> cont_imp, disc_imp = xam.feature_selection.feature_importance_classification(features, target, random_state=1)
-
->>> cont_imp.sort_values('f_p_value')
-                   f_statistic     f_p_value  mutual_information
-petal length (cm)  1179.034328  3.051976e-91            0.990061
-petal width (cm)    959.324406  4.376957e-85            0.977279
-sepal width (cm)     47.364461  1.327917e-16            0.256295
-
->>> disc_imp.sort_values('chi2_p_value')
-                   chi2_statistic  chi2_p_value  cramers_v  mutual_information
-sepal length (cm)        98.11883  4.940452e-22   0.803139            0.386244
-
-```
-
-Regression.
-
-```python
->>> import pandas as pd
->>> from sklearn import datasets
->>> import xam
-
->>> boston = datasets.load_boston()
->>> features = pd.DataFrame(boston.data, columns=boston.feature_names)
->>> features['CHAS'] = features['CHAS'].astype(int)
->>> target = pd.Series(boston.target)
-
->>> cont_imp, disc_imp = xam.feature_selection.feature_importance_regression(features, target, random_state=1)
-
->>> cont_imp.sort_values('pearson_r_p_value')
-         pearson_r  pearson_r_p_value  mutual_information
-LSTAT    -0.737663       5.081103e-88            0.666882
-RM        0.695360       2.487229e-74            0.526456
-PTRATIO  -0.507787       1.609509e-34            0.453291
-INDUS    -0.483725       4.900260e-31            0.471507
-TAX      -0.468536       5.637734e-29            0.363694
-NOX      -0.427321       7.065042e-24            0.456947
-CRIM     -0.385832       2.083550e-19            0.334339
-RAD      -0.381626       5.465933e-19            0.217623
-AGE      -0.376955       1.569982e-18            0.311285
-ZN        0.360445       5.713584e-17            0.195153
-B         0.333461       1.318113e-14            0.161861
-DIS       0.249929       1.206612e-08            0.295207
-
->>> disc_imp.sort_values('mutual_information')
-      f_statistic  f_p_value  mutual_information
-CHAS    15.971512   0.000074            0.030825
-
-```
-
-
-### Clustering
-
-**Cross-chain algorithm**
-
-This is a clustering algorithm I devised at one of my internships for matching customers with multiple accounts. The idea was to that if there accounts shared some information - eg. the phone number - then we would count those accounts as one single customer. In the following example, the first customer has three accounts; the first account shares the first variable with the second and the second account shares the second variable with the third. The first and third account share no information but they are linked by the second account and form a chain, hence the name of the algorithm.
-
-```python
->>> import numpy as np
->>> import xam
-
->>> X = np.array([
-...     # First expected cluster
-...     [0, 1],
-...     [0, 2],
-...     [1, 2],
-...     # Third expected cluster
-...     [4, 3],
-...     # Second expected cluster
-...     [3, 4],
-...     [2, 4],
-... ])
-
->>> xam.clustering.CrossChainClusterer().fit_predict(X)
-[0, 0, 0, 1, 2, 2]
-
-```
-
-
-### Model stacking
-
-- [A Kaggler's guide to model stacking in practice](http://blog.kaggle.com/2016/12/27/a-kagglers-guide-to-model-stacking-in-practice/)
-- [Stacking Made Easy: An Introduction to StackNet by Competitions Grandmaster Marios Michailidis](http://blog.kaggle.com/2017/06/15/stacking-made-easy-an-introduction-to-stacknet-by-competitions-grandmaster-marios-michailidis-kazanova/)
-- [Stacked generalization, when does it work?](http://www.cs.waikato.ac.nz/~ihw/papers/97KMT-IHW-Stacked.pdf)
-
-**Classification**
-
-```python
->>> from sklearn import datasets, model_selection
->>> from sklearn.ensemble import RandomForestClassifier
->>> from sklearn.linear_model import LogisticRegression
->>> from sklearn.naive_bayes import GaussianNB
->>> from sklearn.neighbors import KNeighborsClassifier
->>> import xam
-
->>> iris = datasets.load_iris()
->>> X, y = iris.data[:, :3], iris.target
-
->>> m1 = KNeighborsClassifier(n_neighbors=1)
->>> m2 = RandomForestClassifier(random_state=1)
->>> m3 = GaussianNB()
->>> m4 = LogisticRegression()
-
->>> stack = xam.stacking.StackingClassifier(
-...     models=[m1, m2, m3, m4],
-...     meta_model=LogisticRegression(),
-...     cv=model_selection.StratifiedKFold(n_splits=10),
-...     use_base_features=True,
-...     use_proba=True
-... )
-
->>> model_names = ['KNN', 'Random forest', 'Naïve Bayes', 'Logistic regression', 'StackingClassifier']
-
->>> for clf, label in zip(stack.models + [stack], model_names):
-...     scores = model_selection.cross_val_score(clf, X, y, cv=10, scoring='f1_weighted')
-...     print('Accuracy: %0.3f (+/- %0.3f) [%s]' % (scores.mean(), 1.96 * scores.std(), label))
-Accuracy: 0.932 (+/- 0.104) [KNN]
-Accuracy: 0.926 (+/- 0.125) [Random forest]
-Accuracy: 0.878 (+/- 0.128) [Naïve Bayes]
-Accuracy: 0.917 (+/- 0.137) [Logistic regression]
-Accuracy: 0.939 (+/- 0.093) [StackingClassifier]
-
-```
-
-**Regression**
-
-Model stacking for regression as described in this [Kaggle blog post](http://blog.kaggle.com/2016/12/27/a-kagglers-guide-to-model-stacking-in-practice/).
-
-```python
->>> from sklearn import datasets, model_selection
->>> from sklearn.ensemble import RandomForestRegressor
->>> from sklearn.linear_model import LinearRegression
->>> from sklearn.linear_model import Ridge
->>> from sklearn.neighbors import KNeighborsRegressor
->>> import xam
-
->>> boston = datasets.load_boston()
->>> X, y = boston.data, boston.target
-
->>> m1 = KNeighborsRegressor(n_neighbors=1)
->>> m2 = LinearRegression()
->>> m3 = Ridge(alpha=.5)
-
->>> stack = xam.stacking.StackingRegressor(
-...     models=[m1, m2, m3],
-...     meta_model=RandomForestRegressor(random_state=1),
-...     cv=model_selection.KFold(n_splits=10),
-...     use_base_features=True
-... )
-
->>> model_names = ['KNN', 'Random Forest', 'Ridge regression', 'StackingRegressor']
-
->>> for clf, label in zip(stack.models + [stack], model_names):
-...     scores = model_selection.cross_val_score(clf, X, y, cv=10, scoring='neg_mean_absolute_error')
-...     print('MAE: %0.2f (+/- %0.2f) [%s]' % (-scores.mean(), 1.96 * scores.std(), label))
-MAE: 7.21 (+/- 3.51) [KNN]
-MAE: 4.01 (+/- 4.09) [Random Forest]
-MAE: 3.95 (+/- 4.14) [Ridge regression]
-MAE: 3.07 (+/- 2.54) [StackingRegressor]
-
-```
-
-
 ### Splitting
 
 Splitting makes it easy a model on different *splits* of a dataset. For example you may want to train one model per user/day.
@@ -564,34 +696,6 @@ Splitting makes it easy a model on different *splits* of a dataset. For example 
 >>> scores = model_selection.cross_val_score(split_lasso, X, y, cv=cv, scoring='r2')
 >>> print('{:.3f} (+/- {:.3f})'.format(scores.mean(), 1.96 * scores.std()))
 0.496 (+/- 0.098)
-
-```
-
-
-### Natural Language Processing (NLP)
-
-**Top-terms classifier**
-
-```python
->>> from sklearn.datasets import fetch_20newsgroups
->>> from sklearn.feature_extraction.text import CountVectorizer
->>> import xam
-
->>> cats = ['alt.atheism', 'comp.windows.x']
->>> newsgroups_train = fetch_20newsgroups(subset='train', categories=cats)
->>> newsgroups_test = fetch_20newsgroups(subset='test', categories=cats)
-
->>> vectorizer = CountVectorizer(stop_words='english', max_df=0.2)
-
->>> X_train = vectorizer.fit_transform(newsgroups_train.data)
->>> y_train = newsgroups_train.target
-
->>> X_test = vectorizer.transform(newsgroups_test.data)
->>> y_test = newsgroups_test.target
-
->>> clf = xam.nlp.TopTermsClassifier(n_terms=50)
->>> clf.fit(X_train.toarray(), y_train).score(X_test.toarray(), y_test)
-0.95238095238095233
 
 ```
 
@@ -710,68 +814,6 @@ dtype: float64
 ```
 
 
-### Linear models
-
-**Classification metric maximizer**
-
-This is a generalization of the [AUC regressor](https://github.com/pyduan/amazonaccess/blob/f8addfefcee80f0ca15e416954af3926f3007d16/helpers/ml.py#L77) Paul Buan used for his winning solution to the [Amazon Employee Access Challenge](https://www.kaggle.com/c/amazon-employee-access-challenge).
-
-```python
->>> from sklearn import datasets
->>> from sklearn import metrics
->>> from sklearn import model_selection
->>> import xam
-
->>> X, y = datasets.load_digits(n_class=2, return_X_y=True)
->>> X_train, X_test, y_train, y_test = model_selection.train_test_split(X, y, train_size=0.5, random_state=42)
-
->>> clf = xam.linear_model.ClassificationMetricRegression(metric=metrics.roc_auc_score)
->>> clf.fit(X_train, y_train)
->>> y_pred = clf.predict_proba(X_test)[:, 1]
->>> test_roc_auc = metrics.roc_auc_score(y_test, y_pred)
-
->>> print('ROC AUC: {:.3f}'.format(test_roc_auc))
-ROC AUC: 0.999
-
-```
-
-
-### Plotting
-
-**Latex style figures**
-
-```python
->>> from xam import latex  # Has to be imported before matplotlib.pyplot
->>> import numpy as np
-
->>> fig, ax  = latex.new_fig(width=0.8)
-
->>> x = np.arange(-2, 2, 0.03)
->>> y1 = 1 / (1 + np.exp(-x))  # Logistic
->>> y2 = np.tanh(x)  # Hyperbolic tangent
->>> y3 = np.arctan(x)  # Inverse tangent
->>> y4 = x * (x > 0) # Rectified linear unit (ReLU)
-
->>> plot = ax.plot(x, y1, label='Logistic sigmoid')
->>> plot = ax.plot(x, y2, label='Hyperbolic tangent')
->>> plot = ax.plot(x, y3, label='Inverse tangent')
->>> plot = ax.plot(x, y4, label='Rectified linear unit (ReLU)')
-
->>> x_label = ax.set_xlabel(r'$x$')
->>> y_label = ax.set_ylabel(r'$y$')
->>> title = ax.set_title('A few common activation functions')
->>> ax.grid(linewidth=0.5)
->>> legend = ax.legend(loc='upper left', framealpha=1)
-
->>> latex.save_fig('figures/latex_example')
-
-```
-
-<div align="center">
-  <img src="figures/latex_example.png" width="80%">
-</div>
-
-
 ### Various
 
 **Datetime range**
@@ -783,8 +825,12 @@ ROC AUC: 0.999
 >>> since = dt.datetime(2017, 3, 22)
 >>> until = dt.datetime(2017, 3, 25)
 >>> step = dt.timedelta(days=2)
->>> xam.util.datetime_range(since=since, until=until, step=step)
-[datetime.datetime(2017, 3, 22, 0, 0), datetime.datetime(2017, 3, 24, 0, 0)]
+
+>>> dt_range = xam.util.datetime_range(since=since, until=until, step=step)
+>>> for dt in dt_range:
+...     print(dt)
+2017-03-22 00:00:00
+2017-03-24 00:00:00
 
 ```
 

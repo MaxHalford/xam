@@ -15,13 +15,10 @@ def datetime_range(since, until, step=dt.timedelta(days=1)):
         step (timedelta)
 
     Returns:
-        list of datetimes
+        a generator of datetimes
     """
-    n_steps = (until - since) // step
-    return [
-        since + step * i
-        for i in range(n_steps + 1)
-    ]
+    for i in range((until - since) // step + 1):
+        yield since + step * i
 
 
 def get_next_weekday(date, weekday):
