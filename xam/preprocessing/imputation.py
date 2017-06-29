@@ -16,7 +16,7 @@ def _get_mask(X, value_to_mask):
         return X == value_to_mask
 
 
-class SupervisedImputer(BaseEstimator, TransformerMixin):
+class ConditionalImputer(BaseEstimator, TransformerMixin):
 
     def __init__(self, groupby_col=0, missing_values='NaN', strategy='mean'):
         self.groupby_col = groupby_col

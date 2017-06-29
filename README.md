@@ -445,10 +445,10 @@ dtype: bool
 >>> fig, ax  = latex.new_fig(width=0.8)
 
 >>> x = np.arange(-2, 2, 0.03)
->>> y1 = 1 / (1 + np.exp(-x))  # Logistic
->>> y2 = np.tanh(x)  # Hyperbolic tangent
->>> y3 = np.arctan(x)  # Inverse tangent
->>> y4 = x * (x > 0) # Rectified linear unit (ReLU)
+>>> y1 = 1 / (1 + np.exp(-x))
+>>> y2 = np.tanh(x)
+>>> y3 = np.arctan(x)
+>>> y4 = x * (x > 0)
 
 >>> plot = ax.plot(x, y1, label='Logistic sigmoid')
 >>> plot = ax.plot(x, y2, label='Hyperbolic tangent')
@@ -472,9 +472,9 @@ dtype: bool
 
 ### Preprocessing
 
-**Supervised imputation**
+**Conditional imputation**
 
-Scikit-learn's [`Imputer`](http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.Imputer.html) transformer is practical for it is an unsupervised method. `SupervisedImputer` makes it possible to apply an `Imputer` in a supervised way. In other words the `Imputer` is applied conditionally on the value of `y`.
+Scikit-learn's [`Imputer`](http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.Imputer.html) transformer is practical for it is an unsupervised method. `ConditionalImputer` makes it possible to apply an `Imputer` in a supervised way. In other words the `Imputer` is applied conditionally on the value of `y`.
 
 ```python
 >>> import numpy as np
@@ -490,7 +490,7 @@ Scikit-learn's [`Imputer`](http://scikit-learn.org/stable/modules/generated/skle
 ...     [3,      7,      2],
 ... ])
 
->>> imp = xam.preprocessing.SupervisedImputer(groupby_col=2, strategy='mean')
+>>> imp = xam.preprocessing.ConditionalImputer(groupby_col=2, strategy='mean')
 >>> imp.fit_transform(X)
 array([[ 1. ,  4. ],
        [ 2. ,  4.5],
