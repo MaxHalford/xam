@@ -254,12 +254,12 @@ ROC AUC: 0.999
 
 >>> for clf, label in zip(stack.models + [stack], model_names):
 ...     scores = model_selection.cross_val_score(clf, X, y, cv=10, scoring='f1_weighted')
-...     print('Accuracy: %0.3f (+/- %0.3f) [%s]' % (scores.mean(), 1.96 * scores.std(), label))
-Accuracy: 0.932 (+/- 0.104) [KNN]
-Accuracy: 0.926 (+/- 0.125) [Random forest]
-Accuracy: 0.878 (+/- 0.128) [Naïve Bayes]
-Accuracy: 0.917 (+/- 0.137) [Logistic regression]
-Accuracy: 0.939 (+/- 0.093) [StackingClassifier]
+...     print('F1-score: %0.3f (+/- %0.3f) [%s]' % (scores.mean(), 1.96 * scores.std(), label))
+F1-score: 0.932 (+/- 0.104) [KNN]
+F1-score: 0.926 (+/- 0.125) [Random forest]
+F1-score: 0.878 (+/- 0.128) [Naïve Bayes]
+F1-score: 0.917 (+/- 0.137) [Logistic regression]
+F1-score: 0.939 (+/- 0.093) [StackingClassifier]
 
 ```
 
