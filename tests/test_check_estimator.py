@@ -8,12 +8,12 @@ import xam
 def test_cycle_transformer():
     assert check_estimator(xam.preprocessing.CycleTransformer) is None
 
-def test_supervised_imputer():
+def test_conditional_imputer():
 
     # This is needed for going through the same testing hoops as scikit-learn's Imputer
-    xam.preprocessing.SupervisedImputer.__name__ = 'Imputer'
+    xam.preprocessing.ConditionalImputer.__name__ = 'Imputer'
 
-    assert check_estimator(xam.preprocessing.SupervisedImputer) is None
+    assert check_estimator(xam.preprocessing.ConditionalImputer) is None
 
 ## Binning
 
