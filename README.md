@@ -442,7 +442,7 @@ dtype: bool
 >>> from xam import latex  # Has to be imported before matplotlib.pyplot
 >>> import numpy as np
 
->>> fig, ax  = latex.new_fig(width=0.8)
+>>> fig, ax = latex.new_fig(width=0.8)
 
 >>> x = np.arange(-2, 2, 0.03)
 >>> y1 = 1 / (1 + np.exp(-x))
