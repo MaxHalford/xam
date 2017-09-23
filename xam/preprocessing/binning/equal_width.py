@@ -32,3 +32,7 @@ class EqualWidthBinner(BaseUnsupervisedBinner):
             self.cut_points_[i] = np.arange(start=x_min+step, stop=x_max, step=step).tolist()
 
         return self
+
+    @property
+    def cut_points(self):
+        return self.cut_points_

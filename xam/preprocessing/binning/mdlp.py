@@ -25,6 +25,10 @@ class MDLPBinner(BaseSupervisedBinner):
         self.cut_points_ = [mdlp_cut(x, y, []) for x in X.T]
         return self
 
+    @property
+    def cut_points(self):
+        return self.cut_points_
+
 
 def calc_class_entropy(y):
     class_counts = stats.itemfreq(y)[:, 1]

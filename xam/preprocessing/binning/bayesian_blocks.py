@@ -22,6 +22,10 @@ class BayesianBlocksBinner(BaseUnsupervisedBinner):
         self.cut_points_ = [calc_bayesian_blocks(x) for x in X.T]
         return self
 
+    @property
+    def cut_points(self):
+        return self.cut_points_
+
 
 def calc_bayesian_blocks(x):
 

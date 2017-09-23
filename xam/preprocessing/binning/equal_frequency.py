@@ -31,3 +31,7 @@ class EqualFrequencyBinner(BaseUnsupervisedBinner):
         ], axis=-1).tolist()
 
         return self
+
+    @property
+    def cut_points(self):
+        return self.cut_points_
