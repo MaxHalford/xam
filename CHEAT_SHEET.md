@@ -7,16 +7,14 @@
 - *DV*: dependent variable
 
 
-## Wise words
-
-- Resampling may improve ROC AUC, but it might reduce precision for the lesser represented class
-
-
 ## Missing values
 
 - Replace by mean, median or most frequent value
 - [Random Forest imputation](http://math.furman.edu/~dcs/courses/math47/R/library/randomForest/html/rfImpute.html)
 
+## Stacking
+
+- Use random seeds for improving generalization
 
 ## Feature engineering
 
