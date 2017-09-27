@@ -491,13 +491,6 @@ Scikit-learn's [`Imputer`](http://scikit-learn.org/stable/modules/generated/skle
 ... ])
 
 >>> imp = xam.preprocessing.ConditionalImputer(groupby_col=2, strategy='mean')
-imp.fit_transform(X)
-array([[ 1. ,  4. ],
-       [ 2. ,  4.5],
-       [ 3. ,  5. ],
-       [ 3. ,  5. ],
-       [ 3. ,  6. ],
-       [ 3. ,  7. ]])
 
 ```
 
