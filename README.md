@@ -721,8 +721,10 @@ Splitting makes it easy a model on different *splits* of a dataset. For example 
 
 ```python
 >>> import datetime as dt
+>>> from math import sqrt
 >>> import numpy as np
 >>> import pandas as pd
+>>> from sklearn import metrics
 >>> import xam
 
 >>> df = pd.read_csv('datasets/airline-passengers.csv')
@@ -745,56 +747,23 @@ Splitting makes it easy a model on different *splits* of a dataset. For example 
 >>> beta = 0.2
 >>> gamma = 0.6
 
->>> xam.tsa.SimpleExponentialSmoothingForecaster(alpha).fit(train).predict(test.index)
-1960-01-01    415.452445
-1960-02-01    414.407201
-1960-03-01    413.466481
-1960-04-01    412.619833
-1960-05-01    411.857849
-1960-06-01    411.172064
-1960-07-01    410.554858
-1960-08-01    409.999372
-1960-09-01    409.499435
-1960-10-01    409.049491
-1960-11-01    408.644542
-1960-12-01    408.280088
-dtype: float64
+>>> pred = xam.tsa.SimpleExponentialSmoothingForecaster(alpha).fit(train).predict(test.index)
+>>> print('RMSE: {:.3f}'.format(sqrt(metrics.mean_squared_error(test, pred))))
+RMSE: 99.293
 
->>> xam.tsa.DoubleExponentialSmoothingForecaster(alpha, beta).fit(train).predict(test.index)
-1960-01-01    447.564520
-1960-02-01    451.786035
-1960-03-01    456.007549
-1960-04-01    460.229064
-1960-05-01    464.450579
-1960-06-01    468.672094
-1960-07-01    472.893609
-1960-08-01    477.115124
-1960-09-01    481.336638
-1960-10-01    485.558153
-1960-11-01    489.779668
-1960-12-01    494.001183
-dtype: float64
+>>> pred = xam.tsa.DoubleExponentialSmoothingForecaster(alpha, beta).fit(train).predict(test.index)
+>>> print('RMSE: {:.3f}'.format(sqrt(metrics.mean_squared_error(test, pred))))
+RMSE: 73.265
 
->>> xam.tsa.TripleExponentialSmoothingForecaster(
+>>> pred = xam.tsa.TripleExponentialSmoothingForecaster(
 ...     alpha,
 ...     beta,
 ...     gamma,
 ...     season_length=season_length,
 ...     multiplicative=True
 ... ).fit(train).predict(test.index)
-1960-01-01    407.899644
-1960-02-01    389.067806
-1960-03-01    458.415393
-1960-04-01    448.046660
-1960-05-01    471.033884
-1960-06-01    543.653030
-1960-07-01    623.363220
-1960-08-01    634.072374
-1960-09-01    525.714489
-1960-10-01    462.219296
-1960-11-01    407.274166
-1960-12-01    452.141880
-dtype: float64
+>>> print('RMSE: {:.3f}'.format(sqrt(metrics.mean_squared_error(test, pred))))
+RMSE: 17.543
 
 ```
 

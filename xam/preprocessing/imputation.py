@@ -71,7 +71,7 @@ class ConditionalImputer(BaseEstimator, TransformerMixin):
                 if np.any(class_fill_mask):
                     X[:, i][class_fill_mask] = self.imputers_[i][c].transform(
                         X[:, i][class_fill_mask].reshape(-1, 1)
-                    )
+                    )[:, 0]
         return X
 
     def fit_transform(self, X, y=None, **fit_params):
