@@ -637,25 +637,40 @@ See this [blog post](https://maxhalford.github.io/subsampling-1/).
 
 ```python
 >>> import numpy as np
+>>> import pandas as pd
 >>> import scipy as sp
 >>> import xam
 
 >>> np.random.seed(0)
->>> train = np.random.beta(1.5, 2, size=5000)
->>> test = np.random.beta(2, 1.5, size=1000)
 
->>> # Calculate Kullback–Leibler divergence between the train and the test data
->>> sp.stats.entropy(np.histogram(train, bins=30)[0], np.histogram(test, bins=30)[0])
-0.1612937324333199
+>>> train = pd.DataFrame({
+...     'x': np.random.beta(1.5, 2, size=1000),
+...     'y': np.random.randint(0, 2, 1000)
+... })
 
->>> resampler = xam.preprocessing.DistributionSubsampler(feature=0, sample_frac=0.5, seed=0)
->>> resampler.fit(test.reshape(-1, 1))
+>>> test = pd.DataFrame({
+...     'x': np.random.beta(2, 1.5, size=1000),
+...     'y': np.random.randint(0, 2, 1000)
+... })
 
->>> sample = resampler.transform(train.reshape(-1, 1))
+# Calculate Kullback–Leibler divergence between the train and the test data
+>>> sp.stats.entropy(
+...     np.histogram(train['x'], bins=30)[0],
+...     np.histogram(test['x'], bins=30)[0]
+... )
+0.25207468085005064
 
->>> # The Kullback–Leibler divergence between sample and test is now lower
->>> sp.stats.entropy(np.histogram(sample, bins=30)[0], np.histogram(test, bins=30)[0])
-0.036151910003416325
+>>> resampler = xam.preprocessing.DistributionSubsampler(column='x', sample_frac=0.5, seed=0)
+>>> resampler.fit(test)
+
+>>> sample = resampler.transform(train)
+
+# The Kullback–Leibler divergence between sample and test is now lower
+>>> sp.stats.entropy(
+...     np.histogram(sample['x'], bins=30)[0],
+...     np.histogram(test['x'], bins=30)[0]
+... )
+0.073617242561277552
 
 ```
 

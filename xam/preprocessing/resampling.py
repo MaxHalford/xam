@@ -6,9 +6,9 @@ from .binning.equal_frequency import EqualFrequencyBinner
 
 class DistributionSubsampler():
 
-    def __init__(self, feature=0, sample_frac=0.5, n_bins=100, seed=None):
+    def __init__(self, column=0, sample_frac=0.5, n_bins=100, seed=None):
         super().__init__()
-        self.feature = feature
+        self.column = column
         self.sample_frac = sample_frac
         self.binner = EqualFrequencyBinner(n_bins=n_bins)
         self.seed = None
@@ -16,16 +16,16 @@ class DistributionSubsampler():
     def fit(self, X, y=None, **fit_params):
 
         if isinstance(X, pd.DataFrame):
-            self.binner.fit(X[[self.feature]])
+            self.binner.fit(X[[self.column]])
         else:
-            self.binner.fit(X[:, self.feature].reshape(-1, 1))
+            self.binner.fit(X[:, self.column].values.reshape(-1, 1))
 
     def transform(self, X, y=None):
 
         if isinstance(X, pd.DataFrame):
-            bins = self.binner.transform(X[[self.feature]])[:, 0]
+            bins = self.binner.transform(X[[self.column]])[:, 0]
         else:
-            bins = self.binner.transform(X[:, self.feature].reshape(-1, 1))[:, 0]
+            bins = self.binner.transform(X[:, self.column].values.reshape(-1, 1))[:, 0]
 
         # Match each observation in the training set to a bin
         bin_counts = np.bincount(bins)
@@ -35,7 +35,6 @@ class DistributionSubsampler():
 
         # Weight each observation in the training set based on which bin it is in
         weights_norm = weights / np.sum(weights)
-
 
         if isinstance(X, pd.DataFrame):
             return X.sample(
