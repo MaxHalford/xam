@@ -3,3 +3,4 @@ build/
 .cache/
 dist/
 xam.egg-info/
+.coverage

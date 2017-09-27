@@ -227,7 +227,7 @@ ROC AUC: 0.999
 **Classification**
 
 ```python
->>> from sklearn import datasets, model_selection
+>>> from sklearn import datasets, metrics, model_selection
 >>> from sklearn.ensemble import RandomForestClassifier
 >>> from sklearn.linear_model import LogisticRegression
 >>> from sklearn.naive_bayes import GaussianNB
@@ -250,15 +250,13 @@ ROC AUC: 0.999
 ...     use_proba=True
 ... )
 
->>> models.update({'StackingClassifier': stack})
-
->>> for name, model in models.items():
+>>> for name, model in dict(models, **{'Stacking': stack}).items():
 ...     scores = model_selection.cross_val_score(model, X, y, cv=3, scoring='accuracy')
-...     print('F1-score: %0.3f (+/- %0.3f) [%s]' % (scores.mean(), 1.96 * scores.std(), name))
-F1-score: 0.932 (+/- 0.104) [KNN]
-F1-score: 0.926 (+/- 0.125) [Random forest]
-F1-score: 0.878 (+/- 0.128) [Naïve Bayes]
-F1-score: 0.939 (+/- 0.093) [StackingClassifier]
+...     print('Accuracy: %0.3f (+/- %0.3f) [%s]' % (scores.mean(), 1.96 * scores.std(), name))
+Accuracy: 0.913 (+/- 0.016) [KNN]
+Accuracy: 0.914 (+/- 0.126) [Random forest]
+Accuracy: 0.921 (+/- 0.052) [Naïve Bayes]
+Accuracy: 0.954 (+/- 0.079) [Stacking]
 
 ```
 
@@ -290,15 +288,13 @@ Model stacking for regression as described in this [Kaggle blog post](http://blo
 ...     use_base_features=True
 ... )
 
->>> models.update({'StackingRegressor': stack})
-
->>> for name, model in models.items():
+>>> for name, model in dict(models, **{'Stacking': stack}).items():
 ...     scores = model_selection.cross_val_score(clf, X, y, cv=5, scoring='neg_mean_absolute_error')
 ...     print('MAE: %0.3f (+/- %0.3f) [%s]' % (-scores.mean(), 1.96 * scores.std(), label))
 MAE: 7.21 (+/- 3.51) [KNN]
 MAE: 4.01 (+/- 4.09) [Linear regression]
 MAE: 3.95 (+/- 4.14) [Ridge regression]
-MAE: 3.07 (+/- 2.54) [StackingRegressor]
+MAE: 3.07 (+/- 2.54) [Stacking]
 
 ```
 

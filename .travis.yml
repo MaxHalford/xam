@@ -27,4 +27,4 @@ install:
   - pip install -r requirements/travis.txt
 
 script:
-  - pytest --doctest-glob='README.md' --cov=xam tests/ --verbose
+  - pytest --doctest-glob='README.md' --cov=xam --verbose

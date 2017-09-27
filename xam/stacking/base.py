@@ -35,7 +35,6 @@ class BaseStackingEstimator(BaseEstimator, MetaEstimatorMixin):
                 # Extract fit params for the model
                 model_fit_params = fit_params.get('fit_params', {}).get(name, {})
                 # Train the model on the training set
-                print(X[train_index])
                 model.fit(X[train_index], y[train_index], **model_fit_params)
                 # If use_proba is True then the probabilities of each class for
                 # each model have to be predicted and then stored into
@@ -65,7 +64,7 @@ class BaseStackingEstimator(BaseEstimator, MetaEstimatorMixin):
         # model have to be predicted and then stored into meta_features
         if self.use_proba:
             meta_features = np.empty((len(X), len(self.models) * (self.n_probas_)))
-            for i, model in enumerate(self.models):
+            for i, model in enumerate(self.models.values()):
                 probabilities = model.predict_proba(X)
                 for j, k in enumerate(range(self.n_probas_ * i, self.n_probas_ * (i + 1))):
                     meta_features[:, k] = probabilities[:, j]
