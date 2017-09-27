@@ -71,7 +71,7 @@ class ConditionalImputer(BaseEstimator, TransformerMixin):
                 # If there are missing values for the class then apply the corresponding Imputer
                 if nulls.size > 0:
                     XX[:, i][(null_mask) & (y == c)] = self.imputers_[i][c].transform(
-                        nulls.reshape(-1, 1) if len(nulls.shape) == 1 else nulls
+                        nulls.reshape(-1, 1)
                     )
         return XX
 
