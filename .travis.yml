@@ -9,13 +9,14 @@ python:
 cache:
   apt: true
   directories:
-  - $HOME/.cache/pip
-  - $HOME/download
+    - $HOME/.cache/pip
+    - $HOME/download
 
 addons:
   apt:
     packages:
-    - liblapack-dev
+      - liblapack-dev
+      - pdflatex
 
 before_install:
   - wget http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
