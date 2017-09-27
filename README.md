@@ -235,30 +235,29 @@ ROC AUC: 0.999
 >>> import xam
 
 >>> iris = datasets.load_iris()
->>> X, y = iris.data[:, :3], iris.target
+>>> X, y = iris.data[:, 1:3], iris.target
 
->>> m1 = KNeighborsClassifier(n_neighbors=1)
->>> m2 = RandomForestClassifier(random_state=1)
->>> m3 = GaussianNB()
->>> m4 = LogisticRegression()
+>>> models = {
+...     'KNN': KNeighborsClassifier(n_neighbors=1),
+...     'Random forest': RandomForestClassifier(random_state=1),
+...     'Naïve Bayes': GaussianNB()
+... }
 
 >>> stack = xam.stacking.StackingClassifier(
-...     models=[m1, m2, m3, m4],
+...     models=models,
 ...     meta_model=LogisticRegression(),
-...     cv=model_selection.StratifiedKFold(n_splits=10),
 ...     use_base_features=True,
 ...     use_proba=True
 ... )
 
->>> model_names = ['KNN', 'Random forest', 'Naïve Bayes', 'Logistic regression', 'StackingClassifier']
+>>> models.update({'StackingClassifier': stack})
 
->>> for clf, label in zip(stack.models + [stack], model_names):
-...     scores = model_selection.cross_val_score(clf, X, y, cv=10, scoring='f1_weighted')
-...     print('F1-score: %0.3f (+/- %0.3f) [%s]' % (scores.mean(), 1.96 * scores.std(), label))
+>>> for name, model in models.items():
+...     scores = model_selection.cross_val_score(model, X, y, cv=3, scoring='accuracy')
+...     print('F1-score: %0.3f (+/- %0.3f) [%s]' % (scores.mean(), 1.96 * scores.std(), name))
 F1-score: 0.932 (+/- 0.104) [KNN]
 F1-score: 0.926 (+/- 0.125) [Random forest]
 F1-score: 0.878 (+/- 0.128) [Naïve Bayes]
-F1-score: 0.917 (+/- 0.137) [Logistic regression]
 F1-score: 0.939 (+/- 0.093) [StackingClassifier]
 
 ```
@@ -278,24 +277,26 @@ Model stacking for regression as described in this [Kaggle blog post](http://blo
 >>> boston = datasets.load_boston()
 >>> X, y = boston.data, boston.target
 
->>> m1 = KNeighborsRegressor(n_neighbors=1)
->>> m2 = LinearRegression()
->>> m3 = Ridge(alpha=.5)
+>>> models = {
+...     'KNN': KNeighborsRegressor(n_neighbors=1),
+...     'Linear regression': LinearRegression(),
+...     'Ridge regression': Ridge(alpha=.5)
+... }
 
 >>> stack = xam.stacking.StackingRegressor(
-...     models=[m1, m2, m3],
+...     models=models,
 ...     meta_model=RandomForestRegressor(random_state=1),
 ...     cv=model_selection.KFold(n_splits=10),
 ...     use_base_features=True
 ... )
 
->>> model_names = ['KNN', 'Random Forest', 'Ridge regression', 'StackingRegressor']
+>>> models.update({'StackingRegressor': stack})
 
->>> for clf, label in zip(stack.models + [stack], model_names):
-...     scores = model_selection.cross_val_score(clf, X, y, cv=10, scoring='neg_mean_absolute_error')
-...     print('MAE: %0.2f (+/- %0.2f) [%s]' % (-scores.mean(), 1.96 * scores.std(), label))
+>>> for name, model in models.items():
+...     scores = model_selection.cross_val_score(clf, X, y, cv=5, scoring='neg_mean_absolute_error')
+...     print('MAE: %0.3f (+/- %0.3f) [%s]' % (-scores.mean(), 1.96 * scores.std(), label))
 MAE: 7.21 (+/- 3.51) [KNN]
-MAE: 4.01 (+/- 4.09) [Random Forest]
+MAE: 4.01 (+/- 4.09) [Linear regression]
 MAE: 3.95 (+/- 4.14) [Ridge regression]
 MAE: 3.07 (+/- 2.54) [StackingRegressor]
 
