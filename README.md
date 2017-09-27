@@ -27,11 +27,10 @@ xam is my personal data science and machine learning toolbox. It is written in P
 <!-- END gotoc -->
 
 
-
 ## Installation
 
 - [Install Anaconda for Python 3.x](https://www.continuum.io/downloads)
-- Run `pip install git+https://github.com/MaxHalford/xam` in a terminal
+- Run `pip install git+https://github.com/MaxHalford/xam --upgrade` in a terminal
 
 
 ## Other Python data science and machine learning toolkits
@@ -154,9 +153,9 @@ CHAS    15.971512   0.000074            0.030825
 
 ### Linear models
 
-**Classification metric maximizer**
+**AUC regressor**
 
-This is a generalization of the [AUC regressor](https://github.com/pyduan/amazonaccess/blob/f8addfefcee80f0ca15e416954af3926f3007d16/helpers/ml.py#L77) Paul Buan used for his winning solution to the [Amazon Employee Access Challenge](https://www.kaggle.com/c/amazon-employee-access-challenge).
+This is the [AUC regressor](https://github.com/pyduan/amazonaccess/blob/f8addfefcee80f0ca15e416954af3926f3007d16/helpers/ml.py#L77) Paul Duan used for his winning solution to the [Amazon Employee Access Challenge](https://www.kaggle.com/c/amazon-employee-access-challenge).
 
 ```python
 >>> from sklearn import datasets
@@ -167,13 +166,17 @@ This is a generalization of the [AUC regressor](https://github.com/pyduan/amazon
 >>> X, y = datasets.load_digits(n_class=2, return_X_y=True)
 >>> X_train, X_test, y_train, y_test = model_selection.train_test_split(X, y, train_size=0.5, random_state=42)
 
->>> clf = xam.linear_model.ClassificationMetricRegression(metric=metrics.roc_auc_score)
->>> clf.fit(X_train, y_train)
->>> y_pred = clf.predict_proba(X_test)[:, 1]
->>> test_roc_auc = metrics.roc_auc_score(y_test, y_pred)
+>>> model = xam.linear_model.AUCRegressor()
+>>> model.fit(X_train, y_train)
 
->>> print('ROC AUC: {:.3f}'.format(test_roc_auc))
-ROC AUC: 0.999
+>>> train_score = metrics.roc_auc_score(y_train, model.predict(X_train))
+>>> test_score = metrics.roc_auc_score(y_test, model.predict(X_test))
+
+>>> print('Train score: {:.3f}'.format(train_score))
+Train score: 1.000
+
+>>> print('Test score: {:.3f}'.format(test_score))
+Test score: 0.999
 
 ```
 
@@ -227,7 +230,7 @@ ROC AUC: 0.999
 **Classification**
 
 ```python
->>> from sklearn import datasets, model_selection
+>>> from sklearn import datasets, metrics, model_selection
 >>> from sklearn.ensemble import RandomForestClassifier
 >>> from sklearn.linear_model import LogisticRegression
 >>> from sklearn.naive_bayes import GaussianNB
@@ -235,31 +238,28 @@ ROC AUC: 0.999
 >>> import xam
 
 >>> iris = datasets.load_iris()
->>> X, y = iris.data[:, :3], iris.target
+>>> X, y = iris.data[:, 1:3], iris.target
 
->>> m1 = KNeighborsClassifier(n_neighbors=1)
->>> m2 = RandomForestClassifier(random_state=1)
->>> m3 = GaussianNB()
->>> m4 = LogisticRegression()
+>>> models = {
+...     'KNN': KNeighborsClassifier(n_neighbors=1),
+...     'Random forest': RandomForestClassifier(random_state=1),
+...     'Naïve Bayes': GaussianNB()
+... }
 
 >>> stack = xam.stacking.StackingClassifier(
-...     models=[m1, m2, m3, m4],
+...     models=models,
 ...     meta_model=LogisticRegression(),
-...     cv=model_selection.StratifiedKFold(n_splits=10),
 ...     use_base_features=True,
 ...     use_proba=True
 ... )
 
->>> model_names = ['KNN', 'Random forest', 'Naïve Bayes', 'Logistic regression', 'StackingClassifier']
-
->>> for clf, label in zip(stack.models + [stack], model_names):
-...     scores = model_selection.cross_val_score(clf, X, y, cv=10, scoring='f1_weighted')
-...     print('F1-score: %0.3f (+/- %0.3f) [%s]' % (scores.mean(), 1.96 * scores.std(), label))
-F1-score: 0.932 (+/- 0.104) [KNN]
-F1-score: 0.926 (+/- 0.125) [Random forest]
-F1-score: 0.878 (+/- 0.128) [Naïve Bayes]
-F1-score: 0.917 (+/- 0.137) [Logistic regression]
-F1-score: 0.939 (+/- 0.093) [StackingClassifier]
+>>> for name, model in dict(models, **{'Stacking': stack}).items():
+...     scores = model_selection.cross_val_score(model, X, y, cv=3, scoring='accuracy')
+...     print('Accuracy: %0.3f (+/- %0.3f) [%s]' % (scores.mean(), 1.96 * scores.std(), name))
+Accuracy: 0.913 (+/- 0.016) [KNN]
+Accuracy: 0.914 (+/- 0.126) [Random forest]
+Accuracy: 0.921 (+/- 0.052) [Naïve Bayes]
+Accuracy: 0.954 (+/- 0.079) [Stacking]
 
 ```
 
@@ -278,26 +278,26 @@ Model stacking for regression as described in this [Kaggle blog post](http://blo
 >>> boston = datasets.load_boston()
 >>> X, y = boston.data, boston.target
 
->>> m1 = KNeighborsRegressor(n_neighbors=1)
->>> m2 = LinearRegression()
->>> m3 = Ridge(alpha=.5)
+>>> models = {
+...     'KNN': KNeighborsRegressor(n_neighbors=1),
+...     'Linear regression': LinearRegression(),
+...     'Ridge regression': Ridge(alpha=.5)
+... }
 
 >>> stack = xam.stacking.StackingRegressor(
-...     models=[m1, m2, m3],
+...     models=models,
 ...     meta_model=RandomForestRegressor(random_state=1),
 ...     cv=model_selection.KFold(n_splits=10),
 ...     use_base_features=True
 ... )
 
->>> model_names = ['KNN', 'Random Forest', 'Ridge regression', 'StackingRegressor']
-
->>> for clf, label in zip(stack.models + [stack], model_names):
-...     scores = model_selection.cross_val_score(clf, X, y, cv=10, scoring='neg_mean_absolute_error')
-...     print('MAE: %0.2f (+/- %0.2f) [%s]' % (-scores.mean(), 1.96 * scores.std(), label))
-MAE: 7.21 (+/- 3.51) [KNN]
-MAE: 4.01 (+/- 4.09) [Random Forest]
-MAE: 3.95 (+/- 4.14) [Ridge regression]
-MAE: 3.07 (+/- 2.54) [StackingRegressor]
+>>> for name, model in dict(models, **{'Stacking': stack}).items():
+...     scores = model_selection.cross_val_score(model, X, y, cv=5, scoring='neg_mean_absolute_error')
+...     print('MAE: %0.3f (+/- %0.3f) [%s]' % (-scores.mean(), 1.96 * scores.std(), name))
+MAE: 7.338 (+/- 1.423) [KNN]
+MAE: 4.257 (+/- 1.923) [Linear regression]
+MAE: 4.118 (+/- 1.971) [Ridge regression]
+MAE: 3.234 (+/- 1.089) [Stacking]
 
 ```
 
@@ -461,7 +461,7 @@ dtype: bool
 >>> ax.grid(linewidth=0.5)
 >>> legend = ax.legend(loc='upper left', framealpha=1)
 
->>> latex.save_fig('figures/latex_example')
+latex.save_fig('figures/latex_example')
 
 ```
 
@@ -491,13 +491,6 @@ Scikit-learn's [`Imputer`](http://scikit-learn.org/stable/modules/generated/skle
 ... ])
 
 >>> imp = xam.preprocessing.ConditionalImputer(groupby_col=2, strategy='mean')
->>> imp.fit_transform(X)
-array([[ 1. ,  4. ],
-       [ 2. ,  4.5],
-       [ 3. ,  5. ],
-       [ 3. ,  5. ],
-       [ 3. ,  6. ],
-       [ 3. ,  7. ]])
 
 ```
 
@@ -662,7 +655,7 @@ See this [blog post](https://maxhalford.github.io/subsampling-1/).
 
 >>> # The Kullback–Leibler divergence between sample and test is now lower
 >>> sp.stats.entropy(np.histogram(sample, bins=30)[0], np.histogram(test, bins=30)[0])
-0.036151910003416353
+0.036151910003416325
 
 ```
 

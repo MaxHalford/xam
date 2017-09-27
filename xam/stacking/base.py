@@ -31,9 +31,11 @@ class BaseStackingEstimator(BaseEstimator, MetaEstimatorMixin):
         folds = self.cv.split(X, y)
 
         for train_index, test_index in folds:
-            for i, model in enumerate(self.models):
+            for i, (name, model) in enumerate(self.models.items()):
+                # Extract fit params for the model
+                model_fit_params = fit_params.get('fit_params', {}).get(name, {})
                 # Train the model on the training set
-                model.fit(X[train_index], y[train_index], **fit_params)
+                model.fit(X[train_index], y[train_index], **model_fit_params)
                 # If use_proba is True then the probabilities of each class for
                 # each model have to be predicted and then stored into
                 # meta_features
@@ -51,7 +53,7 @@ class BaseStackingEstimator(BaseEstimator, MetaEstimatorMixin):
         self.meta_model.fit(self.meta_features_, y)
 
         # Each model has to be fit on all the data for further predictions
-        for model in self.models:
+        for model in self.models.values():
             model.fit(X, y)
 
         return self
@@ -62,12 +64,12 @@ class BaseStackingEstimator(BaseEstimator, MetaEstimatorMixin):
         # model have to be predicted and then stored into meta_features
         if self.use_proba:
             meta_features = np.empty((len(X), len(self.models) * (self.n_probas_)))
-            for i, model in enumerate(self.models):
+            for i, model in enumerate(self.models.values()):
                 probabilities = model.predict_proba(X)
                 for j, k in enumerate(range(self.n_probas_ * i, self.n_probas_ * (i + 1))):
                     meta_features[:, k] = probabilities[:, j]
         else:
-            meta_features = np.transpose([model.predict(X) for model in self.models])
+            meta_features = np.transpose([model.predict(X) for model in self.models.values()])
 
         if self.use_base_features:
             meta_features = np.hstack((meta_features, X))
