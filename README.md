@@ -491,11 +491,18 @@ Scikit-learn's [`Imputer`](http://scikit-learn.org/stable/modules/generated/skle
 ... ])
 
 >>> imp = xam.preprocessing.ConditionalImputer(groupby_col=2, strategy='mean')
+>>> imp.fit_transform(X)
+array([[ 1. ,  4. ,  1. ],
+       [ 2. ,  4.5,  1. ],
+       [ 3. ,  5. ,  1. ],
+       [ 3. ,  5. ,  2. ],
+       [ 3. ,  6. ,  2. ],
+       [ 3. ,  7. ,  2. ]])
 
 ```
 
 
-**Transforming cyclic**
+**Transforming cyclic features**
 
 Day of week, hours, minutes, are cyclic ordinal features; cosine and sine transforms should be used to express the cycle. See [this StackEchange discussion](https://datascience.stackexchange.com/questions/5990/what-is-a-good-way-to-transform-cyclic-ordinal-attributes). This transformer returns an array with twice as many columns as the input array; the first columns are the cosine transforms and the last columns are the sine transforms.
 

@@ -56,24 +56,23 @@ class ConditionalImputer(BaseEstimator, TransformerMixin):
             raise ValueError("X has different shape than during fitting. "
                              "Expected %d, got %d." % (len(self.imputers_), X.shape[1]))
 
-        features = np.hstack((X[:, :self.groupby_col], X[:, self.groupby_col+1:]))
-        XX = np.copy(features)
-        y = np.hstack(X[:, self.groupby_col])
-
         # Iterate over the columns
-        for i, x in enumerate(features.T):
+        for i, col in enumerate(X.T):
+            # The grouped by column does not have to be imputed
+            if i == self.groupby_col:
+                continue
             # Determine the null values in the column
-            null_mask = _get_mask(x, self.missing_values)
+            null_mask = _get_mask(col, self.missing_values)
             # Iterate over the classes in y
             for c in self.classes_:
                 # Determine the rows matching the class
-                nulls = x[null_mask & (y == c)]
+                class_fill_mask = null_mask & (X[:, self.groupby_col] == c)
                 # If there are missing values for the class then apply the corresponding Imputer
-                if nulls.size > 0:
-                    XX[:, i][(null_mask) & (y == c)] = self.imputers_[i][c].transform(
-                        nulls.reshape(-1, 1)
+                if np.any(class_fill_mask):
+                    X[:, i][class_fill_mask] = self.imputers_[i][c].transform(
+                        X[:, i][class_fill_mask].reshape(-1, 1)
                     )
-        return XX
+        return X
 
     def fit_transform(self, X, y=None, **fit_params):
         return self.fit(X, y, **fit_params).transform(X, y)
