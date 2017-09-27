@@ -1,1 +1,1 @@
-from .metric_regression import ClassificationMetricRegression
+from .auc_regressor import AUCRegressor

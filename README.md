@@ -27,11 +27,10 @@ xam is my personal data science and machine learning toolbox. It is written in P
 <!-- END gotoc -->
 
 
-
 ## Installation
 
 - [Install Anaconda for Python 3.x](https://www.continuum.io/downloads)
-- Run `pip install git+https://github.com/MaxHalford/xam` in a terminal
+- Run `pip install git+https://github.com/MaxHalford/xam --upgrade` in a terminal
 
 
 ## Other Python data science and machine learning toolkits
@@ -154,9 +153,9 @@ CHAS    15.971512   0.000074            0.030825
 
 ### Linear models
 
-**Classification metric maximizer**
+**AUC regressor**
 
-This is a generalization of the [AUC regressor](https://github.com/pyduan/amazonaccess/blob/f8addfefcee80f0ca15e416954af3926f3007d16/helpers/ml.py#L77) Paul Buan used for his winning solution to the [Amazon Employee Access Challenge](https://www.kaggle.com/c/amazon-employee-access-challenge).
+This is the [AUC regressor](https://github.com/pyduan/amazonaccess/blob/f8addfefcee80f0ca15e416954af3926f3007d16/helpers/ml.py#L77) Paul Duan used for his winning solution to the [Amazon Employee Access Challenge](https://www.kaggle.com/c/amazon-employee-access-challenge).
 
 ```python
 >>> from sklearn import datasets
@@ -167,13 +166,17 @@ This is a generalization of the [AUC regressor](https://github.com/pyduan/amazon
 >>> X, y = datasets.load_digits(n_class=2, return_X_y=True)
 >>> X_train, X_test, y_train, y_test = model_selection.train_test_split(X, y, train_size=0.5, random_state=42)
 
->>> clf = xam.linear_model.ClassificationMetricRegression(metric=metrics.roc_auc_score)
->>> clf.fit(X_train, y_train)
->>> y_pred = clf.predict_proba(X_test)[:, 1]
->>> test_roc_auc = metrics.roc_auc_score(y_test, y_pred)
+>>> model = xam.linear_model.AUCRegressor()
+>>> model.fit(X_train, y_train)
 
->>> print('ROC AUC: {:.3f}'.format(test_roc_auc))
-ROC AUC: 0.999
+>>> train_score = metrics.roc_auc_score(y_train, model.predict(X_train))
+>>> test_score = metrics.roc_auc_score(y_test, model.predict(X_test))
+
+>>> print('Train score: {:.3f}'.format(train_score))
+Train score: 1.000
+
+>>> print('Test score: {:.3f}'.format(test_score))
+Test score: 0.999
 
 ```
 
@@ -289,12 +292,12 @@ Model stacking for regression as described in this [Kaggle blog post](http://blo
 ... )
 
 >>> for name, model in dict(models, **{'Stacking': stack}).items():
-...     scores = model_selection.cross_val_score(clf, X, y, cv=5, scoring='neg_mean_absolute_error')
-...     print('MAE: %0.3f (+/- %0.3f) [%s]' % (-scores.mean(), 1.96 * scores.std(), label))
-MAE: 7.21 (+/- 3.51) [KNN]
-MAE: 4.01 (+/- 4.09) [Linear regression]
-MAE: 3.95 (+/- 4.14) [Ridge regression]
-MAE: 3.07 (+/- 2.54) [Stacking]
+...     scores = model_selection.cross_val_score(model, X, y, cv=5, scoring='neg_mean_absolute_error')
+...     print('MAE: %0.3f (+/- %0.3f) [%s]' % (-scores.mean(), 1.96 * scores.std(), name))
+MAE: 7.338 (+/- 1.423) [KNN]
+MAE: 4.257 (+/- 1.923) [Linear regression]
+MAE: 4.118 (+/- 1.971) [Ridge regression]
+MAE: 3.234 (+/- 1.089) [Stacking]
 
 ```
 

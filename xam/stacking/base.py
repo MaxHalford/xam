@@ -69,7 +69,7 @@ class BaseStackingEstimator(BaseEstimator, MetaEstimatorMixin):
                 for j, k in enumerate(range(self.n_probas_ * i, self.n_probas_ * (i + 1))):
                     meta_features[:, k] = probabilities[:, j]
         else:
-            meta_features = np.transpose([model.predict(X) for model in self.models])
+            meta_features = np.transpose([model.predict(X) for model in self.models.values()])
 
         if self.use_base_features:
             meta_features = np.hstack((meta_features, X))
