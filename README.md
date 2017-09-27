@@ -662,7 +662,7 @@ See this [blog post](https://maxhalford.github.io/subsampling-1/).
 
 >>> # The Kullback–Leibler divergence between sample and test is now lower
 >>> sp.stats.entropy(np.histogram(sample, bins=30)[0], np.histogram(test, bins=30)[0])
-0.036151910003416353
+0.036151910003416325
 
 ```
 
