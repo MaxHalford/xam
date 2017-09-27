@@ -13,7 +13,7 @@ class BaseStackingEstimator(BaseEstimator, MetaEstimatorMixin):
         self.use_base_features = use_base_features
         self.use_proba = use_proba
 
-    def fit(self, X, y):
+    def fit(self, X, y=None, **fit_params):
 
         # Check that X and y have correct shape
         X, y = check_X_y(X, y)
@@ -33,7 +33,7 @@ class BaseStackingEstimator(BaseEstimator, MetaEstimatorMixin):
         for train_index, test_index in folds:
             for i, model in enumerate(self.models):
                 # Train the model on the training set
-                model.fit(X[train_index], y[train_index])
+                model.fit(X[train_index], y[train_index], **fit_params)
                 # If use_proba is True then the probabilities of each class for
                 # each model have to be predicted and then stored into
                 # meta_features
