@@ -16,7 +16,6 @@ addons:
   apt:
     packages:
       - liblapack-dev
-      - texlive-latex-recommended
 
 before_install:
   - wget http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh

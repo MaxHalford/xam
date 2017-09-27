@@ -461,7 +461,7 @@ dtype: bool
 >>> ax.grid(linewidth=0.5)
 >>> legend = ax.legend(loc='upper left', framealpha=1)
 
->>> latex.save_fig('figures/latex_example')
+latex.save_fig('figures/latex_example')
 
 ```
 
