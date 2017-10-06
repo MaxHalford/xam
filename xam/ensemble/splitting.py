@@ -3,8 +3,6 @@ import pandas as pd
 from sklearn.base import BaseEstimator
 from sklearn.base import clone
 from sklearn.base import MetaEstimatorMixin
-from sklearn.exceptions import NotFittedError
-from sklearn.utils.validation import check_is_fitted
 
 
 class SplittingEstimator(BaseEstimator, MetaEstimatorMixin):

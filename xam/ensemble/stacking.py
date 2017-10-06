@@ -1,5 +1,8 @@
 import numpy as np
+from sklearn import model_selection
 from sklearn.base import BaseEstimator
+from sklearn.base import ClassifierMixin
+from sklearn.base import RegressorMixin
 from sklearn.base import MetaEstimatorMixin
 from sklearn.utils.validation import check_X_y
 
@@ -75,3 +78,29 @@ class BaseStackingEstimator(BaseEstimator, MetaEstimatorMixin):
             meta_features = np.hstack((meta_features, X))
 
         return self.meta_model.predict(meta_features)
+
+
+class StackingClassifier(BaseStackingEstimator, ClassifierMixin):
+
+    def __init__(self, models, meta_model, cv=model_selection.StratifiedKFold(n_splits=3),
+                 use_base_features=True, use_proba=True):
+        super().__init__(
+            models=models,
+            meta_model=meta_model,
+            cv=cv,
+            use_base_features=use_base_features,
+            use_proba=use_proba,
+        )
+
+
+class StackingRegressor(BaseStackingEstimator, RegressorMixin):
+
+    def __init__(self, models, meta_model, cv=model_selection.KFold(n_splits=3),
+                 use_base_features=True):
+        super().__init__(
+            models=models,
+            meta_model=meta_model,
+            cv=cv,
+            use_base_features=use_base_features,
+            use_proba=False
+        )
