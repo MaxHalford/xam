@@ -177,7 +177,7 @@ This is the [AUC regressor](https://github.com/pyduan/amazonaccess/blob/f8addfef
 Train score: 1.000
 
 >>> print('Test score: {:.3f}'.format(test_score))
-Test score: 1.000
+Test score: 0.999
 
 ```
 
