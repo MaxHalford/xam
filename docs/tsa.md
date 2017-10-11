@@ -1,6 +1,6 @@
 # Time series analysis (TSA)
 
-## Exponential smoothing forecasting
+## Exponential smoothing
 
 ```python
 >>> import datetime as dt
@@ -50,7 +50,7 @@ RMSE: 17.543
 
 ```
 
-**Frequency average forecasting**
+## Frequency average forecasting
 
 ```python
 >>> import datetime as dt

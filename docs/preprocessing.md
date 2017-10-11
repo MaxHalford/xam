@@ -1,5 +1,10 @@
 # Preprocessing
 
+## Bayesian encoding
+
+Based on [this paper](http://delivery.acm.org/10.1145/510000/507538/p27-micci-barreca.pdf?ip=195.220.58.237&id=507538&acc=ACTIVE%20SERVICE&key=7EBF6E77E86B478F%2EDD49F42520D8214D%2E4D4702B0C3E38B35%2E4D4702B0C3E38B35&CFID=815531231&CFTOKEN=41271394&__acm__=1507647876_89ea73f9273f9f852423613baaa9f9c8).
+
+
 ## Binning
 
 ### Bayesian blocks binning
@@ -113,6 +118,28 @@ array([[2, 0],
 
 ```
 
+## Cyclic features
+
+Day of week, hours, minutes, are cyclic ordinal features; cosine and sine transforms should be used to express the cycle. See [this StackEchange discussion](https://datascience.stackexchange.com/questions/5990/what-is-a-good-way-to-transform-cyclic-ordinal-attributes). This transformer returns an array with twice as many columns as the input array; the first columns are the cosine transforms and the last columns are the sine transforms.
+
+```python
+>>> import numpy as np
+>>> import xam
+
+>>> times = np.array([
+...    np.linspace(0, 23, 4),
+...    np.linspace(0, 59, 4),
+... ]).T
+
+>>> trans = xam.preprocessing.CycleTransformer()
+>>> trans.fit_transform(times)
+array([[ 1.        ,  1.        ,  0.        ,  0.        ],
+       [-0.42261826, -0.46947156,  0.90630779,  0.88294759],
+       [-0.64278761, -0.5591929 , -0.76604444, -0.82903757],
+       [ 0.96592583,  0.9945219 , -0.25881905, -0.10452846]])
+
+```
+
 ## Imputation
 
 ### Conditional imputation
@@ -184,33 +211,5 @@ See this [blog post](https://maxhalford.github.io/subsampling-1/).
 ...     np.histogram(test['x'], bins=30)[0]
 ... )
 0.073617242561277552
-
-```
-
-
-## Bayesian encoding
-
-Based on [this paper](http://delivery.acm.org/10.1145/510000/507538/p27-micci-barreca.pdf?ip=195.220.58.237&id=507538&acc=ACTIVE%20SERVICE&key=7EBF6E77E86B478F%2EDD49F42520D8214D%2E4D4702B0C3E38B35%2E4D4702B0C3E38B35&CFID=815531231&CFTOKEN=41271394&__acm__=1507647876_89ea73f9273f9f852423613baaa9f9c8).
-
-
-## Transforming cyclic features
-
-Day of week, hours, minutes, are cyclic ordinal features; cosine and sine transforms should be used to express the cycle. See [this StackEchange discussion](https://datascience.stackexchange.com/questions/5990/what-is-a-good-way-to-transform-cyclic-ordinal-attributes). This transformer returns an array with twice as many columns as the input array; the first columns are the cosine transforms and the last columns are the sine transforms.
-
-```python
->>> import numpy as np
->>> import xam
-
->>> times = np.array([
-...    np.linspace(0, 23, 4),
-...    np.linspace(0, 59, 4),
-... ]).T
-
->>> trans = xam.preprocessing.CycleTransformer()
->>> trans.fit_transform(times)
-array([[ 1.        ,  1.        ,  0.        ,  0.        ],
-       [-0.42261826, -0.46947156,  0.90630779,  0.88294759],
-       [-0.64278761, -0.5591929 , -0.76604444, -0.82903757],
-       [ 0.96592583,  0.9945219 , -0.25881905, -0.10452846]])
 
 ```

@@ -1,6 +1,6 @@
-### Plotting
+# Plotting
 
-**Latex style figures**
+## Latex style figures
 
 ```python
 >>> from xam import latex  # Has to be imported before matplotlib.pyplot

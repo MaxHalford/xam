@@ -51,7 +51,7 @@ Name: a, dtype: int64
 ```
 
 
-## Convert to DataFrame transformer
+## DataFrame transformer
 
 By design scikit-learn Transformers output numpy nd-arrays, the `ToDataFrameTransformer` can be used in a pipeline to return pandas dataframes if needed.
 

@@ -47,7 +47,7 @@ datetime.datetime(2017, 3, 27, 0, 0)
 
 ```
 
-## Convert pandas DataFrame to Vowpal Wabbit format
+## DataFrame to Vowpal Wabbit
 
 `xam.util.dataframe_to_vw` convert a `pandas.DataFrame` to a string which can be ingested by [Vowpal Wabbit](https://github.com/JohnLangford/vowpal_wabbit) once it is saved on disk.
 
