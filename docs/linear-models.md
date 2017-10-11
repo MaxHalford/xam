@@ -19,10 +19,10 @@ This is the [AUC regressor](https://github.com/pyduan/amazonaccess/blob/f8addfef
 >>> train_score = metrics.roc_auc_score(y_train, model.predict(X_train))
 >>> test_score = metrics.roc_auc_score(y_test, model.predict(X_test))
 
->>> print('Train score: {:.3f}'.format(train_score))
-Train score: 1.000
+>>> print('Train score: {:.2f}'.format(train_score))
+Train score: 1.00
 
->>> print('Test score: {:.3f}'.format(test_score))
-Test score: 0.999
+>>> print('Test score: {:.2f}'.format(test_score))
+Test score: 1.00
 
 ```

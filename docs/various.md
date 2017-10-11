@@ -52,6 +52,7 @@ datetime.datetime(2017, 3, 27, 0, 0)
 `xam.util.dataframe_to_vw` convert a `pandas.DataFrame` to a string which can be ingested by [Vowpal Wabbit](https://github.com/JohnLangford/vowpal_wabbit) once it is saved on disk.
 
 ```python
+>>> import pandas as pd
 >>> import xam
 
 >>> df = pd.DataFrame.from_dict({

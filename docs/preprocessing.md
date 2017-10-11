@@ -118,6 +118,27 @@ array([[2, 0],
 
 ```
 
+## Combining features
+
+```python
+>>> import pandas as pd
+>>> import xam
+
+>>> df = pd.DataFrame({
+...     'col_a': ['a', 'b', 'c'],
+...     'col_b': ['d', 'e', 'f'],
+...     'col_c': ['g', 'h', 'i'],
+... })
+
+>>> combo_transformer = xam.preprocessing.CombinedFeatures(separator='+', orders=[2, 3])
+>>> combo_transformer.fit_transform(df)
+  col_a col_b col_c col_a+col_b col_a+col_c col_b+col_c col_a+col_b+col_c
+0     a     d     g         a+d         a+g         d+g             a+d+g
+1     b     e     h         b+e         b+h         e+h             b+e+h
+2     c     f     i         c+f         c+i         f+i             c+f+i
+
+```
+
 ## Cyclic features
 
 Day of week, hours, minutes, are cyclic ordinal features; cosine and sine transforms should be used to express the cycle. See [this StackEchange discussion](https://datascience.stackexchange.com/questions/5990/what-is-a-good-way-to-transform-cyclic-ordinal-attributes). This transformer returns an array with twice as many columns as the input array; the first columns are the cosine transforms and the last columns are the sine transforms.

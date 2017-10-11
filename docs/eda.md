@@ -25,7 +25,7 @@ Classification.
 >>> features['sepal length (cm)'] = features['sepal length (cm)'] > 5.5
 >>> target = pd.Series(iris.target)
 
->>> cont_imp, disc_imp = xam.feature_selection.feature_importance_classification(features, target, random_state=1)
+>>> cont_imp, disc_imp = xam.eda.feature_importance_classification(features, target, random_state=1)
 
 >>> cont_imp.sort_values('f_p_value')
                    f_statistic     f_p_value  mutual_information
@@ -51,7 +51,7 @@ Regression.
 >>> features['CHAS'] = features['CHAS'].astype(int)
 >>> target = pd.Series(boston.target)
 
->>> cont_imp, disc_imp = xam.feature_selection.feature_importance_regression(features, target, random_state=1)
+>>> cont_imp, disc_imp = xam.eda.feature_importance_regression(features, target, random_state=1)
 
 >>> cont_imp.sort_values('pearson_r_p_value')
          pearson_r  pearson_r_p_value  mutual_information

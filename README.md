@@ -34,6 +34,7 @@ Usage example is available in the [docs](docs) folder. Each example is tested wi
 - [Preprocessing](docs/preprocessing.md)
   - [Bayesian encoding](docs/preprocessing.md#bayesian-encoding)
   - [Binning](docs/preprocessing.md#binning)
+  - [Combining features](docs/preprocessing.md#combining-features)
   - [Cyclic features](docs/preprocessing.md#cyclic-features)
   - [Imputation](docs/preprocessing.md#imputation)
   - [Subsampling](docs/preprocessing.md#subsampling)
