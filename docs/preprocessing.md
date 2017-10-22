@@ -5,6 +5,30 @@
 Based on [this paper](http://delivery.acm.org/10.1145/510000/507538/p27-micci-barreca.pdf?ip=195.220.58.237&id=507538&acc=ACTIVE%20SERVICE&key=7EBF6E77E86B478F%2EDD49F42520D8214D%2E4D4702B0C3E38B35%2E4D4702B0C3E38B35&CFID=815531231&CFTOKEN=41271394&__acm__=1507647876_89ea73f9273f9f852423613baaa9f9c8).
 
 
+```python
+>>> import pandas as pd
+>>> import xam
+
+>>> X = pd.DataFrame({'x_0': ['a'] * 5 + ['b'] * 5, 'x_1': ['a'] * 9 + ['b'] * 1})
+>>> y = pd.Series([1, 1, 1, 1, 0, 1, 0, 0, 0, 0])
+
+>>> be = xam.preprocessing.BayesianEncoder(columns=['x_0', 'x_1'], min_samples=3, smoothing=2)
+>>> be.fit_transform(X, y)
+        x_0       x_1
+0  0.719318  0.542382
+1  0.719318  0.542382
+2  0.719318  0.542382
+3  0.719318  0.542382
+4  0.719318  0.542382
+5  0.280682  0.542382
+6  0.280682  0.542382
+7  0.280682  0.542382
+8  0.280682  0.542382
+9  0.280682  0.203072
+
+```
+
+
 ## Binning
 
 ### Bayesian blocks binning
@@ -130,8 +154,7 @@ array([[2, 0],
 ...     'col_c': ['g', 'h', 'i'],
 ... })
 
->>> combo_transformer = xam.preprocessing.CombinedFeatures(separator='+', orders=[2, 3])
->>> combo_transformer.fit_transform(df)
+>>> xam.preprocessing.FeatureCombiner(separator='+', orders=[2, 3]).fit_transform(df)
   col_a col_b col_c col_a+col_b col_a+col_c col_b+col_c col_a+col_b+col_c
 0     a     d     g         a+d         a+g         d+g             a+d+g
 1     b     e     h         b+e         b+h         e+h             b+e+h

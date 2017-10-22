@@ -5,7 +5,7 @@ from sklearn.base import BaseEstimator
 from sklearn.base import TransformerMixin
 
 
-class CombinedFeatures(BaseEstimator, TransformerMixin):
+class FeatureCombiner(BaseEstimator, TransformerMixin):
 
     """
     Args:
@@ -39,6 +39,9 @@ class CombinedFeatures(BaseEstimator, TransformerMixin):
         for order in self.orders:
             for combo in itertools.combinations(self.columns, order):
                 col_name = self.separator.join(combo)
-                X[col_name] = X[combo[0]].str.cat([X[col] for col in combo[1:]], sep=self.separator)
+                X[col_name] = X[combo[0]].str.cat([
+                    X[col]
+                    for col in combo[1:]
+                ], sep=self.separator).astype('category')
 
         return X
