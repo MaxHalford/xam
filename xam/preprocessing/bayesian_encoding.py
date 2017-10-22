@@ -57,7 +57,7 @@ class BayesianEncoder(BaseEstimator, TransformerMixin):
         for col in self.columns:
             prior = self.priors_[col]
             posteriors = self.posteriors_[col]
-            new_col = col if drop_columns else col + '_be'
+            new_col = col if self.drop_columns else col + '_be'
             X[new_col] = X[col].apply(lambda x: posteriors.get(x, prior))
 
         return X
