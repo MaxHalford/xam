@@ -11,14 +11,17 @@ class BayesianEncoder(BaseEstimator, TransformerMixin):
     https://kaggle2.blob.core.windows.net/forum-message-attachments/225952/7441/high%20cardinality%20categoricals.pdf
 
     Args:
+        columns (list of strs): Columns to encode.
         min_samples (int): Minimum samples.
         smoothing (float): Smoothing parameter.
+        drop_columns (bool): Drop encoded columns or not.
     """
 
-    def __init__(self, columns=None, min_samples=50, smoothing=5):
+    def __init__(self, columns=None, min_samples=50, smoothing=5, drop_columns=True):
         self.columns = columns
         self.min_samples = min_samples
         self.smoothing = smoothing
+        self.drop_columns = drop_columns
 
     def fit(self, X, y=None, **fit_params):
 
@@ -54,6 +57,7 @@ class BayesianEncoder(BaseEstimator, TransformerMixin):
         for col in self.columns:
             prior = self.priors_[col]
             posteriors = self.posteriors_[col]
-            X[col] = X[col].apply(lambda x: posteriors.get(x, prior))
+            new_col = col if drop_columns else col + '_be'
+            X[new_col] = X[col].apply(lambda x: posteriors.get(x, prior))
 
         return X
