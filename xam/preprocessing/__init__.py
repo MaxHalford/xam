@@ -1,4 +1,3 @@
-from .bayesian_encoding import BayesianEncoder
 from .binning.bayesian_blocks import BayesianBlocksBinner
 from .binning.equal_frequency import EqualFrequencyBinner
 from .binning.equal_width import EqualWidthBinner
@@ -6,4 +5,5 @@ from .binning.mdlp import MDLPBinner
 from .combinations import FeatureCombiner
 from .cycle import CycleTransformer
 from .imputation.conditional import ConditionalImputer
-from .resampling import DistributionSubsampler
+from .likelihood_encoding import Likelihood
+from .resampling import DistributionResampler

@@ -4,7 +4,7 @@ from sklearn.base import BaseEstimator
 from sklearn.base import TransformerMixin
 
 
-class BayesianEncoder(BaseEstimator, TransformerMixin):
+class LikelihoodEncoder(BaseEstimator, TransformerMixin):
 
     """
 

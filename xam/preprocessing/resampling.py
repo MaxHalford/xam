@@ -4,7 +4,7 @@ import pandas as pd
 from .binning.equal_frequency import EqualFrequencyBinner
 
 
-class DistributionSubsampler():
+class DistributionResampler():
 
     def __init__(self, column=0, sample_frac=0.5, n_bins=100, seed=None):
         super().__init__()
