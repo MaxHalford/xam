@@ -40,7 +40,7 @@ class FeatureCombiner(BaseEstimator, TransformerMixin):
             for combo in itertools.combinations(self.columns, order):
                 col_name = self.separator.join(combo)
                 X[col_name] = X[combo[0]].apply(str).str.cat([
-                    X[col]
+                    X[col].apply(str)
                     for col in combo[1:]
                 ], sep=self.separator).astype('category')
 
