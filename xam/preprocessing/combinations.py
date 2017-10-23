@@ -39,7 +39,7 @@ class FeatureCombiner(BaseEstimator, TransformerMixin):
         for order in self.orders:
             for combo in itertools.combinations(self.columns, order):
                 col_name = self.separator.join(combo)
-                X[col_name] = X[combo[0]].str.cat([
+                X[col_name] = X[combo[0]].apply(str).str.cat([
                     X[col]
                     for col in combo[1:]
                 ], sep=self.separator).astype('category')
