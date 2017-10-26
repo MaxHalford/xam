@@ -92,6 +92,24 @@ class StackingClassifier(BaseStackingEstimator, ClassifierMixin):
             use_proba=use_proba,
         )
 
+    def predict_proba(self, X):
+
+        # If use_proba is True then the probabilities of each class for each
+        # model have to be predicted and then stored into meta_features
+        if self.use_proba:
+            meta_features = np.empty((len(X), len(self.models) * (self.n_probas_)))
+            for i, model in enumerate(self.models.values()):
+                probabilities = model.predict_proba(X)
+                for j, k in enumerate(range(self.n_probas_ * i, self.n_probas_ * (i + 1))):
+                    meta_features[:, k] = probabilities[:, j]
+        else:
+            meta_features = np.transpose([model.predict(X) for model in self.models.values()])
+
+        if self.use_base_features:
+            meta_features = np.hstack((meta_features, X))
+
+        return self.meta_model.predict_proba(meta_features)
+
 
 class StackingRegressor(BaseStackingEstimator, RegressorMixin):
 
