@@ -36,7 +36,7 @@ class BaseStackingEstimator(BaseEstimator, MetaEstimatorMixin):
         for train_index, test_index in folds:
             for i, (name, model) in enumerate(self.models.items()):
                 # Extract fit params for the model
-                model_fit_params = fit_params.get('fit_params', {}).get(name, {})
+                model_fit_params = fit_params.get(name, {})
                 # Train the model on the training set
                 model.fit(X[train_index], y[train_index], **model_fit_params)
                 # If use_proba is True then the probabilities of each class for
