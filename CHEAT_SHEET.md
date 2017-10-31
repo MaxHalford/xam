@@ -1,20 +1,19 @@
 # Data science knowledge/tricks
 
+## Ensemble
 
-## Vocabulary
+(not too sure about the exact vocabulary)
 
-- *IV*: independent variable
-- *DV*: dependent variable
-
+- Blending is averaging predictions
+- Bagging is averaging predictions with models trained on different folds with replacement
+- Pasting is the same as bagging but without replacement
+- Bumping is when a model is trained on different folds and the one that performs the best on the original dataset is kept
+- Stacking is training a model on predictions made by other models
 
 ## Missing values
 
 - Replace by mean, median or most frequent value
 - [Random Forest imputation](http://math.furman.edu/~dcs/courses/math47/R/library/randomForest/html/rfImpute.html)
-
-## Stacking
-
-- Use random seeds for improving generalization
 
 ## Feature engineering
 
@@ -74,5 +73,12 @@ print(advertising)
 ## Timeseries forecasting
 
 - Use [time series cross-validation](http://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html) (explanatory diagram [here](http://robjhyndman.com/hyndsight/tscv/))
+
+
+## Kaggle tricks
+
+- Adversarial validation can help making relevant cross-validation splits
+- Blend kernel submissions (it's dirty but it works)
+
 
 ### Spectral analysis for uncovering recurring patterns
