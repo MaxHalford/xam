@@ -34,12 +34,11 @@ hours_sin = [sin(pi * h / 24) for h in hours]
 
 - [Minimum description length principle (entropy)](https://arxiv.org/abs/math/0406077)
 
-### String encoding
+### Encoding categorical variables
 
-- Use label encoding if order matters (ordinal values)
-- Use one-hot encoding if order does not matter (nominal values)
-
-For one-hot encoding be careful that the dimensionality doesn't blow up; also expect the training time to increase because of the added columns.
+- One-hot encoding
+- [Target encoding](http://delivery.acm.org/10.1145/510000/507538/p27-micci-barreca.pdf?ip=195.220.58.237&id=507538&acc=ACTIVE%20SERVICE&key=7EBF6E77E86B478F%2EDD49F42520D8214D%2E4D4702B0C3E38B35%2E4D4702B0C3E38B35&CFID=815531231&CFTOKEN=41271394&__acm__=1507647876_89ea73f9273f9f852423613baaa9f9c8)
+- [Feature embedding](https://arxiv.org/pdf/1604.06737.pdf)
 
 ### Adstock transformation
 
