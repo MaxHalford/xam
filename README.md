@@ -51,6 +51,7 @@ Usage example is available in the [docs](docs) folder. Each example is tested wi
 
 ## Other Python data science and machine learning toolkits
 
+- [fastai/fastai](https://github.com/fastai/fastai)
 - [Laurae2/Laurae](https://github.com/Laurae2/Laurae)
 - [rasbt/mlxtend](https://github.com/rasbt/mlxtend)
 - [reiinakano/scikit-plot](https://github.com/reiinakano/scikit-plot)
