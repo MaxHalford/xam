@@ -23,7 +23,7 @@ Usage example is available in the [docs](docs) folder. Each example is tested wi
   - [Stacking](docs/model-ensembling.md#stacking)
   - [Splitting](docs/model-ensembling.md#splitting)
 - [Model selection](docs/model-selection.md)
-  - [Datetime cross-validation](docs/model-selection.md#datetime-cross-validation)
+  - [Ordered cross-validation](docs/model-selection.md#ordered-cross-validation)
 - [Natural Language Processing (NLP)](docs/nlp.md)
   - [Top-terms classifier](docs/nlp.md#top-terms-classifier)
 - [Pipeline](docs/pipeline.md)
