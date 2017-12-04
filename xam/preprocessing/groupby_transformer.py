@@ -13,7 +13,7 @@ class GroupbyTransformer(BaseEstimator, TransformerMixin):
         self.by = by
 
     def _get_transform_columns(self, X):
-        return [i for i, col in enumerate(X.columns) if col != self.by]
+        return [col for col in X.columns if col != self.by]
 
     def fit(self, X, y=None, **fit_params):
 
@@ -37,7 +37,7 @@ class GroupbyTransformer(BaseEstimator, TransformerMixin):
             rows = X.index[mask]
 
             # Fit the transformer
-            transformer.fit(X.iloc[rows, columns], y[mask], **fit_params)
+            transformer.fit(X.loc[rows, columns], y[mask], **fit_params)
 
             # Save the transformer
             self.transformers_[key] = transformer
@@ -63,7 +63,7 @@ class GroupbyTransformer(BaseEstimator, TransformerMixin):
             rows = X.index[mask]
 
             # Transform the rows
-            X.iloc[rows, columns] = transformer.transform(X.iloc[rows, columns])
+            X.iloc[rows, columns] = transformer.transform(X.loc[rows, columns])
 
         return X
 

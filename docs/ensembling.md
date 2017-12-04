@@ -1,6 +1,32 @@
-# Model ensembling
+# Ensembling
 
-- Bagging/pasting is [implemented in scikit-learn](http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.BaggingClassifier.html)
+## Groupby model
+
+```python
+>>> import pandas as pd
+>>> from sklearn import model_selection
+>>> from sklearn.linear_model import Lasso
+>>> from sklearn.datasets import load_diabetes
+>>> import xam
+
+>>> X, y = load_diabetes(return_X_y=True)
+>>> X = pd.DataFrame(X)
+>>> X['split'] = X[[3]] > X[[3]].mean()
+
+>>> lasso = Lasso(alpha=0.01, random_state=42)
+>>> split_lasso = xam.ensemble.GroupbyModel(lasso, 'split')
+
+>>> cv = model_selection.KFold(n_splits=5, random_state=42)
+
+>>> scores = model_selection.cross_val_score(lasso, X, y, cv=cv, scoring='neg_mean_squared_error')
+>>> print('{:.3f} (+/- {:.3f})'.format(-scores.mean(), 1.96 * scores.std()))
+3016.066 (+/- 244.806)
+
+>>> scores = model_selection.cross_val_score(split_lasso, X, y, cv=cv, scoring='neg_mean_squared_error')
+>>> print('{:.3f} (+/- {:.3f})'.format(-scores.mean(), 1.96 * scores.std()))
+2902.065 (+/- 265.931)
+
+```
 
 ## Stacking
 
@@ -79,37 +105,5 @@ MAE: 7.338 (+/- 1.423) [KNN]
 MAE: 4.257 (+/- 1.923) [Linear regression]
 MAE: 4.118 (+/- 1.971) [Ridge regression]
 MAE: 3.234 (+/- 1.089) [Stacking]
-
-```
-
-## Splitting
-
-Splitting makes it easy a model on different *splits* of a dataset. For example you may want to train one model per user/day.
-
-:warning: Python doesn't know how to pickle lambda functions; you should pass a plain old `def` function to `SplittingEstimator` if you want to be able to pickle it.
-
-```python
->>> from sklearn import model_selection
->>> from sklearn.linear_model import Lasso
->>> from sklearn.datasets import load_diabetes
->>> import xam
-
->>> X, y = load_diabetes(return_X_y=True)
-
->>> def split(row):
-...    return row[1] > 0
-
->>> lasso = Lasso(alpha=0.01, random_state=42)
->>> split_lasso = xam.ensemble.SplittingEstimator(lasso, split)
-
->>> cv = model_selection.KFold(n_splits=5, random_state=42)
-
->>> scores = model_selection.cross_val_score(lasso, X, y, cv=cv, scoring='r2')
->>> print('{:.3f} (+/- {:.3f})'.format(scores.mean(), 1.96 * scores.std()))
-0.481 (+/- 0.095)
-
->>> scores = model_selection.cross_val_score(split_lasso, X, y, cv=cv, scoring='r2')
->>> print('{:.3f} (+/- {:.3f})'.format(scores.mean(), 1.96 * scores.std()))
-0.496 (+/- 0.098)
 
 ```
