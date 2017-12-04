@@ -63,7 +63,7 @@ class GroupbyTransformer(BaseEstimator, TransformerMixin):
             rows = X.index[mask]
 
             # Transform the rows
-            X.iloc[rows, columns] = transformer.transform(X.loc[rows, columns])
+            X.loc[rows, columns] = transformer.transform(X.loc[rows, columns])
 
         return X
 
@@ -89,8 +89,8 @@ class GroupbyTransformer(BaseEstimator, TransformerMixin):
             rows = X.index[mask]
 
             # Fit and transform
-            X.iloc[rows, columns] = transformer.fit_transform(
-                X.iloc[rows, columns],
+            X.loc[rows, columns] = transformer.fit_transform(
+                X.loc[rows, columns],
                 y[mask],
                 **fit_params
             )
