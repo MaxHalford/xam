@@ -37,7 +37,7 @@ Usage example is available in the [docs](docs) folder. Each example is tested wi
   - [Binning](docs/preprocessing.md#binning)
   - [Combining features](docs/preprocessing.md#combining-features)
   - [Cyclic features](docs/preprocessing.md#cyclic-features)
-  - [Imputation](docs/preprocessing.md#imputation)
+  - [Groupby transformer](docs/preprocessing.md#groupby-transformer)
   - [Likelihood encoding](docs/preprocessing.md#likelihood-encoding)
   - [Resampling](docs/preprocessing.md#resampling)
 - [Time series analysis (TSA)](docs/tsa.md)

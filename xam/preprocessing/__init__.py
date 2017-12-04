@@ -4,6 +4,6 @@ from .binning.equal_width import EqualWidthBinner
 from .binning.mdlp import MDLPBinner
 from .combinations import FeatureCombiner
 from .cycle import CycleTransformer
-from .imputation.conditional import ConditionalImputer
+from .groupby_transformer import GroupbyTransformer
 from .likelihood_encoding import LikelihoodEncoder
 from .resampling import DistributionResampler

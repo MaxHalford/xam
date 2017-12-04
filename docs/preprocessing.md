@@ -155,34 +155,40 @@ array([[ 1.        ,  1.        ,  0.        ,  0.        ],
 
 ```
 
-## Imputation
-
-### Conditional imputation
-
-Scikit-learn's [`Imputer`](http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.Imputer.html) transformer is practical for it is an unsupervised method. `ConditionalImputer` makes it possible to apply an `Imputer` in a supervised way. In other words the `Imputer` is applied conditionally on the value of `y`.
+## Groupby transformer
 
 ```python
->>> import numpy as np
->>> from sklearn.preprocessing import Imputer
+>>> from sklearn import preprocessing
 >>> import xam
 
->>> X = np.array([
-...     [1,      4,      1],
-...     [np.nan, np.nan, 1],
-...     [3,      5,      1],
-...     [3,      5,      2],
-...     [3,      np.nan, 2],
-...     [3,      7,      2],
-... ])
+>>> df = pd.DataFrame({
+...     'a': [1, None, 3, 3, 3, 3],
+...     'b': [4, None, 5, 5, None, 7],
+...     'c': [1, 1, 1, 2, 2, 2],
+... })
 
->>> imp = xam.preprocessing.ConditionalImputer(groupby_col=2, strategy='mean')
->>> imp.fit_transform(X)
-array([[ 1. ,  4. ,  1. ],
-       [ 2. ,  4.5,  1. ],
-       [ 3. ,  5. ,  1. ],
-       [ 3. ,  5. ,  2. ],
-       [ 3. ,  6. ,  2. ],
-       [ 3. ,  7. ,  2. ]])
+>>> df
+     a    b  c
+0  1.0  4.0  1
+1  NaN  NaN  1
+2  3.0  5.0  1
+3  3.0  5.0  2
+4  3.0  NaN  2
+5  3.0  7.0  2
+
+>>> imp = xam.preprocessing.GroupbyTransformer(
+...     base_transformer=preprocessing.Imputer(strategy='mean'),
+...     by='c'
+... )
+
+>>> imp.fit_transform(df)
+     a    b  c
+0  1.0  4.0  1
+1  2.0  4.5  1
+2  3.0  5.0  1
+3  3.0  5.0  2
+4  3.0  6.0  2
+5  3.0  7.0  2
 
 ```
 
