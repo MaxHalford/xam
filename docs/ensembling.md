@@ -56,6 +56,7 @@
 >>> stack = xam.ensemble.StackingClassifier(
 ...     models=models,
 ...     meta_model=LogisticRegression(),
+...     metric=metrics.accuracy_score,
 ...     use_base_features=True,
 ...     use_proba=True
 ... )

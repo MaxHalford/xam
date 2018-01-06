@@ -1,6 +1,8 @@
 import numpy as np
+import pandas as pd
 from sklearn import metrics
 from sklearn import model_selection
+from sklearn import preprocessing
 from sklearn.base import BaseEstimator
 from sklearn.base import ClassifierMixin
 from sklearn.base import RegressorMixin
@@ -34,11 +36,25 @@ class BaseStackingEstimator(BaseEstimator, MetaEstimatorMixin):
             for name in self.models.keys()
         }
 
+        if self.use_proba:
+            lb = preprocessing.LabelBinarizer().fit(y)
+
         for i, (fit_idx, val_idx) in enumerate(self.cv.split(X, y)):
             for j, (name, model) in enumerate(self.models.items()):
 
-                X_fit, y_fit = X.iloc[fit_idx], y.iloc[fit_idx]
-                X_val, y_val = X.iloc[val_idx], y.iloc[val_idx]
+                if isinstance(X, pd.DataFrame):
+                    X_fit = X.iloc[fit_idx]
+                    X_val = X.iloc[val_idx]
+                else:
+                    X_fit = X[fit_idx]
+                    X_val = X[val_idx]
+
+                if isinstance(y, pd.Series):
+                    y_fit = y.iloc[fit_idx]
+                    y_val = y.iloc[val_idx]
+                else:
+                    y_fit = y[fit_idx]
+                    y_val = y[val_idx]
 
                 # Train the model on the training fold
                 model.fit(X_fit, y_fit, **fit_params.get(name, {}))
@@ -48,15 +64,16 @@ class BaseStackingEstimator(BaseEstimator, MetaEstimatorMixin):
                 # meta_features
                 if self.use_proba:
                     val_pred = model.predict_proba(X_val)
+                    val_score = self.metric(y_val, lb.inverse_transform(val_pred))
                     for k, l in enumerate(range(self.n_probas_ * j, self.n_probas_ * (j + 1))):
                         self.meta_features_[val_idx, l] = val_pred[:, k]
                 else:
                     val_pred = model.predict(X_val)
                     self.meta_features_[val_idx, j] = val_pred
+                    val_score = self.metric(y_val, val_pred)
 
-                # Score the model on the validation fold
-                score = self.metric(y_val, val_pred)
-                self.scores_[name][i] = score
+                # Store the model's score on the validation fold
+                self.scores_[name][i] = val_score
 
                 if verbose:
                     print('{} score on fold {}: {:.5f}'.format(name, (i+1), score))
