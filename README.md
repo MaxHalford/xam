@@ -41,6 +41,7 @@ Usage example is available in the [docs](docs) folder. Each example is tested wi
   - [Likelihood encoding](docs/preprocessing.md#likelihood-encoding)
   - [Resampling](docs/preprocessing.md#resampling)
 - [Time series analysis (TSA)](docs/tsa.md)
+  - [Exponentially weighted average](docs/tsa.md#ewm-optimization)
   - [Exponential smoothing](docs/tsa.md#exponential-smoothing)
   - [Frequency average forecasting](docs/tsa.md#frequency-average-forecasting)
 - [Various](docs/various.md)
