@@ -243,11 +243,11 @@ See this [blog post](https://maxhalford.github.io/subsampling-1/).
 ... })
 
 # Calculate Kullback–Leibler divergence between the train and the test data
->>> sp.stats.entropy(
+>>> str(sp.stats.entropy(
 ...     np.histogram(train['x'], bins=30)[0],
 ...     np.histogram(test['x'], bins=30)[0]
-... )
-0.25207468085005064
+... ))[:5]
+'0.252'
 
 >>> resampler = xam.preprocessing.DistributionResampler(column='x', sample_frac=0.5, seed=0)
 >>> resampler.fit(test)
@@ -255,10 +255,10 @@ See this [blog post](https://maxhalford.github.io/subsampling-1/).
 >>> sample = resampler.transform(train)
 
 # The Kullback–Leibler divergence between sample and test is now lower
->>> sp.stats.entropy(
+>>> str(sp.stats.entropy(
 ...     np.histogram(sample['x'], bins=30)[0],
 ...     np.histogram(test['x'], bins=30)[0]
-... )
-0.073617242561277552
+... ))[:5]
+'0.073'
 
 ```

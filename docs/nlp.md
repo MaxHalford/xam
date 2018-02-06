@@ -20,7 +20,8 @@
 >>> y_test = newsgroups_test.target
 
 >>> clf = xam.nlp.TopTermsClassifier(n_terms=50)
->>> clf.fit(X_train.toarray(), y_train).score(X_test.toarray(), y_test)
-0.95238095238095233
+>>> score = clf.fit(X_train.toarray(), y_train).score(X_test.toarray(), y_test)
+>>> round(score, 5)
+0.95238
 
 ```
