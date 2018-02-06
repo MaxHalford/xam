@@ -4,7 +4,7 @@ xam is my personal data science and machine learning toolbox. It is written in P
 
 ## Installation
 
-- [Install Anaconda for Python 3.x](https://www.continuum.io/downloads)
+- [Install Anaconda for Python 3.x >= 3.5](https://www.continuum.io/downloads)
 - Run `pip install git+https://github.com/MaxHalford/xam --upgrade` in a terminal
 
 :warning: Because xam is a ***personal*** toolkit, the `--upgrade` flag will install the latest releases of each dependency (scipy, pandas etc.).

@@ -1,3 +1,4 @@
+from .ewm_opt import calc_optimized_ewm
 from .exponential_smoothing import DoubleExponentialSmoothingForecaster
 from .exponential_smoothing import SimpleExponentialSmoothingForecaster
 from .exponential_smoothing import TripleExponentialSmoothingForecaster

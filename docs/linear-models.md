@@ -11,7 +11,7 @@ This is the [AUC regressor](https://github.com/pyduan/amazonaccess/blob/f8addfef
 >>> import xam
 
 >>> X, y = datasets.load_digits(n_class=2, return_X_y=True)
->>> X_train, X_test, y_train, y_test = model_selection.train_test_split(X, y, train_size=0.5, random_state=42)
+>>> X_train, X_test, y_train, y_test = model_selection.train_test_split(X, y, test_size=0.5, random_state=42)
 
 >>> model = xam.linear_model.AUCRegressor()
 >>> model.fit(X_train, y_train)

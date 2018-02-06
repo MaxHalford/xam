@@ -1,5 +1,35 @@
 # Time series analysis (TSA)
 
+## Exponentially weighted average optimization
+
+The `calc_optimized_ewm` tries to find the `alpha` that minimises a `metric` between a series and the [exponentially weighted average (EWM)](https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.ewm.html) of parameter `alpha`. The optimisation is done with [differential evolution](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.differential_evolution.html). The EWM is calculated on the input series shifted by an input paramater called `shift`. This ensures that the EWM can only look at values that are in the past with a margin of `shift`. For example if you want the EWM to predict today's values with data that only goes up to yesterday then you would set `shift` to be equal to 1 (which also happens to be the default value).
+
+```python
+>>> import pandas as pd
+>>> from sklearn import metrics
+>>> import xam
+
+>>> series = pd.Series([1, 2, 3, 1, 2, 3, 1, 2, 3])
+>>> shift = 3
+>>> metric = metrics.mean_squared_error
+>>> ewm = xam.tsa.calc_optimized_ewm(series, shift=shift, metric=metric, seed=42)
+>>> ewm
+0       NaN
+1       NaN
+2       NaN
+3    1.0000
+4    1.9999
+5    2.9999
+6    1.0002
+7    1.9999
+8    2.9999
+dtype: float64
+
+>>> metric(series[shift:], ewm[shift:])
+1.3351909851905068e-08
+
+```
+
 ## Exponential smoothing
 
 ```python
