@@ -4,3 +4,4 @@ build/
 dist/
 xam.egg-info/
 .coverage
+.pytest_cache/
