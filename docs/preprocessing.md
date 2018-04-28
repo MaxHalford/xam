@@ -204,7 +204,7 @@ Based on [this paper](http://delivery.acm.org/10.1145/510000/507538/p27-micci-ba
 >>> X = pd.DataFrame({'x_0': ['a'] * 5 + ['b'] * 5, 'x_1': ['a'] * 9 + ['b'] * 1})
 >>> y = pd.Series([1, 1, 1, 1, 0, 1, 0, 0, 0, 0])
 
->>> be = xam.preprocessing.LikelihoodEncoder(columns=['x_0', 'x_1'], min_samples=3, smoothing=2)
+>>> be = xam.preprocessing.LikelihoodEncoder(columns=['x_0', 'x_1'], min_samples=3, smoothing=2, suffix='')
 >>> be.fit_transform(X, y)
         x_0       x_1
 0  0.719318  0.542382

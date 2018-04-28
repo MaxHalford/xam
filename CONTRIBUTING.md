@@ -5,3 +5,5 @@
 - [Random forest imputation](https://stats.stackexchange.com/questions/49270/imputation-with-random-forests)
 - Model performance boxplot (like Airbnb)
 - Optimize the parameters of the exponential smoothing methods through train/test splitting
+- ARCH/GARCH
+- ARIMA

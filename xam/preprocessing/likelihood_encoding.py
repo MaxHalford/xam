@@ -7,21 +7,19 @@ from sklearn.base import TransformerMixin
 class LikelihoodEncoder(BaseEstimator, TransformerMixin):
 
     """
-
     https://kaggle2.blob.core.windows.net/forum-message-attachments/225952/7441/high%20cardinality%20categoricals.pdf
-
     Args:
         columns (list of strs): Columns to encode.
         min_samples (int): Minimum samples.
         smoothing (float): Smoothing parameter.
-        drop_columns (bool): Drop encoded columns or not.
+        suffix (str): Suffix to add the created columns.
     """
 
-    def __init__(self, columns=None, min_samples=50, smoothing=5, drop_columns=True):
+    def __init__(self, columns=None, min_samples=50, smoothing=5, suffix='_mean'):
         self.columns = columns
         self.min_samples = min_samples
         self.smoothing = smoothing
-        self.drop_columns = drop_columns
+        self.suffix = suffix
 
     def fit(self, X, y=None, **fit_params):
 
@@ -45,7 +43,7 @@ class LikelihoodEncoder(BaseEstimator, TransformerMixin):
             means = agg['mean']
             self.priors_[col] = means.mean()
             p = 1 / (1 + np.exp(-(counts - self.min_samples) / self.smoothing))
-            self.posteriors_[col] = p * means + (1 - p) * self.priors_[col]
+            self.posteriors_[col] = (p * means + (1 - p) * self.priors_[col]).to_dict()
 
         return self
 
@@ -57,7 +55,7 @@ class LikelihoodEncoder(BaseEstimator, TransformerMixin):
         for col in self.columns:
             prior = self.priors_[col]
             posteriors = self.posteriors_[col]
-            new_col = col if self.drop_columns else col + '_be'
+            new_col = col + self.suffix
             X[new_col] = X[col].apply(lambda x: posteriors.get(x, prior))
 
         return X

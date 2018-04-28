@@ -74,10 +74,10 @@ print(advertising)
 - Use [time series cross-validation](http://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html) (explanatory diagram [here](http://robjhyndman.com/hyndsight/tscv/))
 
 
+### Spectral analysis for uncovering recurring patterns
+
+
 ## Kaggle tricks
 
 - Adversarial validation can help making relevant cross-validation splits
-- Blend kernel submissions (it's dirty but it works)
-
-
-### Spectral analysis for uncovering recurring patterns
+- Pseudo-labeling by augmenting the training set with part of the labeled test set
