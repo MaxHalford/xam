@@ -4,15 +4,17 @@ from sklearn.base import BaseEstimator
 from sklearn.base import TransformerMixin
 
 
-class LikelihoodEncoder(BaseEstimator, TransformerMixin):
+class BayesianTargetEncoder(BaseEstimator, TransformerMixin):
 
     """
+
     https://kaggle2.blob.core.windows.net/forum-message-attachments/225952/7441/high%20cardinality%20categoricals.pdf
+
     Args:
         columns (list of strs): Columns to encode.
         min_samples (int): Minimum samples.
         smoothing (float): Smoothing parameter.
-        suffix (str): Suffix to add the created columns.
+        suffix (str)
     """
 
     def __init__(self, columns=None, min_samples=50, smoothing=5, suffix='_mean'):
@@ -43,7 +45,7 @@ class LikelihoodEncoder(BaseEstimator, TransformerMixin):
             means = agg['mean']
             self.priors_[col] = means.mean()
             p = 1 / (1 + np.exp(-(counts - self.min_samples) / self.smoothing))
-            self.posteriors_[col] = (p * means + (1 - p) * self.priors_[col]).to_dict()
+            self.posteriors_[col] = p * means + (1 - p) * self.priors_[col]
 
         return self
 
@@ -55,7 +57,6 @@ class LikelihoodEncoder(BaseEstimator, TransformerMixin):
         for col in self.columns:
             prior = self.priors_[col]
             posteriors = self.posteriors_[col]
-            new_col = col + self.suffix
-            X[new_col] = X[col].apply(lambda x: posteriors.get(x, prior))
+            X[col + self.suffix] = X[col].apply(lambda x: posteriors.get(x, prior))
 
         return X
