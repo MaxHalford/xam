@@ -6,4 +6,5 @@ from .binning.mdlp import MDLPBinner
 from .combinations import FeatureCombiner
 from .cycle import CycleTransformer
 from .groupby_transformer import GroupbyTransformer
+from .k_fold_target_encoding import KFoldTargetEncoder
 from .resampling import DistributionResampler
