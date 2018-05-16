@@ -6,7 +6,7 @@ import xam
 # Preprocessing
 
 def test_cycle_transformer():
-    assert check_estimator(xam.preprocessing.CycleTransformer) is None
+    assert check_estimator(xam.feature_extraction.CycleTransformer) is None
 
 ## Binning
 
