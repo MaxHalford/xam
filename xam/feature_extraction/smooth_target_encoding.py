@@ -58,3 +58,6 @@ class SmoothTargetEncoder(BaseEstimator, TransformerMixin):
             X[col + self.suffix] = X[col].apply(lambda x: posteriors.get(x, prior))
 
         return X
+
+    def fit_transform(self, X, y):
+        return self.fit(X, y).transform(X, y)
