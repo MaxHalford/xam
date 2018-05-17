@@ -58,7 +58,7 @@ array([[ 1.        ,  1.        ,  0.        ,  0.        ],
 ...     suffix='',
 ...     random_state=42
 ... )
->>> encoder.fit(X, y).transform(X)
+>>> encoder.fit_transform(X, y)
     x_0       x_1
 0  0.75  0.428571
 1  0.75  0.571429
@@ -90,7 +90,7 @@ Based on [this](https://www.wikiwand.com/en/Additive_smoothing).
 ...     prior_weight=3,
 ...     suffix=''
 ... )
->>> encoder.fit(X, y).transform(X)
+>>> encoder.fit_transform(X, y)
       x_0       x_1
 0  0.6875  0.486111
 1  0.6875  0.486111
