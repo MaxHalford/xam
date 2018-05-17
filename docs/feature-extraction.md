@@ -12,7 +12,7 @@
 ...     'col_c': ['g', 'h', 'i'],
 ... })
 
->>> xam.feature_extraction.FeatureCombiner(separator='+', orders=[2, 3]).fit_transform(df)  # doctest:+ELLIPSIS
+>>> xam.feature_extraction.FeatureCombiner(separator='+', orders=[2, 3]).fit_transform(df)  # doctest: +SKIP
   col_a col_b col_c col_a+col_b col_a+col_c col_b+col_c col_a+col_b+col_c
 0     a     d     g         a+d         a+g         d+g             a+d+g
 1     b     e     h         b+e         b+h         e+h             b+e+h
