@@ -4,10 +4,17 @@ from setuptools import setup
 setup(
     author='Max Halford',
     author_email='maxhalford25@gmail.com',
-    description='Data science utilities library',
+    description="Max Halford's personal data science toolkit",
     license='MIT',
     name='xam',
-    install_requires=open('requirements/base.txt').read().splitlines(),
+    python_requires='>=3.5.0',
+    install_requires=[
+        'matplotlib>=2.2.2',
+        'numpy>=1.14.0',
+        'pandas>=0.22.0',
+        'scipy>=1.0.1',
+        'scikit-learn>=0.19.1'
+    ],
     packages=find_packages(exclude=['examples']),
     url='https://github.com/MaxHalford/xam',
     version='0.0.1dev',

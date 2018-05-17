@@ -24,7 +24,10 @@ before_install:
   - conda update --yes conda
 
 install:
-  - pip install -r requirements/travis.txt
+  - pip install -r requirements.dev.txt
 
 script:
   - pytest --doctest-glob='docs/*.md' --cov=xam --verbose
+
+after_success:
+  - coveralls

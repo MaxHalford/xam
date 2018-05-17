@@ -1,5 +1,0 @@
--r base.txt
-
-nose
-pytest
-pytest-cov
