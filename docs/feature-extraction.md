@@ -12,7 +12,7 @@
 ...     'col_c': ['g', 'h', 'i'],
 ... })
 
->>> xam.feature_extraction.FeatureCombiner(separator='+', orders=[2, 3]).fit_transform(df)
+>>> xam.feature_extraction.FeatureCombiner(separator='+', orders=[2, 3]).fit_transform(df)  # doctest:+ELLIPSIS
   col_a col_b col_c col_a+col_b col_a+col_c col_b+col_c col_a+col_b+col_c
 0     a     d     g         a+d         a+g         d+g             a+d+g
 1     b     e     h         b+e         b+h         e+h             b+e+h
@@ -53,8 +53,12 @@ array([[ 1.        ,  1.        ,  0.        ,  0.        ],
 >>> X = pd.DataFrame({'x_0': ['a'] * 5 + ['b'] * 5, 'x_1': ['a'] * 9 + ['b'] * 1})
 >>> y = pd.Series([1, 1, 1, 1, 0, 1, 0, 0, 0, 0])
 
->>> be = xam.feature_extraction.KFoldTargetEncoder(columns=['x_0', 'x_1'], suffix='', random_state=42)
->>> be.fit_transform(X, y)
+>>> encoder = xam.feature_extraction.KFoldTargetEncoder(
+...     columns=['x_0', 'x_1'],
+...     suffix='',
+...     random_state=42
+... )
+>>> be.fit(X, y).transform(X)
     x_0       x_1
 0  0.75  0.428571
 1  0.75  0.571429
@@ -81,8 +85,12 @@ Based on [this](https://www.wikiwand.com/en/Additive_smoothing).
 >>> X = pd.DataFrame({'x_0': ['a'] * 5 + ['b'] * 5, 'x_1': ['a'] * 9 + ['b'] * 1})
 >>> y = pd.Series([1, 1, 1, 1, 0, 1, 0, 0, 0, 0])
 
->>> be = xam.feature_extraction.SmoothTargetEncoder(columns=['x_0', 'x_1'], prior_weight=3, suffix='')
->>> be.fit_transform(X, y)
+>>> encoder = xam.feature_extraction.SmoothTargetEncoder(
+...     columns=['x_0', 'x_1'],
+...     prior_weight=3,
+...     suffix=''
+... )
+>>> encoder.fit(X, y).transform(X)
       x_0       x_1
 0  0.6875  0.486111
 1  0.6875  0.486111

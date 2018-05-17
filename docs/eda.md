@@ -27,13 +27,13 @@ Classification.
 
 >>> cont_imp, disc_imp = xam.eda.feature_importance_classification(features, target, random_state=1)
 
->>> cont_imp.sort_values('f_p_value')
+>>> cont_imp.sort_values('f_p_value')  # doctest:+ELLIPSIS
                    f_statistic     f_p_value  mutual_information
 petal length (cm)  1179.034328  3.051976e-91            0.990061
 petal width (cm)    959.324406  4.376957e-85            0.977279
 sepal width (cm)     47.364461  1.327917e-16            0.256295
 
->>> disc_imp.sort_values('chi2_p_value')
+>>> disc_imp.sort_values('chi2_p_value')  # doctest:+ELLIPSIS
                    chi2_statistic  chi2_p_value  cramers_v  mutual_information
 sepal length (cm)        98.11883  4.940452e-22   0.803139            0.386244
 
