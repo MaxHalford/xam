@@ -6,7 +6,7 @@ from sklearn.base import TransformerMixin
 class SmoothTargetEncoder(BaseEstimator, TransformerMixin):
 
     """
-    Reference: https://www.wikiwand.com/en/Additive_smoothing
+    Reference: https://www.wikiwand.com/en/Bayes_estimator#/Practical_example_of_Bayes_estimators
 
     Args:
         columns (list of strs): Columns to encode.
@@ -40,7 +40,7 @@ class SmoothTargetEncoder(BaseEstimator, TransformerMixin):
             agg = X.groupby(col)['y'].agg(['count', 'mean'])
             counts = agg['count']
             means = agg['mean']
-            prior = means.mean()
+            prior = X['y'].mean()
             self.priors_[col] = prior
             w = self.prior_weight
             self.posteriors_[col] = (w * prior + counts * means) / (w + counts)

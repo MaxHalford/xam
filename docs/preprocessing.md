@@ -117,6 +117,7 @@ array([[2, 0],
 ## Groupby transformer
 
 ```python
+>>> import pandas as pd
 >>> from sklearn import preprocessing
 >>> import xam
 
@@ -175,11 +176,11 @@ See this [blog post](https://maxhalford.github.io/subsampling-1/).
 ... })
 
 # Calculate Kullback–Leibler divergence between the train and the test data
->>> str(sp.stats.entropy(
+>>> sp.stats.entropy(
 ...     np.histogram(train['x'], bins=30)[0],
 ...     np.histogram(test['x'], bins=30)[0]
-... ))[:5]
-'0.252'
+... )  # doctest: +ELLIPSIS
+0.252074...
 
 >>> resampler = xam.preprocessing.DistributionResampler(column='x', sample_frac=0.5, seed=0)
 >>> resampler.fit(test)
@@ -187,10 +188,10 @@ See this [blog post](https://maxhalford.github.io/subsampling-1/).
 >>> sample = resampler.transform(train)
 
 # The Kullback–Leibler divergence between sample and test is now lower
->>> str(sp.stats.entropy(
+>>> sp.stats.entropy(
 ...     np.histogram(sample['x'], bins=30)[0],
 ...     np.histogram(test['x'], bins=30)[0]
-... ))[:5]
-'0.073'
+... )  # doctest: +ELLIPSIS
+0.073617...
 
 ```
