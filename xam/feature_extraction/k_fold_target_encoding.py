@@ -41,11 +41,13 @@ class KFoldTargetEncoder(BaseEstimator, TransformerMixin):
 
                 col_means = fit.groupby(col)[y_col].mean()
 
-                means[col] = pd.concat((
-                    means[col],
-                    val[[col]].join(col_means, on=col)[y_col]\
-                              .fillna(col_means.mean())
-                ))
+                means[col] = pd.concat(
+                    (
+                        means[col],
+                        val[[col]].join(col_means, on=col)[y_col].fillna(col_means.mean())
+                    ),
+                    axis='rows'
+                )
 
         for col in means:
             X[col + self.suffix] = means[col]

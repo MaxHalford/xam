@@ -1,3 +1,5 @@
+import collections
+
 import pandas as pd
 from sklearn.base import BaseEstimator
 from sklearn.base import TransformerMixin
@@ -34,16 +36,17 @@ class SmoothTargetEncoder(BaseEstimator, TransformerMixin):
 
         # Compute prior and posterior probabilities for each feature
         X = pd.concat((X[columns], y.rename('y')), axis='columns')
-        self.priors_ = {}
+        self.prior_ = y.mean()
         self.posteriors_ = {}
         for col in columns:
             agg = X.groupby(col)['y'].agg(['count', 'mean'])
             counts = agg['count']
             means = agg['mean']
-            prior = X['y'].mean()
-            self.priors_[col] = prior
-            w = self.prior_weight
-            self.posteriors_[col] = (w * prior + counts * means) / (w + counts)
+            pw = self.prior_weight
+            self.posteriors_[col] = collections.defaultdict(
+                lambda: self.prior_,
+                ((pw * self.prior_ + counts * means) / (pw + counts)).to_dict()
+            )
 
         return self
 
@@ -53,11 +56,7 @@ class SmoothTargetEncoder(BaseEstimator, TransformerMixin):
             raise ValueError('X has to be a pandas.DataFrame')
 
         for col in self.columns:
-            prior = self.priors_[col]
             posteriors = self.posteriors_[col]
-            X[col + self.suffix] = X[col].apply(lambda x: posteriors.get(x, prior))
+            X[col + self.suffix] = X[col].map(posteriors)
 
         return X
-
-    def fit_transform(self, X, y):
-        return self.fit(X, y).transform(X, y)
