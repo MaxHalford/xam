@@ -44,7 +44,7 @@ class SmoothTargetEncoder(BaseEstimator, TransformerMixin):
             means = agg['mean']
             pw = self.prior_weight
             self.posteriors_[col] = collections.defaultdict(
-                lambda: self.prior_,
+                self.prior_,
                 ((pw * self.prior_ + counts * means) / (pw + counts)).to_dict()
             )
 
