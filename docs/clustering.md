@@ -2,7 +2,7 @@
 
 ## Cross-chain algorithm
 
-This is a clustering algorithm I devised at one of my internships for matching customers with multiple accounts. The idea was to that if there accounts shared some information - eg. the phone number - then we would count those accounts as one single customer. In the following example, the first customer has three accounts; the first account shares the first variable with the second and the second account shares the second variable with the third. The first and third account share no information but they are linked by the second account and form a chain, hence the name of the algorithm.
+This is a clustering algorithm I devised at one of my internships for matching customers with multiple accounts. The idea was that if some accounts shared some supposedly unique information -- eg. the phone number -- then we would consider those accounts as one single customer. In the following example, the first customer has three accounts; the first account shares the first variable with the second and the second account shares the second variable with the third. The first and third account share no information but they are linked by the second account and form a chain, hence the name of the algorithm.
 
 ```python
 >>> import numpy as np
