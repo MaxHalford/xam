@@ -1,5 +1,42 @@
 # Natural Language Processing (NLP)
 
+## Norvig spelling corrector
+
+Adapted from [here](https://norvig.com/spell-correct.html).
+
+```python
+>>> import xam
+
+>>> sentences = [
+...     'I madz a mistkze',
+...     'I did toi'
+... ]
+
+>>> word_counts = {
+...     'I': 16,
+...     'a': 13,
+...     'did': 15,
+...     'made': 42,
+...     'to': 12,
+...     'too': 24,
+...     'mistake': 36
+... }
+
+>>> alphabet = 'abcdefghijklmnopqrstuvwxyz'
+>>> corrector = xam.nlp.NorvigSpellingCorrector(word_counts, alphabet)
+>>> corrector = corrector.fit(sentences)
+>>> corrector.transform(sentences)
+['I made a mistake', 'I did too']
+
+>>> for i, sentence in enumerate(sentences):
+...     n_mistakes = corrector.count_sentence_mistakes(sentence)
+...     print('Number of mistakes for sentence {}: {}'.format(i, n_mistakes))
+Number of mistakes for sentence 0: 2
+Number of mistakes for sentence 1: 1
+
+```
+
+
 ## Top-terms classifier
 
 ```python

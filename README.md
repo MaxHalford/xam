@@ -30,6 +30,7 @@ Usage example is available in the [docs](docs) folder. Each example is tested wi
 - [Model selection](docs/model-selection.md)
   - [Ordered cross-validation](docs/model-selection.md#ordered-cross-validation)
 - [Natural Language Processing (NLP)](docs/nlp.md)
+  - [Norvig spelling corrector](docs/nlp.md#norvig-spelling-corrector)
   - [Top-terms classifier](docs/nlp.md#top-terms-classifier)
 - [Pipeline](docs/pipeline.md)
   - [Column selection](docs/pipeline.md#column-selection)
