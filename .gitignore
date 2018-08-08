@@ -5,3 +5,5 @@ dist/
 xam.egg-info/
 .coverage
 .pytest_cache/
+*.ipynb
+.ipynb_checkpoints

@@ -57,6 +57,6 @@ class SmoothTargetEncoder(BaseEstimator, TransformerMixin):
 
         for col in self.columns:
             posteriors = self.posteriors_[col]
-            X[col + self.suffix] = X[col].map(posteriors)
+            X[col + self.suffix] = X[col].map(posteriors).astype(float)
 
         return X
