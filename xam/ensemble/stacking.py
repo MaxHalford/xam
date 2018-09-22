@@ -8,6 +8,7 @@ from sklearn import preprocessing
 from sklearn import utils
 from sklearn.base import BaseEstimator
 from sklearn.base import ClassifierMixin
+from sklearn.base import clone
 from sklearn.base import RegressorMixin
 from sklearn.base import MetaEstimatorMixin
 
@@ -34,6 +35,7 @@ class BaseStackingEstimator(BaseEstimator, MetaEstimatorMixin):
             meta_features = np.empty((len(X), len(self.models)))
 
         self.oof_scores_ = collections.defaultdict(list)
+        self.instances_ = collections.defaultdict(list)
 
         if self.use_probas:
             lb = preprocessing.LabelBinarizer().fit(y)
@@ -57,18 +59,20 @@ class BaseStackingEstimator(BaseEstimator, MetaEstimatorMixin):
 
                 # Train the model on the training fold
                 fit_handler = self.fit_handlers.get(name, lambda a, b, c, d: {})
-                model.fit(X_fit, y_fit, **fit_handler(X_fit, y_fit, X_val, y_val))
+                instance = clone(model)
+                instance = instance.fit(X_fit, y_fit, **fit_handler(X_fit, y_fit, X_val, y_val))
+                self.instances_[name].append(instance)
 
                 # If use_probas is True then the probabilities of each class for
                 # each model have to be predicted and then stored into
                 # meta_features
                 if self.use_probas:
-                    val_pred = model.predict_proba(X_val)
+                    val_pred = instance.predict_proba(X_val)
                     val_score = self.metric(y_val, lb.inverse_transform(val_pred))
                     for k, l in enumerate(range(self.n_probas_ * j, self.n_probas_ * (j + 1))):
                         meta_features[val_idx, l] = val_pred[:, k]
                 else:
-                    val_pred = model.predict(X_val)
+                    val_pred = instance.predict(X_val)
                     meta_features[val_idx, j] = val_pred
                     val_score = self.metric(y_val, val_pred)
 
@@ -89,26 +93,35 @@ class BaseStackingEstimator(BaseEstimator, MetaEstimatorMixin):
         # Train the meta-model
         self.meta_model  = self.meta_model.fit(meta_features, y)
 
-        # Each model has to be fit on all the data for further predictions
-        for model in self.models.values():
-            model.fit(X, y)
-
         return self
 
     def _predict(self, X, proba):
 
-        utils.validation.check_is_fitted(self, ['oof_scores_'])
+        utils.validation.check_is_fitted(self, ['oof_scores_', 'instances_'])
 
         # If use_probas is True then the probabilities of each class for each
         # model have to be predicted and then stored into meta_features
         if self.use_probas:
             meta_features = np.empty((len(X), len(self.models) * self.n_probas_))
-            for i, model in enumerate(self.models.values()):
-                probabilities = model.predict_proba(X)
+            for i, name in enumerate(self.models):
+                # Bagging
+                instances = self.instances_[name]
+                probabilities = sum((
+                    instance.predict_proba(X)
+                    for instance in instances
+                )) / len(instances)
+
                 for j, k in enumerate(range(self.n_probas_ * i, self.n_probas_ * (i + 1))):
                     meta_features[:, k] = probabilities[:, j]
         else:
-            meta_features = np.transpose([model.predict(X) for model in self.models.values()])
+            # Bagging
+            meta_features = np.transpose([
+                sum((
+                    instance.predict(X) / len(self.instances_[name])
+                    for instance in self.instances_[name]
+                ))
+                for name in self.models
+            ])
 
         if self.use_base_features:
             meta_features = np.hstack((meta_features, X))

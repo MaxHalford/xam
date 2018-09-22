@@ -180,6 +180,6 @@ Model stacking for regression as described in this [Kaggle blog post](http://blo
 MAE: 7.338 (+/- 1.423) [KNN]
 MAE: 4.257 (+/- 1.923) [Linear regression]
 MAE: 4.118 (+/- 1.971) [Ridge regression]
-MAE: 3.234 (+/- 1.089) [Stacking]
+MAE: 3.217 (+/- 1.121) [Stacking]
 
 ```
