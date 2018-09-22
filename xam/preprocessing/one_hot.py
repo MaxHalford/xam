@@ -44,7 +44,7 @@ class OneHotEncoder(BaseEstimator, TransformerMixin):
             one_hots = self.encoders_[col].transform(labels.reshape(-1, 1))
             # Create a DataFrame containing the one-hots
             columns = ['{}_{}'.format(col, klass) for klass in self.labelers_[col].classes_]
-            frame = pd.DataFrame(one_hots.todense(), columns=columns)
+            frame = pd.DataFrame(one_hots.todense(), columns=columns).astype(bool)
             # Merge the input DataFrame with the one-hots
             X = pd.concat((X.drop(col, axis='columns'), frame), axis='columns')
 

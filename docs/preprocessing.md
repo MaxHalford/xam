@@ -167,10 +167,10 @@ array([[2, 0],
 >>> oh = xam.preprocessing.OneHotEncoder(['cat'])
 >>> oh.fit_transform(df)
    num  cat_a  cat_b  cat_c
-0    1    0.0    1.0    0.0
-1    2    1.0    0.0    0.0
-2    3    1.0    0.0    0.0
-3    4    0.0    0.0    1.0
+0    1  False   True  False
+1    2   True  False  False
+2    3   True  False  False
+3    4  False  False   True
 
 ```
 
