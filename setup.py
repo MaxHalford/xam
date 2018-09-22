@@ -9,6 +9,7 @@ setup(
     name='xam',
     python_requires='>=3.5.0',
     install_requires=[
+        'lightgbm>=2.1.2',
         'matplotlib>=2.2.2',
         'numpy>=1.14.0',
         'pandas>=0.22.0',

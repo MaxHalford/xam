@@ -37,6 +37,7 @@
 ### Stacking classification
 
 ```python
+>>> import lightgbm as lgbm
 >>> from sklearn import datasets, metrics, model_selection
 >>> from sklearn.ensemble import RandomForestClassifier
 >>> from sklearn.linear_model import LogisticRegression
@@ -50,7 +51,8 @@
 >>> models = {
 ...     'KNN': KNeighborsClassifier(n_neighbors=1),
 ...     'Random forest': RandomForestClassifier(random_state=1),
-...     'Naïve Bayes': GaussianNB()
+...     'Naïve Bayes': GaussianNB(),
+...     'LightGBM': lgbm.LGBMClassifier(random_state=42, verbose=-1)
 ... }
 
 >>> stack = xam.ensemble.StackingClassifier(
@@ -58,7 +60,15 @@
 ...     meta_model=LogisticRegression(),
 ...     metric=metrics.accuracy_score,
 ...     use_base_features=True,
-...     use_proba=True
+...     use_probas=True,
+...     fit_handlers={
+...         'LightGBM': lambda X_fit, y_fit, X_val, y_val: {
+...             'eval_set': [(X_fit, y_fit), (X_val, y_val)],
+...             'eval_names': ['fit', 'val'],
+...             'early_stopping_rounds': 10,
+...             'verbose': False
+...         }
+...     }
 ... )
 
 >>> for name, model in dict(models, **{'Stacking': stack}).items():
@@ -67,7 +77,8 @@
 Accuracy: 0.913 (+/- 0.016) [KNN]
 Accuracy: 0.914 (+/- 0.126) [Random forest]
 Accuracy: 0.921 (+/- 0.052) [Naïve Bayes]
-Accuracy: 0.954 (+/- 0.079) [Stacking]
+Accuracy: 0.934 (+/- 0.046) [LightGBM]
+Accuracy: 0.954 (+/- 0.047) [Stacking]
 
 ```
 
