@@ -1,10 +1,13 @@
 sudo: false
 
+dist: trusty
+
 language: python
 
 python:
   - "3.5"
   - "3.6"
+  - "3.7"
 
 cache:
   apt: true
@@ -22,6 +25,8 @@ before_install:
   - bash miniconda.sh -b -p $HOME/miniconda
   - export PATH="$HOME/miniconda/bin:$PATH"
   - conda update --yes conda
+  - conda env create -n testenv python=$TRAVIS_PYTHON_VERSION
+  - source activate testenv
 
 install:
   - pip install -r requirements.dev.txt

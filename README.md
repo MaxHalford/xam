@@ -43,6 +43,7 @@ Usage example is available in the [docs](docs) folder. Each example is tested wi
 - [Preprocessing](docs/preprocessing.md)
   - [Binning](docs/preprocessing.md#binning)
   - [Groupby transformer](docs/preprocessing.md#groupby-transformer)
+  - [One-hot encoding](docs/preprocessing.md#one-hot-encoding)
   - [Resampling](docs/preprocessing.md#resampling)
 - [Time series analysis (TSA)](docs/tsa.md)
   - [Exponentially weighted average](docs/tsa.md#ewm-optimization)
