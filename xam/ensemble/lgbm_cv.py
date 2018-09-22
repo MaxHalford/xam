@@ -41,18 +41,21 @@ class LGBMCV():
 
             # https://lightgbm.readthedocs.io/en/latest/Python-API.html#lightgbm.train
             self.evals_results_[i] = {}
-            self.models_.append(lgbm.train(
+            model = lgbm.train(
                 params=self.lgbm_params,
                 train_set=fit_set,
                 valid_sets=(fit_set, val_set),
                 valid_names=('fit', 'val'),
                 evals_result=self.evals_results_[i],
                 **kwargs
-            ))
+            )
 
             # Store the feature importances
-            self.feature_importances_[f'gain_{i}'] = self.models_[i].feature_importance('gain')
-            self.feature_importances_[f'split_{i}'] = self.models_[i].feature_importance('split')
+            self.feature_importances_['gain_{}'.format(i)] = model.feature_importance('gain')
+            self.feature_importances_['split_{}'.format(i)] = model.feature_importance('split')
+
+            # Store the model
+            self.models_.append(model)
 
         return self
 
