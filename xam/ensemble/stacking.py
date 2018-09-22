@@ -5,6 +5,7 @@ import pandas as pd
 from sklearn import metrics
 from sklearn import model_selection
 from sklearn import preprocessing
+from sklearn import utils
 from sklearn.base import BaseEstimator
 from sklearn.base import ClassifierMixin
 from sklearn.base import RegressorMixin
@@ -94,7 +95,9 @@ class BaseStackingEstimator(BaseEstimator, MetaEstimatorMixin):
 
         return self
 
-    def _predict(self, X, proba=False):
+    def _predict(self, X, proba):
+
+        utils.validation.check_is_fitted(self, ['oof_scores_'])
 
         # If use_probas is True then the probabilities of each class for each
         # model have to be predicted and then stored into meta_features

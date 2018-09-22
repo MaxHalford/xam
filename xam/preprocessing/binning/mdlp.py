@@ -31,7 +31,7 @@ class MDLPBinner(BaseSupervisedBinner):
 
 
 def calc_class_entropy(y):
-    class_counts = stats.itemfreq(y)[:, 1]
+    class_counts = np.unique(y, return_counts=True)[1]
     return stats.entropy(class_counts, base=2)
 
 

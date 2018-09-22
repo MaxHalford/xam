@@ -17,6 +17,7 @@ Usage example is available in the [docs](docs) folder. Each example is tested wi
   - [Cross-chain algorithm](docs/clustering.md#cross-chain-algorithm)
 - [Ensembling](docs/ensembling.md)
   - [Groupby model](docs/ensembling.md#groupby-model)
+  - [LightGBM with CV](docs/ensembling.md#lightgbm-with-cv)
   - [Stacking](docs/ensembling.md#stacking)
 - [Exploratory data analysis (EDA)](docs/eda.md)
   - [Feature importance](docs/eda.md#feature-importance)
