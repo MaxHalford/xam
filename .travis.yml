@@ -26,6 +26,7 @@ before_install:
   - conda update --yes conda
   - conda create -n testenv python=$TRAVIS_PYTHON_VERSION --yes
   - source activate testenv
+  - pip install --no-binary :all: lightgbm>=2.1.2
 
 install:
   - pip install -r requirements.dev.txt
