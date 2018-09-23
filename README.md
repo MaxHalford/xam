@@ -1,13 +1,13 @@
 # xam [![Build Status](https://travis-ci.org/MaxHalford/xam.svg?branch=master)](https://travis-ci.org/MaxHalford/xam)
 
-xam is my personal data science and machine learning toolbox. It is written in Python 3 and stands on the shoulders of giants (mainly [pandas](https://pandas.pydata.org/) and [scikit-learn](http://scikit-learn.org/)).
+`xam` is my personal data science and machine learning toolbox. It is written in Python 3 and stands on the shoulders of giants (mainly [pandas](https://pandas.pydata.org/) and [scikit-learn](http://scikit-learn.org/)). It loosely follows scikit-learn's `fit`/`transform`/`predict` convention.
 
 ## Installation
 
 - [Install Anaconda for Python 3.x >= 3.5](https://www.continuum.io/downloads)
 - Run `pip install git+https://github.com/MaxHalford/xam --upgrade` in a terminal
 
-:warning: Because xam is a ***personal*** toolkit, the `--upgrade` flag will install the latest releases of each dependency (scipy, pandas etc.).
+:warning: Because xam is a ***personal*** toolkit, the `--upgrade` flag will install the latest releases of each dependency (scipy, pandas etc.). I like to stay up-to-date with the latest library versions.
 
 ## Table of contents
 
@@ -19,6 +19,7 @@ Usage example is available in the [docs](docs) folder. Each example is tested wi
   - [Groupby model](docs/ensembling.md#groupby-model)
   - [LightGBM with CV](docs/ensembling.md#lightgbm-with-cv)
   - [Stacking](docs/ensembling.md#stacking)
+  - [Stacking with bagged test predictions](docs/ensembling.md#stacking-with-bagged-test-predictions)
 - [Exploratory data analysis (EDA)](docs/eda.md)
   - [Feature importance](docs/eda.md#feature-importance)
 - [Feature extraction](docs/feature-extraction.md)
