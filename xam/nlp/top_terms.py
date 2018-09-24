@@ -1,11 +1,9 @@
 import numpy as np
-from sklearn.base import BaseEstimator
-from sklearn.base import ClassifierMixin
-from sklearn.utils.validation import check_array
-from sklearn.utils.validation import check_X_y
+from sklearn import base
+from sklearn import utils
 
 
-class TopTermsClassifier(BaseEstimator, ClassifierMixin):
+class TopTermsClassifier(base.BaseEstimator, base.ClassifierMixin):
 
     def __init__(self, n_terms=10):
         self.n_terms = n_terms
@@ -13,7 +11,7 @@ class TopTermsClassifier(BaseEstimator, ClassifierMixin):
     def fit(self, X, y=None, **fit_params):
 
         # scikit-learn checks
-        X, y = check_X_y(X, y)
+        X, y = utils.check_X_y(X, y, accept_sparse='csr', order='C')
 
         n_terms = min(self.n_terms, X.shape[1])
 
@@ -43,6 +41,6 @@ class TopTermsClassifier(BaseEstimator, ClassifierMixin):
     def predict(self, X):
 
         # scikit-learn checks
-        X = check_array(X)
+        X = utils.check_array(X, accept_sparse='csr', order='C')
 
         return np.array([self._predict(x) for x in X])
