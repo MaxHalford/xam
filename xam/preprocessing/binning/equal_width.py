@@ -28,8 +28,12 @@ class EqualWidthBinner(BaseUnsupervisedBinner):
         for i, x in enumerate(X.T):
             x_min = np.min(x)
             x_max = np.max(x)
-            step = (x_max - x_min) / self.n_bins
-            self.cut_points_[i] = np.arange(start=x_min+step, stop=x_max, step=step).tolist()
+
+            if x_min == x_max:
+                self.cut_points_[i] = np.array([x_min])
+            else:
+                step = (x_max - x_min) / self.n_bins
+                self.cut_points_[i] = np.arange(start=x_min+step, stop=x_max, step=step).tolist()
 
         return self
 

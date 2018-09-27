@@ -21,7 +21,7 @@ Adapted from [here](https://www.kaggle.com/jhoward/nb-svm-strong-linear-baseline
 >>> X_test = vectorizer.transform(newsgroups_test.data)
 >>> y_test = newsgroups_test.target
 
->>> clf = xam.nlp.NBSVMClassifier(C=3, dual=False, n_jobs=1, random_state=42)
+>>> clf = xam.nlp.NBSVMClassifier(solver='lbfgs', C=3, dual=False, n_jobs=1, random_state=42)
 >>> score = clf.fit(X_train, y_train).score(X_test, y_test)
 >>> score  # doctest: +ELLIPSIS
 0.95938...

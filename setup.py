@@ -14,7 +14,7 @@ setup(
         'numpy>=1.14.0',
         'pandas>=0.22.0',
         'scipy>=1.0.1',
-        'scikit-learn>=0.19.1'
+        'scikit-learn>=0.20.0'
     ],
     packages=find_packages(exclude=['examples']),
     url='https://github.com/MaxHalford/xam',

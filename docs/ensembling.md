@@ -114,14 +114,14 @@ LGBM with CV AUC: 0.98714 (+/- 0.00996)
 
 >>> models = {
 ...     'KNN': KNeighborsClassifier(n_neighbors=1),
-...     'Random forest': RandomForestClassifier(random_state=1),
+...     'Random forest': RandomForestClassifier(n_estimators=10, random_state=1),
 ...     'Naïve Bayes': GaussianNB(),
 ...     'LightGBM': lgbm.LGBMClassifier(random_state=42, verbose=-1)
 ... }
 
 >>> stack = xam.ensemble.StackingClassifier(
 ...     models=models,
-...     meta_model=LogisticRegression(),
+...     meta_model=LogisticRegression(solver='lbfgs', multi_class='auto'),
 ...     metric=metrics.accuracy_score,
 ...     use_base_features=True,
 ...     use_probas=True,
@@ -131,7 +131,7 @@ LGBM with CV AUC: 0.98714 (+/- 0.00996)
 ...     scores = model_selection.cross_val_score(model, X, y, cv=3, scoring='accuracy')
 ...     print('Accuracy: %0.3f (+/- %0.3f) [%s]' % (scores.mean(), 1.96 * scores.std(), name))
 Accuracy: 0.913 (+/- 0.016) [KNN]
-Accuracy: 0.914 (+/- 0.126) [Random forest]
+Accuracy: 0.934 (+/- 0.100) [Random forest]
 Accuracy: 0.921 (+/- 0.052) [Naïve Bayes]
 Accuracy: 0.934 (+/- 0.046) [LightGBM]
 Accuracy: 0.954 (+/- 0.047) [Stacking]
@@ -161,7 +161,7 @@ Model stacking for regression as described in this [Kaggle blog post](http://blo
 
 >>> stack = xam.ensemble.StackingRegressor(
 ...     models=models,
-...     meta_model=RandomForestRegressor(random_state=1),
+...     meta_model=RandomForestRegressor(n_estimators=10, random_state=1),
 ...     cv=model_selection.KFold(n_splits=10),
 ...     use_base_features=True
 ... )
@@ -170,9 +170,9 @@ Model stacking for regression as described in this [Kaggle blog post](http://blo
 ...     scores = model_selection.cross_val_score(model, X, y, cv=5, scoring='neg_mean_absolute_error')
 ...     print('MAE: %0.3f (+/- %0.3f) [%s]' % (-scores.mean(), 1.96 * scores.std(), name))
 MAE: 7.338 (+/- 1.423) [KNN]
-MAE: 4.257 (+/- 1.923) [Linear regression]
-MAE: 4.118 (+/- 1.971) [Ridge regression]
-MAE: 3.234 (+/- 1.089) [Stacking]
+MAE: 4.250 (+/- 1.919) [Linear regression]
+MAE: 4.112 (+/- 1.967) [Ridge regression]
+MAE: 3.227 (+/- 1.065) [Stacking]
 
 ```
 
@@ -197,14 +197,14 @@ Averaging the predictions of each level 1 model instance means that we don't hav
 
 >>> models = {
 ...     'KNN': KNeighborsClassifier(n_neighbors=1),
-...     'Random forest': RandomForestClassifier(random_state=1),
+...     'Random forest': RandomForestClassifier(n_estimators=10, random_state=1),
 ...     'Naïve Bayes': GaussianNB(),
-...     'LightGBM': lgbm.LGBMClassifier(random_state=42, verbose=-1)
+...     'LightGBM': lgbm.LGBMClassifier(n_estimators=10, random_state=42, verbose=-1)
 ... }
 
 >>> stack = xam.ensemble.BaggedStackingClassifier(
 ...     models=models,
-...     meta_model=LogisticRegression(),
+...     meta_model=RandomForestClassifier(n_estimators=100, random_state=1),
 ...     metric=metrics.accuracy_score,
 ...     use_base_features=True,
 ...     use_probas=True,
@@ -219,13 +219,13 @@ Averaging the predictions of each level 1 model instance means that we don't hav
 ... )
 
 >>> for name, model in dict(models, **{'Stacking': stack}).items():
-...     scores = model_selection.cross_val_score(model, X, y, cv=3, scoring='accuracy')
+...     scores = model_selection.cross_val_score(model, X, y, cv=3, scoring='accuracy', error_score='raise')
 ...     print('Accuracy: %0.3f (+/- %0.3f) [%s]' % (scores.mean(), 1.96 * scores.std(), name))
 Accuracy: 0.913 (+/- 0.016) [KNN]
-Accuracy: 0.914 (+/- 0.126) [Random forest]
+Accuracy: 0.934 (+/- 0.100) [Random forest]
 Accuracy: 0.921 (+/- 0.052) [Naïve Bayes]
-Accuracy: 0.934 (+/- 0.046) [LightGBM]
-Accuracy: 0.954 (+/- 0.047) [Stacking]
+Accuracy: 0.940 (+/- 0.053) [LightGBM]
+Accuracy: 0.967 (+/- 0.048) [Stacking]
 
 ```
 
@@ -250,7 +250,7 @@ Accuracy: 0.954 (+/- 0.047) [Stacking]
 
 >>> stack = xam.ensemble.BaggedStackingRegressor(
 ...     models=models,
-...     meta_model=RandomForestRegressor(random_state=1),
+...     meta_model=RandomForestRegressor(n_estimators=10, random_state=1),
 ...     cv=model_selection.KFold(n_splits=10),
 ...     use_base_features=True
 ... )
@@ -259,8 +259,9 @@ Accuracy: 0.954 (+/- 0.047) [Stacking]
 ...     scores = model_selection.cross_val_score(model, X, y, cv=5, scoring='neg_mean_absolute_error')
 ...     print('MAE: %0.3f (+/- %0.3f) [%s]' % (-scores.mean(), 1.96 * scores.std(), name))
 MAE: 7.338 (+/- 1.423) [KNN]
-MAE: 4.257 (+/- 1.923) [Linear regression]
-MAE: 4.118 (+/- 1.971) [Ridge regression]
-MAE: 3.217 (+/- 1.121) [Stacking]
+MAE: 4.250 (+/- 1.919) [Linear regression]
+MAE: 4.112 (+/- 1.967) [Ridge regression]
+MAE: 3.211 (+/- 1.100) [Stacking]
+
 
 ```

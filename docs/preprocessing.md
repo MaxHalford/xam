@@ -118,6 +118,7 @@ array([[2, 0],
 
 ```python
 >>> import pandas as pd
+>>> from sklearn import impute
 >>> from sklearn import preprocessing
 >>> import xam
 
@@ -137,7 +138,7 @@ array([[2, 0],
 5  3.0  7.0  2
 
 >>> imp = xam.preprocessing.GroupbyTransformer(
-...     base_transformer=preprocessing.Imputer(strategy='mean'),
+...     base_transformer=impute.SimpleImputer(strategy='mean'),
 ...     by='c'
 ... )
 
@@ -149,28 +150,6 @@ array([[2, 0],
 3  3.0  5.0  2
 4  3.0  6.0  2
 5  3.0  7.0  2
-
-```
-
-## One-hot encoding
-
-```python
->>> import pandas as pd
->>> import xam
-
-
->>> df = pd.DataFrame({
-...     'cat': ['b', 'a', 'a', 'c'],
-...     'num': [1, 2, 3, 4]
-... })
-
->>> oh = xam.preprocessing.OneHotEncoder(['cat'])
->>> oh.fit_transform(df)
-   num  cat_a  cat_b  cat_c
-0    1  False   True  False
-1    2   True  False  False
-2    3   True  False  False
-3    4  False  False   True
 
 ```
 
