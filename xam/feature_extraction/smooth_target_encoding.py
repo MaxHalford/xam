@@ -1,4 +1,5 @@
 import collections
+import functools
 
 import pandas as pd
 from sklearn.base import BaseEstimator
@@ -21,6 +22,9 @@ class SmoothTargetEncoder(BaseEstimator, TransformerMixin):
         self.prior_weight = prior_weight
         self.suffix = suffix
 
+    def _make_name(cols):
+        return '_'.join(cols)
+
     def fit(self, X, y=None, **fit_params):
 
         if not isinstance(X, pd.DataFrame):
@@ -29,21 +33,36 @@ class SmoothTargetEncoder(BaseEstimator, TransformerMixin):
         if not isinstance(y, pd.Series):
             raise ValueError('y has to be a pandas.Series')
 
+        X = X.copy()
+
         # Default to using all the categorical columns
-        columns = [col for col in X.columns if X.dtypes[col] in ('object', 'category')]\
+        columns = X.select_dtypes(['object', 'category']).columns\
             if self.columns is None\
             else self.columns
 
+        names = []
+        for cols in columns:
+            if isinstance(cols, list):
+                name = '_'.join(cols)
+                names.append('_'.join(cols))
+                X[name] = functools.reduce(
+                    lambda a, b: a.astype(str) + '_' + b.astype(str),
+                    [X[col] for col in cols]
+                )
+            else:
+                names.append(cols)
+
         # Compute prior and posterior probabilities for each feature
-        X = pd.concat((X[columns], y.rename('y')), axis='columns')
+        X = pd.concat((X[names], y.rename('y')), axis='columns')
         self.prior_ = y.mean()
         self.posteriors_ = {}
-        for col in columns:
-            agg = X.groupby(col)['y'].agg(['count', 'mean'])
+
+        for name in names:
+            agg = X.groupby(name)['y'].agg(['count', 'mean'])
             counts = agg['count']
             means = agg['mean']
             pw = self.prior_weight
-            self.posteriors_[col] = collections.defaultdict(
+            self.posteriors_[name] = collections.defaultdict(
                 lambda: self.prior_,
                 ((pw * self.prior_ + counts * means) / (pw + counts)).to_dict()
             )
@@ -55,8 +74,19 @@ class SmoothTargetEncoder(BaseEstimator, TransformerMixin):
         if not isinstance(X, pd.DataFrame):
             raise ValueError('X has to be a pandas.DataFrame')
 
-        for col in self.columns:
-            posteriors = self.posteriors_[col]
-            X[col + self.suffix] = X[col].map(posteriors).astype(float)
+        for cols in self.columns:
+
+            if isinstance(cols, list):
+                name = '_'.join(cols)
+                x = functools.reduce(
+                    lambda a, b: a.astype(str) + '_' + b.astype(str),
+                    [X[col] for col in cols]
+                )
+            else:
+                name = cols
+                x = X[name]
+
+            posteriors = self.posteriors_[name]
+            X[name + self.suffix] = x.map(posteriors).astype(float)
 
         return X

@@ -7,3 +7,4 @@ xam.egg-info/
 .pytest_cache/
 *.ipynb
 .ipynb_checkpoints
+test.py
