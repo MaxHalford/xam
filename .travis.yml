@@ -4,7 +4,6 @@ sudo: required
 language: python
 
 python:
-  - "3.5"
   - "3.6"
 
 cache:
@@ -29,11 +28,11 @@ before_install:
   - source activate testenv
 
 install:
-  - pip install -r requirements.dev.txt
   - conda install lightgbm --yes
+  - pip install -r requirements.dev.txt
 
 script:
-  - source activate testenv && pytest --doctest-glob='docs/*.md' --cov=xam --verbose
+  - pytest --doctest-glob='docs/*.md' --cov=xam --verbose
 
 after_success:
   - coveralls
