@@ -30,6 +30,7 @@ before_install:
 
 install:
   - pip install -r requirements.dev.txt
+  - conda install lightgbm
 
 script:
   - pytest --doctest-glob='docs/*.md' --cov=xam --verbose

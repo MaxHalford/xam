@@ -23,7 +23,7 @@
 
 ## Cyclic features
 
-Day of week, hours, minutes, are cyclic ordinal features; cosine and sine transforms should be used to express the cycle. See [this StackEchange discussion](https://datascience.stackexchange.com/questions/5990/what-is-a-good-way-to-transform-cyclic-ordinal-attributes). This transformer returns an array with twice as many columns as the input array; the first columns are the cosine transforms and the last columns are the sine transforms.
+Day of week, hours, minutes, are cyclic ordinal features; cosine and sine transforms should be used to express the cycle. See [this StackEchange discussion](https://datascience.stackexchange.com/questions/5990/what-is-a-good-way-to-transform-cyclic-ordinal-attributes) and [this r/learnmachinelearning thread answer](https://www.reddit.com/r/learnmachinelearning/comments/9yg4sa/one_hot_encoding_should_i_split_feature_into_as/ea16yln/). This transformer returns an array with twice as many columns as the input array; the first columns are the cosine transforms and the last columns are the sine transforms.
 
 ```python
 >>> import numpy as np
