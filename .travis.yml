@@ -33,7 +33,7 @@ install:
   - conda install lightgbm --yes
 
 script:
-  - pytest --doctest-glob='docs/*.md' --cov=xam --verbose
+  - source activate testenv && pytest --doctest-glob='docs/*.md' --cov=xam --verbose
 
 after_success:
   - coveralls
