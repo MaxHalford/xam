@@ -6,7 +6,7 @@ from sklearn.base import BaseEstimator
 from sklearn.base import TransformerMixin
 
 
-class SmoothTargetEncoder(BaseEstimator, TransformerMixin):
+class BayesianTargetEncoder(BaseEstimator, TransformerMixin):
 
     """
     Reference: https://www.wikiwand.com/en/Bayes_estimator#/Practical_example_of_Bayes_estimators
@@ -21,9 +21,6 @@ class SmoothTargetEncoder(BaseEstimator, TransformerMixin):
         self.columns = columns
         self.prior_weight = prior_weight
         self.suffix = suffix
-
-    def _make_name(cols):
-        return '_'.join(cols)
 
     def fit(self, X, y=None, **fit_params):
 

@@ -1,5 +1,64 @@
 # Feature extraction
 
+## Bayesian target encoding
+
+Based on [this](https://www.wikiwand.com/en/Additive_smoothing).
+
+```python
+>>> import pandas as pd
+>>> import xam
+
+>>> X = pd.DataFrame({'x_0': ['a'] * 5 + ['b'] * 5, 'x_1': ['a'] * 9 + ['b'] * 1})
+>>> y = pd.Series([1, 1, 1, 1, 0, 1, 0, 0, 0, 0])
+
+>>> encoder = xam.feature_extraction.BayesianTargetEncoder(
+...     columns=['x_0', 'x_1'],
+...     prior_weight=3,
+...     suffix=''
+... )
+>>> encoder.fit_transform(X, y)
+      x_0       x_1
+0  0.6875  0.541667
+1  0.6875  0.541667
+2  0.6875  0.541667
+3  0.6875  0.541667
+4  0.6875  0.541667
+5  0.3125  0.541667
+6  0.3125  0.541667
+7  0.3125  0.541667
+8  0.3125  0.541667
+9  0.3125  0.375000
+
+```
+
+## Count encoding
+
+```python
+>>> import pandas as pd
+>>> import xam
+
+>>> X = pd.DataFrame({'x_0': ['a'] * 5 + ['b'] * 5, 'x_1': ['a'] * 9 + ['b'] * 1})
+>>> y = pd.Series([1, 1, 1, 1, 0, 1, 0, 0, 0, 0])
+
+>>> encoder = xam.feature_extraction.CountEncoder(
+...     columns=['x_0', 'x_1'],
+...     suffix=''
+... )
+>>> encoder.fit_transform(X, y)
+   x_0  x_1
+0    5    9
+1    5    9
+2    5    9
+3    5    9
+4    5    9
+5    5    9
+6    5    9
+7    5    9
+8    5    9
+9    5    1
+
+```
+
 ## Combining features
 
 ```python
@@ -40,67 +99,5 @@ array([[ 1.        ,  1.        ,  0.        ,  0.        ],
        [-0.42261826, -0.46947156,  0.90630779,  0.88294759],
        [-0.64278761, -0.5591929 , -0.76604444, -0.82903757],
        [ 0.96592583,  0.9945219 , -0.25881905, -0.10452846]])
-
-```
-
-
-## K-fold target encoding
-
-```python
->>> import pandas as pd
->>> import xam
-
->>> X = pd.DataFrame({'x_0': ['a'] * 5 + ['b'] * 5, 'x_1': ['a'] * 9 + ['b'] * 1})
->>> y = pd.Series([1, 1, 1, 1, 0, 1, 0, 0, 0, 0])
-
->>> encoder = xam.feature_extraction.KFoldTargetEncoder(
-...     columns=['x_0', 'x_1'],
-...     suffix='',
-...     random_state=42
-... )
->>> encoder.fit_transform(X, y)
-    x_0       x_1
-0  0.75  0.428571
-1  0.75  0.571429
-2  0.75  0.571429
-3  0.75  0.571429
-4  1.00  0.625000
-5  0.00  0.428571
-6  0.25  0.571429
-7  0.25  0.571429
-8  0.25  0.571429
-9  0.25  0.625000
-
-```
-
-
-## Smooth target encoding
-
-Based on [this](https://www.wikiwand.com/en/Additive_smoothing).
-
-```python
->>> import pandas as pd
->>> import xam
-
->>> X = pd.DataFrame({'x_0': ['a'] * 5 + ['b'] * 5, 'x_1': ['a'] * 9 + ['b'] * 1})
->>> y = pd.Series([1, 1, 1, 1, 0, 1, 0, 0, 0, 0])
-
->>> encoder = xam.feature_extraction.SmoothTargetEncoder(
-...     columns=['x_0', 'x_1'],
-...     prior_weight=3,
-...     suffix=''
-... )
->>> encoder.fit_transform(X, y)
-      x_0       x_1
-0  0.6875  0.541667
-1  0.6875  0.541667
-2  0.6875  0.541667
-3  0.6875  0.541667
-4  0.6875  0.541667
-5  0.3125  0.541667
-6  0.3125  0.541667
-7  0.3125  0.541667
-8  0.3125  0.541667
-9  0.3125  0.375000
 
 ```
