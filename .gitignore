@@ -3,7 +3,7 @@ build/
 .cache/
 dist/
 xam.egg-info/
-.coverage
+.coverage*
 .pytest_cache/
 *.ipynb
 .ipynb_checkpoints

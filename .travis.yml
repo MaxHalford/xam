@@ -32,7 +32,7 @@ install:
   - pip install -r requirements.dev.txt
 
 script:
-  - pytest --doctest-glob='docs/*.md' --cov=xam --verbose
+  - pytest
 
 after_success:
   - coveralls

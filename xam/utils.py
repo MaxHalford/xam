@@ -1,9 +1,27 @@
 from collections import defaultdict
+import codecs
 import datetime as dt
-from itertools import groupby
-from operator import itemgetter
 
-import numpy as np
+
+def normalized_compression_distance(x, y, n=25_270_000_000):
+    """Computes the Normalized Compression Distance (NCD) between two strings.
+
+    Parameters:
+        x (bytes)
+        y (bytes)
+
+    References:
+
+        1. https://www.wikiwand.com/en/Normalized_compression_distance
+        2. https://www.wikiwand.com/en/Normalized_Google_distance
+
+    """
+
+    x_code = codecs.encode(x, encoding='zip')
+    y_code = codecs.encode(y, encoding='zip')
+    x_y_code = codecs.encode(x + y, encoding='zip')
+
+    return (len(x_y_code) - min(len(x_code), len(y_code))) / max(len(x_code), len(y_code))
 
 
 def datetime_range(since, until, step=dt.timedelta(days=1)):

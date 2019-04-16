@@ -2,11 +2,8 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import BaseCrossValidator
 
-from xam.util import datetime_range
-
 
 class OrderedCV(BaseCrossValidator):
-
     """Cross-validation procedure with order of indexes taken into account.
 
     Say you have an interval [a, b] and you want to make n splits with d test

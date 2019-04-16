@@ -9,4 +9,4 @@ from . import nlp
 from . import pipeline
 from . import preprocessing
 from . import tsa
-from . import util
+from . import utils

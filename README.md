@@ -55,7 +55,8 @@ Usage example is available in the [docs](docs) folder. Each example is tested wi
   - [Datetime range](docs/various.md#datetime-range)
   - [Next day of the week](docs/various.md#next-day-of-the-week)
   - [Subsequence lengths](docs/various.md#subsequence-lengths)
-  - [DataFrame to Vowpal Wabbit](docs/various.md#dataFrame-to-vowpal-wabbit)
+  - [DataFrame to Vowpal Wabbit](docs/various.md#dataframe-to-vowpal-wabbit)
+  - [Normalized compression distance](docs/various.md#normalized-compression-distance)
 
 ## Other Python data science and machine learning toolkits
 
