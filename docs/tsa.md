@@ -25,9 +25,6 @@ The `calc_optimized_ewm` tries to find the `alpha` that minimises a `metric` bet
 8    2.9999
 dtype: float64
 
->>> metric(series[shift:], ewm[shift:])
-1.3351909851905068e-08
-
 ```
 
 ## Exponential smoothing
