@@ -6,14 +6,21 @@ import matplotlib as mpl
 
 mpl.use('pgf')
 
+
 def figsize(scale):
-    fig_width_pt = 469.755                          # Get this from LaTeX using \the\textwidth
-    inches_per_pt = 1.0 / 72.27                     # Convert pt to inch
-    golden_mean = (math.sqrt(5.0) - 1.0) / 2.0      # Aesthetic ratio (you could change this)
-    fig_width = fig_width_pt*inches_per_pt*scale    # width in inches
-    fig_height = fig_width*golden_mean              # height in inches
-    fig_size = [fig_width,fig_height]
+    # Get this from LaTeX using \the\textwidth
+    fig_width_pt = 469.755
+    # Convert pt to inch
+    inches_per_pt = 1.0 / 72.27
+    # Aesthetic ratio (you could change this)
+    golden_mean = (math.sqrt(5.0) - 1.0) / 2.0
+    # Width in inches
+    fig_width = fig_width_pt * inches_per_pt * scale
+    # Height in inches
+    fig_height = fig_width * golden_mean
+    fig_size = [fig_width, fig_height]
     return fig_size
+
 
 pgf_with_latex = {                      # setup matplotlib to use latex for output
     'pgf.texsystem': 'pdflatex',        # change this if using xetex or lautex
@@ -45,10 +52,12 @@ def new_fig(width):
     return fig, ax
 
 
-def save_fig(filename, dpi=200):
+def save_fig(filename, dpi=200, tight=True):
     import matplotlib.pyplot as plt
 
-    plt.tight_layout()
+    if tight:
+        plt.tight_layout()
+
     plt.savefig('{}.pdf'.format(filename))
     plt.savefig('{}.pgf'.format(filename))
     plt.savefig('{}.png'.format(filename), dpi=dpi)
