@@ -85,7 +85,7 @@
 ...     with_cv_scores[i] = metrics.roc_auc_score(y_val, model.predict(X_val))
 
 >>> print('LGBM without CV AUC: {:.5f} (+/- {:.5f})'.format(single_scores.mean(), single_scores.std()))
-LGBM without CV AUC: 0.98168 (+/- 0.01167)
+LGBM without CV AUC: 0.98049 (+/- 0.01140)
 
 >>> print('LGBM with CV AUC: {:.5f} (+/- {:.5f})'.format(with_cv_scores.mean(), with_cv_scores.std()))
 LGBM with CV AUC: 0.98714 (+/- 0.00996)

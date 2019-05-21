@@ -15,6 +15,7 @@ class BayesianTargetEncoder(BaseEstimator, TransformerMixin):
         columns (list of strs): Columns to encode.
         weighting (int or dict): Value(s) used to weight each prior.
         suffix (str): Suffix used for naming the newly created variables.
+
     """
 
     def __init__(self, columns=None, prior_weight=100, suffix='_mean'):
@@ -59,10 +60,7 @@ class BayesianTargetEncoder(BaseEstimator, TransformerMixin):
             counts = agg['count']
             means = agg['mean']
             pw = self.prior_weight
-            self.posteriors_[name] = collections.defaultdict(
-                lambda: self.prior_,
-                ((pw * self.prior_ + counts * means) / (pw + counts)).to_dict()
-            )
+            self.posteriors_[name] = ((pw * self.prior_ + counts * means) / (pw + counts)).to_dict()
 
         return self
 
@@ -84,6 +82,6 @@ class BayesianTargetEncoder(BaseEstimator, TransformerMixin):
                 x = X[name]
 
             posteriors = self.posteriors_[name]
-            X[name + self.suffix] = x.map(posteriors).astype(float)
+            X[name + self.suffix] = x.map(posteriors).fillna(self.prior_).astype(float)
 
         return X
