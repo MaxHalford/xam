@@ -3,6 +3,66 @@ import codecs
 import datetime as dt
 
 
+__all__ = [
+    'dataframe_to_vw',
+    'datetime_range',
+    'find_skyline',
+    'get_next_weekday',
+    'normalized_compression_distance',
+    'subsequence_lengths'
+]
+
+
+def find_skyline(df, to_min, to_max):
+    """Finds the skyline of a dataframe using a block-nested loop algorithm."""
+
+    def count_diffs(a, b, to_min, to_max):
+        n_better = 0
+        n_worse = 0
+
+        for f in to_min:
+            n_better += a[f] < b[f]
+            n_worse += a[f] > b[f]
+
+        for f in to_max:
+            n_better += a[f] > b[f]
+            n_worse += a[f] < b[f]
+
+        return n_better, n_worse
+
+    rows = df.to_dict(orient='index')
+
+    # Use the first row to initialize the skyline
+    skyline = {df.index[0]}
+
+    # Loop through the rest of the rows
+    for i in df.index[1:]:
+
+        to_drop = set()
+        is_dominated = False
+
+        for j in skyline:
+
+            n_better, n_worse = count_diffs(rows[i], rows[j], to_min, to_max)
+
+            # Case 1
+            if n_worse > 0 and n_better == 0:
+                is_dominated = True
+                break
+
+            # Case 3
+            if n_better > 0 and n_worse == 0:
+                to_drop.add(j)
+
+        if is_dominated:
+            continue
+
+        skyline = skyline.difference(to_drop)
+        skyline.add(i)
+
+    return df[df.index.isin(skyline)]
+
+
 def normalized_compression_distance(x, y, n=25_270_000_000):
     """Computes the Normalized Compression Distance (NCD) between two strings.
 
@@ -11,7 +71,6 @@ def normalized_compression_distance(x, y, n=25_270_000_000):
         y (bytes)
 
     References:
-
         1. https://www.wikiwand.com/en/Normalized_compression_distance
         2. https://www.wikiwand.com/en/Normalized_Google_distance
 
@@ -76,7 +135,7 @@ def subsequence_lengths(sequence):
     if sequence[-1] == sequence[-2]:
         lengths[sequence[-1]].append(i)
     else:
-        lengths[sequence[-2]].append(i+1)
+        lengths[sequence[-2]].append(i + 1)
         lengths[sequence[-1]].append(1)
 
     return dict(lengths)

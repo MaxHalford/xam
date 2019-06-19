@@ -57,6 +57,7 @@ Usage example is available in the [docs](docs) folder. Each example is tested wi
   - [Subsequence lengths](docs/various.md#subsequence-lengths)
   - [DataFrame to Vowpal Wabbit](docs/various.md#dataframe-to-vowpal-wabbit)
   - [Normalized compression distance](docs/various.md#normalized-compression-distance)
+  - [Skyline querying](docs/various.md#skyline-querying)
 
 ## Other Python data science and machine learning toolkits
 
