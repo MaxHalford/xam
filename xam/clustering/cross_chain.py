@@ -1,7 +1,4 @@
-import numpy as np
 from sklearn.base import BaseEstimator, ClusterMixin
-from sklearn.utils.multiclass import unique_labels
-from sklearn.utils.validation import check_X_y
 
 
 class CrossChainClusterer(BaseEstimator, ClusterMixin):

@@ -27,6 +27,8 @@ Usage example is available in the [docs](docs) folder. Each example is tested wi
   - [Combining features](docs/feature-extraction.md#combining-features)
   - [Count encoding](docs/feature-extraction.md#count-encoding)
   - [Cyclic features](docs/feature-extraction.md#cyclic-features)
+- [Feature selection](docs/feature-selection.md)
+  - [Forward-backward selection](docs/feature-selection#forward-backward-selection)
 - [Linear models](docs/linear-models.md)
   - [AUC regressor](docs/linear-models.md#auc-regressor)
 - [Model selection](docs/model-selection.md)

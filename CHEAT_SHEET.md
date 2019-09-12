@@ -1,5 +1,32 @@
 # Data science knowledge/tricks
 
+## pandas
+
+Time since last having seen a particular value. Remove the `.shift()` if you're not doing target encoding.
+
+```python
+>>> import pandas as pd
+
+>>> df = pd.DataFrame([
+...     (1, 'cloudy'),
+...     (2, 'cloudy'),
+...     (3, 'sunny'),
+...     (4, 'sunny'),
+...     (5, 'cloudy'),
+...     (6, 'sunny')
+... ], columns=['time', 'location'])
+
+>>> (df['time'] - df['time'].groupby(df['location'].shift().eq('cloudy').cumsum()).transform('first'))
+0    0
+1    0
+2    0
+3    1
+4    2
+5    0
+Name: time, dtype: int64
+
+```
+
 ## Ensemble
 
 (not too sure about the exact vocabulary)
@@ -81,3 +108,8 @@ print(advertising)
 
 - Adversarial validation can help making relevant cross-validation splits
 - Pseudo-labeling by augmenting the training set with part of the labeled test set
+
+
+## Target transformation
+
+- Using `log` on the target, training, and then using `exp` is [naive](https://www.reddit.com/r/MachineLearning/comments/ccbbdw/d_transforming_the_target_variable_a_bad_idea/)

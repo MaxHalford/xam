@@ -13,7 +13,6 @@ from sklearn.base import RegressorMixin
 from sklearn.base import MetaEstimatorMixin
 
 
-
 class BaseStackingEstimator(BaseEstimator, MetaEstimatorMixin):
 
     def __init__(self, models, meta_model, cv, metric, use_base_features, use_probas):
