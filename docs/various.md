@@ -138,3 +138,66 @@ datetime.datetime(2017, 3, 27, 0, 0)
 20     Parade Kart      7         3             4       7      3
 
 ```
+
+## Fuzzy duplicates
+
+See [this](https:maxhalford.github.io/blog/finding-transitive-duplicates-in-a-dataframe/) blog post.
+
+```python
+>>> import pandas as pd
+>>> import xam
+
+>>> users = pd.DataFrame([
+...     {
+...         'email': 'a',
+...         'number': '1',
+...         'region': 'A'
+...     },
+...     {
+...         'email': 'b',
+...         'number': '1',
+...         'region': 'A'
+...     },
+...     {
+...         'email': 'b',
+...         'number': '2',
+...         'region': 'A'
+...     },
+...     {
+...         'email': 'd',
+...         'number': '3',
+...         'region': 'B'
+...     },
+...     {
+...         'email': 'd',
+...      'number': '4',
+...         'region': 'B'
+...     },
+...     {
+...         'email': 'e',
+...         'number': '5',
+...         'region': 'B'
+...     },
+... ])
+
+>>> def is_same_user(user_1, user_2):
+...     return (
+...         user_1['email'] == user_2['email'] or
+...         user_1['number'] == user_2['number']
+...     )
+
+>>> xam.utils.find_partitions(
+...     df=users,
+...     match_func=is_same_user,
+...     block_by='region',
+...     max_size=3
+... )
+0    0
+1    0
+2    0
+3    1
+4    1
+5    2
+dtype: int64
+
+```

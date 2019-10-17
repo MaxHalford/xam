@@ -21,6 +21,8 @@ class BayesianTargetEncoder(BaseEstimator, TransformerMixin):
         self.columns = columns
         self.prior_weight = prior_weight
         self.suffix = suffix
+        self.prior_ = None
+        self.posteriors_ = None
 
     def fit(self, X, y=None, **fit_params):
 
@@ -33,9 +35,11 @@ class BayesianTargetEncoder(BaseEstimator, TransformerMixin):
         X = X.copy()
 
         # Default to using all the categorical columns
-        columns = X.select_dtypes(['object', 'category']).columns\
-            if self.columns is None\
-            else self.columns
+        columns = (
+            X.select_dtypes(['object', 'category']).columns
+            if self.columns is None else
+            self.columns
+        )
 
         names = []
         for cols in columns:

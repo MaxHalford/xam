@@ -13,8 +13,6 @@
 
 Usage example is available in the [docs](docs) folder. Each example is tested with [doctest](https://pymotw.com/2/doctest/).
 
-- [Clustering](docs/clustering.md)
-  - [Cross-chain algorithm](docs/clustering.md#cross-chain-algorithm)
 - [Ensembling](docs/ensembling.md)
   - [Groupby model](docs/ensembling.md#groupby-model)
   - [LightGBM with CV](docs/ensembling.md#lightgbm-with-cv)
@@ -60,6 +58,7 @@ Usage example is available in the [docs](docs) folder. Each example is tested wi
   - [DataFrame to Vowpal Wabbit](docs/various.md#dataframe-to-vowpal-wabbit)
   - [Normalized compression distance](docs/various.md#normalized-compression-distance)
   - [Skyline querying](docs/various.md#skyline-querying)
+  - [Fuzzy duplicates](docs/various.md#fuzzy-duplicates)
 
 ## Other Python data science and machine learning toolkits
 

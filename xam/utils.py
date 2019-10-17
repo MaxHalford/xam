@@ -2,10 +2,14 @@ from collections import defaultdict
 import codecs
 import datetime as dt
 
+import pandas as pd
+import numpy as np
+
 
 __all__ = [
     'dataframe_to_vw',
     'datetime_range',
+    'find_partitions',
     'find_skyline',
     'get_next_weekday',
     'normalized_compression_distance',
@@ -184,3 +188,66 @@ def dataframe_to_vw(dataframe, label_col, importance_col=None, base_col=None, ta
     vw_str = vw_str.rstrip('\n')
 
     return vw_str
+
+
+def find_partitions(df, match_func, max_size=None, block_by=None):
+    """Recursive algorithm for finding duplicates in a DataFrame."""
+
+    # If block_by is provided, then we apply the algorithm to each block and
+    # stitch the results back together
+    if block_by is not None:
+        blocks = df.groupby(block_by).apply(lambda g: find_partitions(
+            df=g,
+            match_func=match_func,
+            max_size=max_size
+        ))
+
+        keys = blocks.index.unique(block_by)
+        for a, b in zip(keys[:-1], keys[1:]):
+            blocks.loc[b, :] += blocks.loc[a].iloc[-1] + 1
+
+        return blocks.reset_index(block_by, drop=True)
+
+    def get_record_index(r):
+        return r[df.index.name or 'index']
+
+    # Records are easier to work with than a DataFrame
+    records = df.to_records()
+
+    # This is where we store each partition
+    partitions = []
+
+    def find_partition(at=0, partition=None, indexes=None):
+
+        r1 = records[at]
+
+        if partition is None:
+            partition = {get_record_index(r1)}
+            indexes = [at]
+
+        # Stop if enough duplicates have been found
+        if max_size is not None and len(partition) == max_size:
+            return partition, indexes
+
+        for i, r2 in enumerate(records):
+
+            if get_record_index(r2) in partition or i == at:
+                continue
+
+            if match_func(r1, r2):
+                partition.add(get_record_index(r2))
+                indexes.append(i)
+                find_partition(at=i, partition=partition, indexes=indexes)
+
+        return partition, indexes
+
+    while len(records) > 0:
+        partition, indexes = find_partition()
+        partitions.append(partition)
+        records = np.delete(records, indexes)
+
+    return pd.Series({
+        idx: partition_id
+        for partition_id, idxs in enumerate(partitions)
+        for idx in idxs
+    })
