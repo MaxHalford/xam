@@ -122,6 +122,7 @@ def subsequence_lengths(sequence):
         sequence (iterable): 'abbaabbbb'
     Returns:
         dict: {'a': [1, 2], 'b': [2, 4]}
+
     """
 
     lengths = defaultdict(list)
@@ -251,3 +252,20 @@ def find_partitions(df, match_func, max_size=None, block_by=None):
         for partition_id, idxs in enumerate(partitions)
         for idx in idxs
     })
+
+
+def iter_time_series(ts, in_len, out_len, step):
+    """Iterates over a time-series in successive chunks.
+
+    Example
+
+        >>> ts = np.arange(10)
+        >>> for x, y in iter_time_series(ts, 3, 2, 1):
+        ...     print(x, y)
+
+    """
+
+    for i in reversed(range(len(ts) - out_len, in_len - 1, -step)):
+        x = ts[i - in_len:i]
+        y = ts[i:i + out_len]
+        yield x, y
